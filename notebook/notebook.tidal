@@ -1,0 +1,111 @@
+-- Const.
+d1
+$ every 6 (const("hc(6,8)*2"))
+$ every 5 (const $ "hc!13")
+$ every 2 (const $ "hc")
+$ "hc(5, 7)"
+
+-- Slice is for samples.  Bite is for patterns.
+d1 $ slice 8 "0 2 4 6 6 0 6" $ s "break:1"
+
+-- Scale.
+d1 $ n (scale "minor" $ run 8) # s "supermandolin"
+
+-- Scale in different key
+d1 $ n (scale "minor" $ run 8) |+ n "d" # s "supermandolin"
+
+-- Ply.
+d1 $ ply 4 $ n (scale "harmonicMinor" "<[4 0 1 -1] [0 1 2 3]>") # s "supersaw" # legato 0.3 # lpf 800
+
+-- Off.
+d1 $ off (1 / (4 * 4)) (|+ n 0) $ n (scale "harmonicMinor" "<[4 0 1 -1] [0 1 2 3]>") # s "supersaw" # legato 0.2 # lpf 800
+
+-- Chords. These two examples are equivalent.
+d1 $ arp "up" $ n "<c'maj bf'min>" |+ n "<0 -12>" # s "supermandolin"
+d1 $ arp "up" $ n "<c'maj bf'min>" # octave "<5 4>" # s "supermandolin"
+
+d1 $ arp "up down" $ ply 2 $ n "<c'maj'4 bf'min'4>" # octave "<5 4>" # s "supermandolin"
+
+-- Custom scale.  These two examples are equivalent.
+d1 $ slow 2 $ n (toScale [0,1.5,3,5,7,8.5,10] "0..7") # s "supervibe"
+
+let scale = getScale (scaleTable ++ [("microtonal", [0,1.5,3,5,7,8.5,10])])
+d1 $ slow 2 $ n (scale "microtonal" "0..7") # s "supervibe"
+
+-- Custom chord.
+let myChord = "[0,3.5,7]"
+d1 $ rolled $ n myChord |+ n "<c5 bf4>" # s "supervibe"
+
+-- Ur.
+d1 $ ur 2 "p1 p2 . p1:e1 p2:e1"
+[
+("p1", s "bd"),
+("p2", s "cp")
+]
+[
+("e1", (# squiz 3))
+]
+
+-- Fit.
+d1 $ n (fit 1 [0, 1, 4, 7] "0 1 2 3") # s "supervibe"
+
+-- Random pitches.
+d1 $ segment 16 $ n (10 * rand) # s "supervibe" # legato 0.5
+
+-- Random pitches in a scale.
+d1 $ segment 8 $ n (scale "minor" $ irand 8) # s "supervibe" # legato 0.5
+
+-- Decoupling multiple rands, because rand is a deterministic function of time.
+-- In the first example, all the high pitches are in the right speaker.  In the second example, pitch is decoupled from panning.
+d1 $ segment 16 $ n (24 * rand) # s "supervibe" # pan rand
+d1 $ segment 16 $ n (24 * rand) # s "supervibe" # pan (slow 1.1 rand)
+
+-- Randomly drop events with question mark.
+d1 $ fast 2 $ stack [
+"bd?0.2 bd" # squiz 3 # gain 2,
+"~!3 cp . ~ cp?0.2"
+]
+
+-- Randomly drop events with degrade and degradeBy
+d1 $ degradeBy 0.2 $ fast 4 $ "1 . 1 1" # s "glockenspiel:-24" # legato 0.8
+
+-- Scramble: sampling with replacement.
+d1 $ scramble 2 $ stack [
+ "1 1*2 . 1 1 ~ 1" # s "hc",
+ "1 . 1 1" # s "bd" # squiz 2 # gain 2
+]
+
+-- Shuffle: sampling without replacement.
+d1 $ shuffle 4 $ stack [
+ "1 1*2 . 1 1 ~ 1" # s "hc",
+ "1 . 1 1" # s "bd" # squiz 2 # gain 2
+]
+
+-- All the chords.
+import Sound.Tidal.Chords
+chordList
+
+-- Choose. By itself, it produces a continuous stream, with no structure.
+-- With choose, the parameters to choose from are a list of values, not patterns, so you can't normally use mininotation there.
+-- A supposed workaround is innerJoin but that doesn't seem to work.
+d1 $ rolledBy (choose [0.25, 0.5, 0.75]) $ n "<c'min'6 df'maj'5>" # s "supervibe"
+
+-- Segment + choose.
+d1 $ segment 16 $ n (6 * rand) |+ n (segment 3 $ choose [0, 10, 20]) # s "supervibe" # legato 0.5
+
+-- Wchoose.
+d1 $ segment 16 $ n (scale "minor" (wchoose [(0, 6), (2, 2), (4, 2), (7, 2)])) # s "supervibe"
+
+-- Randcat.
+d1 $ randcat ["sd", "sd(3,8)", "sd(9,16)"]
+
+-- Wrandcat.
+d1 $ wrandcat [
+("sd", 1),
+("sd sd", 2),
+("sd(3,8)", 3)
+]
+
+-- Stripe.  There seems to be a bug where the first event is repeated very fast and distorted.
+d1 $ stripe 2 $ "1 1*2" # s "hc"
+

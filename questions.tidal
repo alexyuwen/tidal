@@ -1,0 +1,2 @@
+-- Does not work as expected.
+d1 $ sometimesBy 0.3 (fast 2) $ "hc*4"

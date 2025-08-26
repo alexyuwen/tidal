@@ -1,0 +1,66 @@
+-- degrade - remember the ? mininotation modifier in the previous
+-- video? It drops events at random:
+d1 $ sound "bd*8?"
+
+-- Degrade is a function that does the same:
+d1 $ degrade $ sound "bd*8"
+
+-- Just like this:
+d1 $ sound "bd*8?0.6"
+
+-- You can specify a probability, by using 'degradeBy'. E.g.,
+-- to give each event a 60% chance of being 'lost':
+d1 $ degradeBy 0.6 $ sound "bd*8"
+
+-- 'sometimes' applies a function to a pattern, but only sometimes.
+-- lets hurry this rhythm, but only sometimes:
+d1 $ sometimes (hurry 2) $ n "0 ~ 3 1 5 2 ~ 5" # sound "cpu"
+
+-- Here's the original, which sounds pretty boring in comparison:
+d1 $ n "0 ~ 3 1 5 2 ~ 5" # sound "cpu"
+
+-- You can use it to apply effects as well.
+d1 $ sometimes (# crush 4) $ n "0 ~ 3 1 5 2 ~ 5" # sound "cpu"
+
+-- There's also a 'sometimesBy' variant, for specifying a
+-- probability:
+d1 $ sometimesBy 0.3 (# crush 4) $ n "0 ~ 3 1 5 2 ~ 5" # sound "cpu"
+
+-- There's some aliases for different probabilities:
+
+{-
+sometimes = sometimesBy 0.5
+often = sometimesBy 0.75
+rarely = sometimesBy 0.25
+almostNever = sometimesBy 0.1
+almostAlways = sometimesBy 0.9
+-}
+
+-- So you can do this:
+d1 $ rarely (# crush 4) $ n "0 ~ 3 1 5 2 ~ 5" # sound "cpu"
+
+-- somecycles is similar to sometimes, but works on whole
+-- cycles at a time, rather than individual events:
+d1 $ somecycles (hurry 2) $ n "0 ~ 3 1 5 2 ~ 5" # sound "cpu"
+  # speed 1.5
+
+-- Again, there's a 'somecyclesBy' variant for being specific
+-- about that probability. To apply the squiz, 90% of the time:
+d1 $ somecyclesBy 0.9 (# squiz 4) $ n "0 ~ 3 1 5 2 ~ 5" # sound "cpu"
+  # speed 1.5
+
+-- randslice is a bit like 'slice' that we met a couple of lessons
+-- ago:
+d1 $ slice 4 "0 1 2 3" $ sound "break:8"
+
+-- Instead of taking a pattern of slices though, it picks slices at
+-- random. So to play a random quarter of this break:
+d1 $ randslice 4 $ sound "break:8"
+
+-- We can use 'loopAt' to fit them to a cycle, just like we saw before
+-- with 'chop' and 'striate':
+d1 $ loopAt 1 $ randslice 4 $ sound "break:8*4"
+
+-- We could also do the same sort of thing by giving 'slice' or 'splice'
+-- a random pattern:
+d1 $ splice 4 (segment 4 $ irand 4) $ sound "break:8"

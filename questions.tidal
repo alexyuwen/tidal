@@ -1,2 +1,7 @@
 -- Does not work as expected.
 d1 $ sometimesBy 0.3 (fast 2) $ "hc*4"
+
+-- TODO: Duplicate. 2 at same time.
+-- TODO: How to decouple perlin?  Unlike rand, it only generates one event per cycle, so applying a multiplier would change the frequency of events.
+-- Perlin2 would work, if only it didn't cause type errors
+d1 $ segment 16 $ n (fast 4 $ range 0 20 $ perlin) # s "supersaw" # lpf 999

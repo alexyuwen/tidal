@@ -267,13 +267,18 @@ d1 $ contrastBy (==) (# octave 6) (# legato 0.3) (n (scale "minor" "[0, 4, 7]"))
 -- ContrastBy.  A more general version of contrast that takes an abritrary boolean function that is used to compare the control patterns.
 d1 $ contrastBy (>=) (# octave 6) (# legato 0.3) (n (scale "minor" 2)) $ n (scale "minor" "0..7") # s "supervibe" -- Applies true-branch if 2 >= note
 
+-- Palindrome.  Applies rev to a pattern every other cycle, so that the pattern alternates between forwards and backwards.
+-- These two examples are equivalent.
+d1 $ palindrome $ n (scale "minor" "0 1 2 1") # s "supervibe"
+d1 $ every 2 rev $ n (scale "minor" "0 1 2 1") # s "supervibe"
 
+-- Trunc.  Truncates a pattern so that only a fraction of the pattern is played.
+d1 $ trunc "<0.25 1 0.5 1>" $ sound "sd cp [~ sn] cp"
 
+-- Linger.  Trunc, but repeats the truncated part to fill the remainder of the cycle.
+d1 $ linger "<0.25 1 0.5 1>" $ sound "sd cp [~ sn] cp"
 
-
-
-
-
+-- Chunk.
 
 
 

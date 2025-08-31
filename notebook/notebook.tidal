@@ -5,11 +5,10 @@ $ every 5 (const $ "hc!13")
 $ every 2 (const $ "hc")
 $ "hc(5, 7)"
 
--- Slice is for samples.  Bite is for patterns.
-d1 $ slice 8 "0 2 4 6 6 0 6" $ s "break:1"
-
--- Randslice.  This example plays a random half of the sample each cycle.
-d1 $ randslice 2 $ "break:1"
+-- Bite.  Slice each cycle into a given number of equal sized bits, then pattern those bits by number.
+-- The sliced bits will be squeezed or contracted to fit.
+-- Slice is for samples.  Bite is for patterns (over one cycle).
+d1 $ bite 4 "0 1 1 2 3" "<[bd cp [~ bd] cp] [sd hc [~ sd] hc]>"
 
 -- Scale.
 d1 $ n (scale "minor" $ run 8) # s "supermandolin"
@@ -37,7 +36,7 @@ d1 $ slow 2 $ n (scale "microtonal" "0..7") # s "supervibe"
 let myChord = "[0,3.5,7]"
 d1 $ rolled $ n myChord |+ n "<c5 bf4>" # s "supervibe"
 
--- Ur.
+-- Ur.  Pattern of patterns, over a given number of cycles.
 d1 $ ur 2 "p1 p2 . p1:e1 p2:e1"
 [
 ("p1", s "bd"),
@@ -79,13 +78,13 @@ d1 $ "1*16" # (sometimes (|+ n 12) $ n (range 0 6 rand)) # s "supervibe"
 -- Somecycles.
 d2 $ somecycles (fast 2) $ "glockenspiel:-24(5,8)"
 
--- Scramble: sampling with replacement.
+-- Scramble.  Sampling with replacement.
 d2 $ scramble 2 $ stack [
  "1 1*2 . 1 1 ~ 1" # s "hc",
  "1 . 1 1" # s "bd" # squiz 2 # gain 2
 ]
 
--- Shuffle: sampling without replacement.
+-- Shuffle.  Sampling without replacement.
 d1 $ shuffle 4 $ stack [
  "1 1*2 . 1 1 ~ 1" # s "hc",
  "1 . 1 1" # s "bd" # squiz 2 # gain 2
@@ -278,7 +277,27 @@ d1 $ trunc "<0.25 1 0.5 1>" $ sound "sd cp [~ sn] cp"
 -- Linger.  Trunc, but repeats the truncated part to fill the remainder of the cycle.
 d1 $ linger "<0.25 1 0.5 1>" $ sound "sd cp [~ sn] cp"
 
--- Chunk.
+-- Chunk.  Divides a pattern into parts, then applies the function to each part in turn (one part per cycle).
+d1 $ chunk 4 (# gain 1.5) $ sound "sd . cp cp"
+
+-- Chunk'.  Chunk, but cycles through the parts in the reverse direction.
+d1 $ chunk' 4 (# gain 1.5) $ sound "sd . cp cp"
+
+-- LoopFirst.  Loops only the first cycle of a pattern.
+d1 $ someCyclesBy 0.33 loopFirst $ s "<hc(3,8) [hc(3,8)*3]>" -- Combines with someCyclesBy to interject the first cycle randomly
+
+-- Amp.  Whereas gain is exponential, amp is linear.
+d1 $ "hc*18" # amp (1 - saw)
+
+-- Accelerate.  Speeds up (or slows down) samples while they play.
+-- Accelerate 0 does nothing.  Negative values decelerate.
+d1 $ s "sax:0" # accelerate 1 # cut 1
+
+-- Speed.  Changes the speed of sample playback.  Both sample duration and pitch will be modified.
+-- Negative values play the sample backwards.
+d1 $ s "sax:0" # speed "<1 2 3 4>" # cut 1
+
+
 
 
 

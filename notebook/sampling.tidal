@@ -1,0 +1,91 @@
+-- Unit.  Changes the behavior of speed.  Accepts values of "r" (rate), "c" (cycles), or "s" (seconds).  The default is "r".
+-- These two examples are equivalent.
+d1 $ stack [
+s "break:1" # speed 1 # unit "c",
+s "cp"
+]
+
+d1 $ stack [
+  loopAt 1 $ "break:1",
+  s "cp"
+]
+
+-- Begin and End.  Play part of a sample.
+-- Instead of using 'unit', 'begin' and 'end' by hand, use splice / slice / chop to cut a sound into bits, then set the length of the loop in cycles with loopAt.
+-- These two examples are equivalent.
+d1 $ stack [
+  "break:1 !" # begin 0.75 # end 1,
+  "cp"
+]
+
+d1 $ stack [
+  slice 4 "3 ~ 3 ~" $ s "break:1",
+  "cp"
+]
+
+-- Chop.  Cuts a sample into parts.
+-- Lends itself to granular synthesis.
+d1 $ stack [
+  rev $ chop 4 $ loopAt 1 "break:1",
+  "cp"
+]
+
+d1 $ stack [
+  striate 4 $ loopAt 1 "break:1",
+  "cp"
+]
+
+-- Striate.  Chop, but interlaces the cut-up bits.
+d1 $ slow 4 $ striate 4 $ loopAt 1 $ s "break:1*4"
+
+-- Slice.  Slice samples into bits, then pattern those bits by number.
+-- Slice is for samples.  Bite is for patterns.
+d1 $ stack [
+  slice 8 "0 0 1 2 0 0 3 4 4" $ loopAt 1 $ s "break:1" # cut 1,
+  "cp"
+]
+
+-- Randslice.  This example plays a random half of the sample each cycle.
+d1 $ randslice 2 $ "break:1"
+
+-- Splice.  Slice, but the slices are automatically pitched up or down to fit their slot.
+d1 $ stack [
+  splice 8 "0 1 2 0 3 4" $ loopAt 1 $ s "break:1",
+  "cp"
+]
+
+
+
+
+
+
+
+{-
+
+----------------------------------------------------------------------------------------------------------------
+
+-}
+
+-- These two examples are equivalent.
+d1 $ slow 2 $ loopAt 1 $ s "break:1 break:8"
+d1 $ loopAt 1 $ s "<break:1 break:8>"
+
+-- For patterns with multiple samples, loopAt applies to each individual sample, not the pattern as a whole.
+-- In this example, each sample stretches over two samples.
+d1 $ loopAt 2 $ s "break:1 break:8"
+
+-- So, loopAt is essentially cyclesPerSample, regardless of pattern structure.
+
+-- Chop and Striate values also apply to each sample, not the pattern as a whole.
+d1 $ stack [
+  slow 2 $ loopAt 1 $ rev $ chop 2 $ s "break:1 break:8",
+  "cp"
+]
+
+d1 $ stack [
+  slow 2 $ loopAt 1 $ striate 2 $ s "break:1 break:8",
+  "cp"
+]
+
+
+

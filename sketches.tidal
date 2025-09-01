@@ -91,19 +91,22 @@ do
   d1 $ "cp"
   d2 $ slice 8 "{0 1 2 3 4 5 6 7}%8" $ loopAt 1 "break:1" # cut 1
 
-  -- Improvisation starting-point.
-  let
-  normalBreak = chop 16 $ loopAt 1 "break:1" # cut 1
-  fastBreak = hurry 1.5 $ chop 16 $ loopAt 1 "break:1" # cut 1
-  mixedBreak = wrandcat [
-      (fastBreak, 3),
-      (normalBreak, 5)
-    ]
-  in do
-    d1 $ "cp"
-    d2 $ mixedBreak
+-- Improvisation starting-point.
+let
+normalBreak = chop 16 $ loopAt 1 "break:1" # cut 1
+fastBreak = hurry 1.5 $ chop 16 $ loopAt 1 "break:1" # cut 1
+mixedBreak = wrandcat [
+    (fastBreak, 3),
+    (normalBreak, 5)
+  ]
+in do
+  d1 $ "cp"
+  d2 $ mixedBreak
 
-
+-- Starting point.
+do
+  d1 $ striate 2 $ loopAt 1 $ s "break:1" # cut 1 * speed "1 2 1 1"
+  d2 $ "cp"
 
 
 

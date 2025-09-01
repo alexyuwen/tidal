@@ -27,12 +27,22 @@
 - mouth
 - east
 
-- fmBass, rubberBand
 
-- lt, ht, sd, hc, cp
+Melodic Bass:
+- organTonewheel0, organTonewheel1, organTonewheel2, organTonewheel3
+- organDonor, moogBass, ksBass, cheapPiano1
 
-- organTonewheel0, organTonewheel1, organTonewheel2, organTonewheel3, organDonor, moogBass, ksBass
+Plucked strings:
+- harpsichord2
+- supermandolin
+
+Mallets:
+- supervibe
+- kalimba, modalMarimba
+
+Bowed strings:
 - violin, prophet5pwmStrings
+
 
 
 

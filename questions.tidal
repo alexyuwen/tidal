@@ -7,3 +7,12 @@ d1 $ sometimesBy 0.3 (fast 2) $ "hc*4"
 d1 $ segment 16 $ n (fast 4 $ range 0 20 $ perlin) # s "supersaw" # lpf 999
 
 -- How to have control effects (#) with markovPat?
+-- Does not seem possible.
+d1 $ s $ fmap (["bd", "sd", "clap"]!!)
+       $ markovPat 4 0 [
+           [0.1,  0.7, 0.2],
+           [0.15, 0.1, 0.8],
+           [0.5,  0.3, 0.4]
+         ]
+
+-- How to decouple "every" so that, for example, two "every 2" will be offset

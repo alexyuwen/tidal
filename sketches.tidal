@@ -80,3 +80,44 @@ d2 $ segment 3 $ n (12 * rand) # octave 4 # s "fmBass" # gain 2
 do
   d1 $ "cp"
   d2 $ fast 8 $ every (segment 1 $ irand 8) (const $ s "hc") $ "~"
+
+-- Time-shifting a break.
+do
+  d1 $ "cp"
+  d2 $ someCyclesBy 0.2 (const silence) $ (<~) (cycleChoose [0, 1/4, 2/4, 3/4]) $ striate 4 $ loopAt 1 "break:1" # cut 1
+
+-- Improvisation starting-point.
+do
+  d1 $ "cp"
+  d2 $ slice 8 "{0 1 2 3 4 5 6 7}%8" $ loopAt 1 "break:1" # cut 1
+
+  -- Improvisation starting-point.
+  let
+  normalBreak = chop 16 $ loopAt 1 "break:1" # cut 1
+  fastBreak = hurry 1.5 $ chop 16 $ loopAt 1 "break:1" # cut 1
+  mixedBreak = wrandcat [
+      (fastBreak, 3),
+      (normalBreak, 5)
+    ]
+  in do
+    d1 $ "cp"
+    d2 $ mixedBreak
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

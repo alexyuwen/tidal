@@ -31,4 +31,9 @@
 
 - lt, ht, sd, hc, cp
 
+- organTonewheel0, organTonewheel1, organTonewheel2, organTonewheel3, organDonor, moogBass, ksBass
+- violin, prophet5pwmStrings
+
+
+
 -}

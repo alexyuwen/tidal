@@ -30,13 +30,11 @@ d1 $ stack [
   "cp"
 ]
 
-d1 $ stack [
-  striate 4 $ loopAt 1 "break:1",
-  "cp"
-]
-
 -- Striate.  Chop, but interlaces the cut-up bits.
 d1 $ slow 4 $ striate 4 $ loopAt 1 $ s "break:1*4"
+
+-- Striate with legato.
+d1 $ slow 4 $ striate 4 $ loopAt 1 $ s "break:1*4" # legato 0.5
 
 -- Slice.  Slice samples into bits, then pattern those bits by number.
 -- Slice is for samples.  Bite is for patterns.
@@ -86,6 +84,23 @@ d1 $ stack [
   slow 2 $ loopAt 1 $ striate 2 $ s "break:1 break:8",
   "cp"
 ]
+
+-- Speed affects only the sample speed.
+-- Fast affects only the event speed.
+-- Hurry affects both the sample speed and the event speed.
+do
+  d1 $ "cp"
+  -- d2 $ every 2 (# speed (2/3)) $ chop 8 $ loopAt 1 "break:1" # cut 1
+  -- d2 $ every 2 (fast (2/3)) $ chop 8 $ loopAt 1 "break:1" # cut 1
+  d2 $ every 2 (hurry (2/3)) $ chop 8 $ loopAt 1 "break:1" # cut 1
+
+-- Time-stretching can be done by first slicing the sample, then using either fast/slow or slice function.
+
+--
+
+
+
+
 
 
 

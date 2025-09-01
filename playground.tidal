@@ -1,0 +1,55 @@
+
+
+
+let
+normalBreak = chop 16 $ loopAt 1 "break:1" # cut 1
+fastBreak = hurry 1.5 $ chop 16 $ loopAt 1 "break:1" # cut 1
+mixedBreak = every 2 (const $ fastBreak) $ normalBreak
+in do
+  d1 $ ur 2 "[mixedBreak, cp] mixedBreak"
+    [
+    ("normalBreak", normalBreak),
+    ("fastBreak", fastBreak),
+    ("mixedBreak", mixedBreak),
+    ("cp", "cp")
+    ]
+    [
+    --
+    ]
+
+
+do
+  d1 $ "cp"
+  d2 $ splice 8 (run 8) "break:1"
+  -- d2 $ splice 8 (run 4 ++ run 4) "break:1"
+  -- d2 $ splice 8 (fastcat [run 4, run 4]) $ loopAt 1 "break:1"
+  d2 $ splice 8 "0 1 0 1 [0 1] !" $ loopAt 1 "break:1"
+
+-- Improvisation starting-point.
+  do
+    d1 $ "cp"
+    d2 $ slice 8 "{0 1 2 3 4 5 6 7}%8" $ loopAt 1 "break:1" # cut 1 -- [a..b] does not work with }%
+
+
+
+-- Improvisation starting-point.
+let
+normalBreak = chop 16 $ loopAt 1 "break:1" # cut 1
+fastBreak = hurry 1.5 $ chop 16 $ loopAt 1 "break:1" # cut 1
+slowBreak = hurry (2/3) $ chop 16 $ loopAt 1 "break:1" # cut 1
+mixedBreak = wrandcat [
+    (normalBreak, 5),
+    (fastBreak, 1),
+    (slowBreak, 1)
+  ]
+in do
+  d1 $ stack [
+    "cp",
+    segment 4 $ n 0 # octave 3 # s "organTonewheel1"
+    ]
+  d2 $ mixedBreak
+  d3 $ segment 24 $ n (range 0 12 rand) # octave 6 # s "prophet5pwmStrings" # gain 1 # legato 1
+
+
+
+

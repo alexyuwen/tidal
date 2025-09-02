@@ -19,11 +19,12 @@ d1 $ n (scale "minor" $ run 8) |+ n "d" # s "supermandolin"
 -- Ply.  Repeats each event the given number of times.
 d1 $ ply 2 $ n (scale "minor" "0 2 1 4") # s "supersaw" # legato 0.1 # lpf 800
 
--- Chords. These two examples are equivalent.
+-- Arp. These two examples are equivalent.
 d1 $ arp "up" $ n "<c'maj bf'min>" |+ n "<0 -12>" # s "supermandolin"
 d1 $ arp "up" $ n "<c'maj bf'min>" # octave "<5 4>" # s "supermandolin"
 
 -- More than one arp per chord.
+-- up down updown downup disconverge pinkyup pinkyupdown thumbup thumbupdown
 d1 $ arp "up down" $ ply 2 $ n "<c'maj'4 bf'min'4>" # octave "<5 4>" # s "supermandolin"
 
 -- Custom scale.  These two examples are equivalent.
@@ -70,7 +71,7 @@ d1 $ segment 16 $ n (24 * rand) # s "supervibe" # pan (slow 1.1 rand)
 -- Randomly drop events with question mark.
 d1 $ fast 2 $ stack [
 "bd?0.2 bd" # squiz 3 # gain 2,
-"~!3 cp . ~ cp?0.2"
+"~ ~ ~ cp . ~ cp?0.2"
 ]
 
 -- Randomly drop events with degrade and degradeBy
@@ -307,6 +308,7 @@ d1 $ s "sax:0" # accelerate 1 # cut 1
 d1 $ s "sax:0" # speed "<1 2 3 4>" # cut 1
 
 -- Mask.  Uses a binary pattern to mask another pattern.
+-- Note that Mask only masks events.  Sustained sounds will not be masked, even with cut 1.
 d1 $ stack [
   mask "1 . [0 1] 1" $ segment 16 $ n (range 0 12 rand) # s "supervibe",
   "cp"

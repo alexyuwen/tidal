@@ -16,3 +16,4 @@ d1 $ s $ fmap (["bd", "sd", "clap"]!!)
          ]
 
 -- How to decouple "every" so that, for example, two "every 2" will be offset
+-- The answer seems to be every`.

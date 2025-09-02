@@ -96,11 +96,31 @@ do
 
 -- Time-stretching can be done by first slicing the sample, then using either fast/slow or slice function.
 
---
+-- Observe what happens when you move the speed control.
+do
+  d1 "cp"
+  d2 $ striate 4 $ loopAt 1 $ s "break:1" # cut 1 * speed "1 2"  -- Gets structure from speed before striating.  Speed is baked into the structure.
+  d2 $ striate 4 $ loopAt 1 $ s "break:1 !" # cut 1 # speed "1 2"  -- Same as above.
+  d2 $ striate 4 $ (# speed "1 2") $ loopAt 1 $ s "break:1 !" # cut 1  -- Same as above.
+
+do
+  d1 "cp"
+  d2 $ (* speed "1 2") $ striate 4 $ loopAt 1 $ s "break:1" # cut 1  -- Gets structure from base pattern, then striates.  Speed applied to each striated bit.
+  d2 $ (# speed "1 2") $ striate 4 $ loopAt 1 $ s "break:1" # cut 1  -- Same as above.
+
+-- What does not seem to work:
+do
+  d1 "cp"
+  d2 $ (*| speed "1 2") $ striate 4 $ loopAt 1 $ s "break:1" # cut 1 -- Striate, then get structure from speed.
+  d2 $ striate 4 $ loopAt 1 $ s "break:1" # cut 1 # speed "1 2" -- Gets structure from base pattern, but speed not applied because there's only one event each cycle.
+  d2 $ chop 4 $ loopAt 1 $ s "break:1" # cut 1 # speed "1 2" -- Changing striate to chop makes this work.  Why?
 
 
-
-
+-- Mask.  Silence parts of sample.
+-- randomly drop 1/8 of cycle
+do
+  d1 $ mask (segment 8 $ wchoose [(True, 8), (False, 1)]) $ fast 2 $ chop 128 $ loopAt 1 $ s "break:1" # cut 1
+  d2 "cp"
 
 
 

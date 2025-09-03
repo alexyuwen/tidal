@@ -45,7 +45,7 @@ p2 = stack [
   ]
 in do
   resetCycles
-  d1 $ rotR 4 $ seqPLoop [
+  d1 $ seqPLoop [
     (0, 8, p1),
     (8, 16, p2)
     ]

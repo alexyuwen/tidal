@@ -89,13 +89,13 @@ d2 $ someCycles (fast 2) $ "glockenspiel:-24(5,8)"
 -- SomeCyclesBy.
 d2 $ someCyclesBy 0.33 (fast 2) $ "glockenspiel:-24(5,8)" -- Applies fast 2 on average 33/100 cycles.
 
--- Scramble.  Sampling with replacement.
+-- Scramble.  Divides the pattern into parts, then randomly selects from the parts.  Sampling with replacement.
 d2 $ scramble 2 $ stack [
  "1 1*2 . 1 1 ~ 1" # s "hc",
  "1 . 1 1" # s "bd" # squiz 2 # gain 2
 ]
 
--- Shuffle.  Sampling without replacement.
+-- Shuffle.  Divides the pattern into parts, then permutes the parts, picking one of each per cycle.  Sampling without replacement.
 d1 $ shuffle 4 $ stack [
  "1 1*2 . 1 1 ~ 1" # s "hc",
  "1 . 1 1" # s "bd" # squiz 2 # gain 2
@@ -175,7 +175,7 @@ d1 $ (<~) (1/8) $ (euclid 3 8 $ s "cp") -- Wrapping <~ in parentheses turns it i
 
 -- Random Euclidean offset.
 -- These three examples are equivalent.
-let fractions = [n / 8 | n <- [0 .. 7]]
+let fractions = [n / 8 | n <- [0 .. 7]] -- List comprehension.
 in do
 d1 $ (<~) (cycleChoose fractions) $ (euclid 3 8 $ s "cp")
 d1 $ (<~) (cycleChoose [0, 1/8 .. 7/8]) $ (euclid 3 8 $ s "cp")

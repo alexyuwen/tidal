@@ -41,10 +41,14 @@ d1 $ arp "up down" $ ply 2 $ n "<c'maj'4 bf'min'4>" # octave "<5 4>" # s "superm
 d1 $ bite 8 (run 8 |% 5) $ arp "updown" $ n "c'min'5" # s "supermandolin"
 
 -- Custom arpeggio pattern.
--- This solves the limitation with the previous example.
+-- This almost solves the limitation with the previous example.
 do
   d1 "cp"
-  d2 $ bite 5 "0 1 2 0 1 2 3 4" $ arpg $ n "c'min'5" # s "supermandolin"
+  d2 $ bite 5 "0 1 2 3 4 0 1 2" $ arpg $ n "c'min'5" # s "supermandolin"
+
+-- TimeCat.  Fastcat, but with proportioning of patterns.
+-- Useful for combining patterns while maintaining constant subdivision.
+d1 $ bite 5 (timeCat [(5, run 5), (4, run 4)]) $ arpg $ n "c'min'5" # s "violin"
 
 -- Custom scale.  These two examples are equivalent.
 d1 $ slow 2 $ n (toScale [0,1.5,3,5,7,8.5,10] "0..7") # s "supervibe"
@@ -141,6 +145,25 @@ d1 $ n "0 0 1 1 2 2 1 1" # s "supersaw" # lpf (cycleChoose [400, 1200, 3600])
 -- ChooseBy.  Choose, but instead of selecting elements of the list randomly, it uses the given pattern to select elements.
 -- At first glance, this functions seems unwieldy to me.
 d1 $ n (chooseBy "0 0.2 0.4 0.6 0.8" [0..3]) # s "supervibe" -- 0 <= x < 0.25 maps to 0, 0.25 <= x < 0.5 maps to 1, etc.  x > 1 wraps around: only the decimal matters.
+
+-- ChooseBy, accommodate arbitrary number of patterns.
+-- Again, unwieldy.  Use Select instead.
+do
+  d1 "cp"
+  d2 $ unwrap (chooseBy (listToPat $ map (/2) [0, 0, 0, 0, 1, 0, 0, 0]) [
+    bite 5 "0 1 2 3 4 2 3 4" $ arpg $ n "c'min'5",
+    fast 8 $ n (scale "minor" "2 1 . 0") # octave 6
+    ]) # s "violin"
+
+-- Select.  Choose between a list of patterns using a pattern of floats (from 0 to 1).
+-- With three or more patterns, just use integer indices divided by number of patterns.
+do
+  d1 "cp"
+  d2 $ select (listToPat [0, 0, 0, 0, 1, 0, 0, 0]) [
+    bite 5 "0 1 2 3 4 2 3 4" $ arpg $ n "c'min'5",
+    fast 8 $ n (scale "minor" "2 1 . 0") # octave 6
+    ] # s "violin"
+
 
 -- Cat.
 d1 $ cat ["hc(3,8)", "hc(9,16,7)"]
@@ -287,7 +310,7 @@ do
 d2 $ echo 3 0.2 0.7 $ sound "cp"
 d2 $ echo 3 (-0.2) 0.7 $ sound "cp" -- Reverse echo.  Echo before the note instead of after.
 
--- EchoWith.  Echo, but with a custom function applied to each echo, not limited to volume.
+-- EchoWith.  Echo, but any functions can be applied to echoes, not just volume.
 -- Also, unlike Echo, the first argument of EchoWith includes the base event.
 -- Note: A function like "|+ n ..." piles the function on top for each echo, which is probably unintended.
 d1 $ echoWith 4 (1/8) (# octave 2) $ sound "supervibe" # n "0"
@@ -395,6 +418,7 @@ in do
   d2 $ n (scale "minor" $ sew "1 1 1 [1 0]" baseNotes $ notes 0) # octave 4 # s "organTonewheel3" -- Insert ornament with sew.
 
 -- Squeeze.  Choose between a list of patterns using a pattern of integers.
+-- Note that each pattern is played entirely within each cycle.
 d2 $ n (squeeze "0 . 1 1" [listToPat [0, 7], fastcat [2, 3]]) # s "organTonewheel3" -- listToPat and fastcat do the same thing here.
 
 

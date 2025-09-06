@@ -1,11 +1,3 @@
 do
   d1 "cp"
-  d2 $ bite 5 "0 1 2 0 1 2 3 4" $ arpg $ n "c'min'5" # s "supermandolin"
-
-
-
-
-
-
-
-
+  d2 $ fast 2 $ bite 3 "2 0 1 0" $ arpg $ n ("<c5 >" |+ "'min'i0") # s "violin"

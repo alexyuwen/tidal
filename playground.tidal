@@ -1,3 +1,11 @@
 do
   d1 "cp"
   d2 $ bite 5 "0 1 2 0 1 2 3 4" $ arpg $ n "c'min'5" # s "supermandolin"
+
+
+
+
+
+
+
+

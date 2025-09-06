@@ -1,3 +1,11 @@
 do
   d1 "cp"
-  d2 $ fast 2 $ bite 3 "2 0 1 0" $ arpg $ n ("<c5 >" |+ "'min'i0") # s "violin"
+  d2 $ n "g3" # s "organDonor" # gain 1.2
+  d3 $ fast 2 $ bite 3 "2 0 1 0" $ arpg $ n ("<c5 g4>" |+ "'min") # s "violin"
+  d3 $ bite 4 "2 0 1 2 . [3] [2 1 0]@1.5" $ arpg $ n ("<c5 g4>" |+ "'min'4") # s "violin"
+  d3 $ bite 3 ("1 . 1 1" |+ (irand 3)) $ arpg $ n ("<c5 g4>" |+ "'min") # s "violin"
+
+
+
+
+

@@ -41,7 +41,7 @@ d1 $ arp "up down" $ ply 2 $ n "<c'maj'4 bf'min'4>" # octave "<5 4>" # s "superm
 d1 $ bite 8 (run 8 |% 5) $ arp "updown" $ n "c'min'5" # s "supermandolin"
 
 -- Custom arpeggio pattern.
--- This almost solves the limitation with the previous example.
+-- This almost solves the limitation with the previous example.  Because it still relies on bite, it is difficult to pattern the chords.
 do
   d1 "cp"
   d2 $ bite 5 "0 1 2 3 4 0 1 2" $ arpg $ n "c'min'5" # s "supermandolin"
@@ -238,9 +238,12 @@ d1 $ every 2 ((<~) 0.125 . rev) $ n (scale "minor" "0 1 2 1") # s "supervibe"
 -- MarkovPat.  Its three arguments are: sequence length, start index, and matrix.
 -- Every cycle starts on the start index.
 -- Sequence length of n means 1/n of a cycle.  Only integer sequence length allowed, so each pattern cannot exceed one cycle.
-d1 $ s $ fmap (["bd", "sd", "clap"]!!)  -- !! takes a list on the left and an index on the right, then returns the item at that index.
+-- MarkovPat is broken.  It does not follow the probability matrix.
+do
+  d1 $ "hc"
+  d2 $ s $ fmap (["bd", "sd", "clap"]!!)  -- !! takes a list on the left and an index on the right, then returns the item at that index.
        $ markovPat 4 0 [
-           [0.1,  0.7, 0.2],
+           [0, 1, 0],
            [0.15, 0.1, 0.8],
            [0.5, 0.3, 0.4]
          ]

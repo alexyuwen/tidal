@@ -166,13 +166,13 @@ do
 
 -- Select.  Choose between a list of patterns using a pattern of floats (from 0 to 1).
 -- With three or more patterns, just use integer indices divided by (n - 1) where n is number of patterns.
-do
+let
+pat1 = bite 5 "0 1 2 3 4 2 3 4" $ arpg $ n "c'min'5"
+pat2 = fast 8 $ n (scale "minor" "2 1 . 0") # octave 6
+in do
   d1 "cp"
-  d2 $ select (listToPat $ map (/1) [0, 0, 0, 0, 1, 0, 0, 0]) [ -- If there were three patterns, then map (/2).
-    bite 5 "0 1 2 3 4 2 3 4" $ arpg $ n "c'min'5",
-    fast 8 $ n (scale "minor" "2 1 . 0") # octave 6
-    ] # s "violin"
-
+  d2 $ select (listToPat $ map (/1) [0, 0, 0, 0, 1, 0, 0, 0]) [pat1, pat2] # s "violin"  -- If there were three patterns, then map (/2).
+  d2 $ select ((/1) <$> "0 0 0 0 1 0 0 0") [pat1, pat2] # s "violin" -- Equivalent to above, but more concise.
 
 -- Cat.
 d1 $ cat ["hc(3,8)", "hc(9,16,7)"]
@@ -434,7 +434,7 @@ in do
   d2 $ n (scale "minor" $ sew "1 1 1 [1 0]" baseNotes $ notes 0) # octave 4 # s "organTonewheel3" -- Insert ornament with sew.
 
 -- Squeeze.  Choose between a list of patterns using a pattern of integers.
--- Note that each pattern is played entirely within each cycle.
+-- Squeezes patterns into each cycle, unlike Select.
 d2 $ n (squeeze "0 . 1 1" [listToPat [0, 7], fastcat [2, 3]]) # s "organTonewheel3" -- listToPat and fastcat do the same thing here.
 
 -- <$>.  Infix synonym for fmap.  fmap f x === f <$> x
@@ -456,6 +456,17 @@ do
   d1 "cp"
   d2 $ rot 1 $ n (scale "minor" "0 4 ~ [2 4]") # s "violin"
 
+-- Sew vs Select for switching between two patterns.
+let
+scramblePat = "1 2 3 0 . 1 2 1 0 . 1 0 1 2 . 3 2 1 0"
+arpPat = n (bite 8 (scramble 4 scramblePat) $ arpg $ "c4'min'8'i2") # s "violin"
+scalePat = n (bite 4 (scramble 4 scramblePat) $ (scale "minor" "-3 0 1 2")) # s "violin"
+in do
+  d1 $ "cp"
+  d2 $ sew (segment 2 $ choose [False, True]) arpPat scalePat -- Randomly switch between two patterns.
+  d2 $ select (segment 2 $ irand 2) [arpPat, scalePat]  -- Equivalent to above.
+  d2 $ sew "t t t f" arpPat scalePat -- Switch between two patterns, non-randomly.
+  d2 $ select "0 0 0 1" [arpPat, scalePat] -- Equivalent to above.
 
 
 

@@ -21,22 +21,36 @@ do
 
 let
 scramblePat = "1 2 3 0 . 1 2 1 0 . 1 0 1 2 . 3 2 1 0"
-scramblePat2 = fast 8 $ "3 2 . 1"
+arpPat = n (bite 8 (scramble 4 scramblePat) $ arpg $ "c4'min'8'i2") # s "violin"
+scalePat = n (bite 4 (scramble 4 scramblePat) $ (scale "minor" "-3 0 1 2")) # s "violin"
+combinedPat = select (segment 2 $ irand 2) [ -- Find other ways to do this.  Switch between just two patterns.
+  arpPat,
+  scalePat
+  ]
+fastPat = fast 8 $ "3 2 . 1"
 in do
   d1 $ "cp"
-  d2 $ n (bite 8 (scramble 4 scramblePat) $ arpg $ "c4'min'8'i2") # s "violin"
-  d2 $ n (bite 4 (scramble 4 scramblePat) $ (scale "minor" "-3 0 1 2")) # s "violin"
-  -- Switch between two patterns
+  d2 $ combinedPat
 
 
 
--- TODO: Try to change array to segment $ rand
-do
-  d1 "cp"
-  d2 $ select (listToPat $ map (/1) [0, 0, 0, 0, 1, 0, 0, 0]) [ -- If there were three patterns, then map (/2).
-    bite 5 "0 1 2 3 4 2 3 4" $ arpg $ n "c'min'5",
-    fast 8 $ n (scale "minor" "2 1 . 0") # octave 6
-    ] # s "violin"
+
+
+
+
+
+
+let
+tones = "1 2 3 0 . 1 2 1 0 . 1 0 1 2 . 3 2 1 0"
+arpPat = n (bite 8 (scramble 4 tones) $ arpg $ "c4'min'8'i2") # s "violin"
+scalePat = n (bite 4 (scramble 4 tones) $ (scale "minor" "-3 0 1 2")) # s "violin" -- Use custom arpeggio
+combinedPat = select (segment 2 $ irand 2) [arpPat, scalePat]
+fastPat = fast 8 $ n (scale "minor" "2 1 . 0") # s "violin"
+in do
+  d1 $ "cp"
+  d2 $ sew "t f" combinedPat fastPat
+
+
 
 
 

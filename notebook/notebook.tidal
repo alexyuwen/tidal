@@ -133,6 +133,15 @@ chordList
 -- As such, you can't normally use mininotation there.  A supposed workaround is innerJoin but that isn't working.
 d1 $ rolledBy (choose [0.25, 0.5, 0.7]) $ n "df'maj'5" # s "supervibe" # room 0.5
 
+-- These two examples are identical.
+let
+scramblePat = "1 2 3 0 . 1 2 1 0 . 1 0 1 2 . 3 2 1 0"
+scrambleList = ["1 2 3 0", "1 2 1 0", "1 0 1 2", "3 2 1 0"]
+in do
+  d1 $ "cp"
+  d2 $ n (bite 4 (scramble 4 scramblePat) $ (scale "minor" "-3 0 1 2")) # s "violin"
+  d2 $ fast 4 $ n (bite 4 (unwrap $ segment 1 $ choose scrambleList) $ (scale "minor" "-3 0 1 2")) # s "violin"
+
 -- Segment + choose.
 d1 $ segment 16 $ n (6 * rand) |+ n (segment 3 $ choose [0, 10, 20]) # s "supervibe" # legato 0.5
 
@@ -380,11 +389,15 @@ d1 $ stack [
 
 -- Stitch.
 -- Stitch gets the structure from the binary pattern, whereas Sew gets it from the two source patterns.
-d1 $ stitch "t(3,8)" (n 0 # s "supervibe") (s "snare:4")
+do
+  d1 "cp"
+  d2 $ stitch "t(3,8)" (n 0 # s "supervibe") (s "snare:4")
 
 -- Sew.  Uses a binary pattern to switch between two other patterns.
 -- Stitch gets the structure from the binary pattern, whereas Sew gets it from the two source patterns.
-d1 $ sew "t(3,8)" (segment 16 $ n 0 # s "supervibe") ("sd*8")
+do
+  d1 "cp"
+  d2 $ sew "t(3,8)" (segment 16 $ n 0 # s "supervibe") ("sd*8")
 
 -- Generating a tone with segment.
 d1 $ segment 90 $ n 0 # octave 1 # s "acidOto3091" # gain 2
@@ -426,5 +439,23 @@ d2 $ n (squeeze "0 . 1 1" [listToPat [0, 7], fastcat [2, 3]]) # s "organTonewhee
 
 -- <$>.  Infix synonym for fmap.  fmap f x === f <$> x
 d1 $ bite 8 (segment 8 $ floor <$> range 0 8 perlin) $ arpg $ n "c'min'8" # s "violin"
+
+-- Iter.  Divides pattern into subdivisions, and increments the starting subdivision each cycle.  Wraps around to the first subdivision after the last.
+do
+  d1 "cp"
+  d2 $ iter 4 $ n (scale "minor" "0 1 . 2 . 2 1 . 0") # s "violin"
+
+-- Iter'.  Iter, but in the other direction.  Decrements the starting subdivision each cycle.  Wraps around to the last subdivision after the first.
+-- I think Iter' is more cohesive than Iter because the last segment of the last variation is always immediately repeated.
+do
+  d1 "cp"
+  d2 $ iter' 4 $ n (scale "minor" "0 1 . 2 . 2 1 . 0") # s "violin"
+
+-- Rot.  Rotates the values (not rests) in a pattern while preserving structure.  Increments starting position by rotation amount.
+do
+  d1 "cp"
+  d2 $ rot 1 $ n (scale "minor" "0 4 ~ [2 4]") # s "violin"
+
+
 
 

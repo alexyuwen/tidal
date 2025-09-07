@@ -11,7 +11,38 @@ do
     ] # s "violin"
   d3 $ bite 8 (segment "16" $ irand 4) $ arpg $ n "c'min'8" # s "violin"
   d3 $ bite 8 (fast 4 $ shuffle 4 $ run 4) $ arpg $ n "c'min'8" # s "violin"  -- Still repeats notes sometimes every quarter cycle.
+  d3 $ select (iter 8 $ listToPat $ map (/1) [0, 0, 0, 0, 0, 0, 1, 1]) [
+    bite 8 "2 0 1 2 3 2 1 2" $ arpg $ n "'min'8" |+ n "c5",
+    fast 4 $ n (scale "minor" "0 1 2 1") |+ n "c5"
+    ] # s "violin"
+  d3 $ n (sew "t(3,8,[0|1|2|3|4|5|6|7])" (arp "updown" "c'min'5") (fast 2 $ arp "updown" "c'min'5")) # s "violin"
 
+
+
+let
+scramblePat = "1 2 3 0 . 1 2 1 0 . 1 0 1 2 . 3 2 1 0"
+scramblePat2 = fast 8 $ "3 2 . 1"
+in do
+  d1 $ "cp"
+  d2 $ n (bite 8 (scramble 4 scramblePat) $ arpg $ "c4'min'8'i2") # s "violin"
+  d2 $ n (bite 4 (scramble 4 scramblePat) $ (scale "minor" "-3 0 1 2")) # s "violin"
+  -- Switch between two patterns
+
+
+
+-- TODO: Try to change array to segment $ rand
+do
+  d1 "cp"
+  d2 $ select (listToPat $ map (/1) [0, 0, 0, 0, 1, 0, 0, 0]) [ -- If there were three patterns, then map (/2).
+    bite 5 "0 1 2 3 4 2 3 4" $ arpg $ n "c'min'5",
+    fast 8 $ n (scale "minor" "2 1 . 0") # octave 6
+    ] # s "violin"
+
+
+
+do
+  d1 $ "cp"
+  d2 $ slow 2 $ striate 16 $ loopAt 1 $ s "break:1 !"
 
 
 

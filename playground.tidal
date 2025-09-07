@@ -4,8 +4,21 @@ do
   d3 $ fast 2 $ bite 3 "2 0 1 0" $ arpg $ n ("<c5 g4>" |+ "'min") # s "violin"
   d3 $ bite 4 "2 0 1 2 . [3] [2 1 0]@1.5" $ arpg $ n ("<c5 g4>" |+ "'min'4") # s "violin"
   d3 $ bite 3 ("1 . 1 1" |+ (irand 3)) $ arpg $ n ("<c5 g4>" |+ "'min") # s "violin"
+  d3 $ bite 8 "2 0 1 2 . [3] [2 1 0]@1.5" $ arpg $ n ("<c5 g5>" |+ "<'min'8'i2 'min'8>") # s "violin"
+  d3 $ select (segment 4 $ irand 2) [
+    bite 8 "2 0 1 2 3 2 1 2" $ arpg $ n "'min'8" |+ n "c5",
+    fast 2 $ n (scale "minor" "[0 1] 2 [2 1] 0") |+ n "c5"
+    ] # s "violin"
+  d3 $ bite 8 (segment 16 $ irand 3) $ arpg $ n "c'min'8" # s "violin"  -- Is there irand but without repeating the same choice?
 
 
+
+
+
+
+do
+  d1 "cp"
+  d2 $ slow 2 $ every 2 $ striate "<1 2>" $ loopAt 1 $ s "break:1!2"
 
 
 

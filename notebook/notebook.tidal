@@ -156,10 +156,10 @@ do
     ]) # s "violin"
 
 -- Select.  Choose between a list of patterns using a pattern of floats (from 0 to 1).
--- With three or more patterns, just use integer indices divided by number of patterns.
+-- With three or more patterns, just use integer indices divided by (n - 1) where n is number of patterns.
 do
   d1 "cp"
-  d2 $ select (listToPat [0, 0, 0, 0, 1, 0, 0, 0]) [
+  d2 $ select (listToPat $ map (/1) [0, 0, 0, 0, 1, 0, 0, 0]) [ -- If there were three patterns, then map (/2).
     bite 5 "0 1 2 3 4 2 3 4" $ arpg $ n "c'min'5",
     fast 8 $ n (scale "minor" "2 1 . 0") # octave 6
     ] # s "violin"
@@ -421,7 +421,7 @@ in do
 -- Note that each pattern is played entirely within each cycle.
 d2 $ n (squeeze "0 . 1 1" [listToPat [0, 7], fastcat [2, 3]]) # s "organTonewheel3" -- listToPat and fastcat do the same thing here.
 
-
-
+-- <$>.  Infix synonym for fmap.  fmap f x === f <$> x
+d1 $ bite 8 (segment 8 $ floor <$> range 0 8 perlin) $ arpg $ n "c'min'8" # s "violin"
 
 

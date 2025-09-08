@@ -457,16 +457,19 @@ do
   d2 $ rot 1 $ n (scale "minor" "0 4 ~ [2 4]") # s "violin"
 
 -- Sew vs Select for switching between two patterns.
+-- I prefer select for all three cases.
 let
 scramblePat = "1 2 3 0 . 1 2 1 0 . 1 0 1 2 . 3 2 1 0"
 arpPat = n (bite 8 (scramble 4 scramblePat) $ arpg $ "c4'min'8'i2") # s "violin"
-scalePat = n (bite 4 (scramble 4 scramblePat) $ (scale "minor" "-3 0 1 2")) # s "violin"
+scalePat = n (bite 4 (scramble 4 scramblePat) $ (scale "minor" "-3 0 1 2")) # s "violin" -- Pitch set.  Arpeggio generalized.
 in do
   d1 $ "cp"
-  d2 $ sew (segment 2 $ choose [False, True]) arpPat scalePat -- Randomly switch between two patterns.
-  d2 $ select (segment 2 $ irand 2) [arpPat, scalePat]  -- Equivalent to above.
-  d2 $ sew "t t t f" arpPat scalePat -- Switch between two patterns, non-randomly.
-  d2 $ select "0 0 0 1" [arpPat, scalePat] -- Equivalent to above.
+  d2 $ sew "t t t f" arpPat scalePat -- Non-random.
+  d2 $ select "0 0 0 1" [arpPat, scalePat]
+  d2 $ sew (segment 2 $ choose [False, True]) arpPat scalePat -- Random.
+  d2 $ select (segment 2 $ irand 2) [arpPat, scalePat]
+  d2 $ sew (segment 2 $ wchoose [(True, 1), (False, 3)]) arpPat scalePat -- Random, with weighted probabilities.
+  d2 $ select (segment 2 $ wchoose [(0, 1), (1, 3)]) [arpPat, scalePat]
 
 
 

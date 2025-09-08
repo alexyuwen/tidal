@@ -75,7 +75,14 @@ in do
   d1 $ loopAt (stack $ loopAts) $ splice 1024 "177..1023" $ s "londynn"
   d1 $ chop 1024 $ loopAt 4 $ s "londynn"
 
-
+-- Bass line.
+let
+bass1 = "[0 . ~ -3]*4"
+bass2 = "[0 ~ -3 ~]*4"
+bass3 = "0*4"
+in do
+  d1 "cp"
+  d2 $ n (scale "minor" $ select (segment 4 $ "1") [bass1, bass2, bass3]) # octave 3 # s "moogBass" # gain 1.8
 
 
 

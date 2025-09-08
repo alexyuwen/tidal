@@ -479,7 +479,10 @@ do
   d1 "cp"
   d2 $ while "f(3,8)" (ply 2) $ n (scale "minor" $ run 8) # s "violin"
 
-
+-- Smooth.  Takes a pattern of numbers and linearly goes from one to the next, passing through all of them.  Goes smoothly from the last number to the first.
+do
+  d1 "cp"
+  d2 $ n (run 16 |% 8) # s "supervibe" # gain (smooth "<0.5 0.75 1>")
 
 
 

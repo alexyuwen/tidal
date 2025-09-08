@@ -4,6 +4,7 @@ arpPat = n (bite 8 (scramble 4 tones) $ arpg $ "c4'min'8'i2") # s "violin"
 scalePat = n (bite 4 (scramble 4 tones) $ (scale "minor" "-3 0 1 2")) # s "violin"
 combinedPat = select (segment 2 $ irand 2) [arpPat, scalePat]
 fastPat = fast 4 $ n (scale "minor" "0 [2 1 . 0]") # s "violin"
+arpPatSlow = slow 4 $ n (bite 8 tones $ arpg $ "c4'min'8'i2") # s "violin" # vowel "u"
 drumStart = "[0 0 0?0.8 0?0.2]*4"
 drumMiddle = "<[0|4] [2|4]>*8"
 in do
@@ -13,6 +14,8 @@ in do
   d4 $ select (segment 8 $ wchoose [(0, 4), (1, 1)]) [combinedPat, fastPat]
   d4 $ select ((/2) <$> "<[2 1 0 0] [2 1 1 <1 2>]>") [arpPat, scalePat, slow 2 $ (<~) (1/8) fastPat]
   d4 $ while "f(3,8)" (ply 2) $ slow 2 $ n (bite 4 tones $ (scale "minor" "-3 0 1 2")) # s "violin"
+  d4 $ slow 4 $ n (bite 4 tones $ (scale "minor" "-3 0 1 2")) # s "violin"
+  d4 $ select (segment 4 $ wchoose [(0, 5), (1, 1)]) [arpPatSlow, slow 2 $ fastPat # vowel "u"] -- Is it possible to alternate the wchoose with a another choose, as the index selection?
 
 
 :t while

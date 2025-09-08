@@ -9,13 +9,13 @@ drumMiddle = "<[0|4] [2|4]>*8"
 in do
   d1 $ "cp"
   d2 $ n "c2" # s "organDonor" # gain 1.5
-  d3 $ select (segment 8 $ wchoose [(0, 4), (1, 1)]) [combinedPat, fastPat]
-  d3 $ select ((/2) <$> "<[2 1 0 0] [2 1 1 <1 2>]>") [arpPat, scalePat, slow 2 $ (<~) (1/8) fastPat]
-  d4 $ slice 8 (select ("0 1 1 1?0.2") [drumStart, drumMiddle]) $ loopAt 1 $ s "break:4" # cut 1
+  -- d3 $ slice 8 (select ("0 1 1 1?0.2") [drumStart, drumMiddle]) $ loopAt 1 $ s "break:4" # cut 1 # gain "1.1 1 1 1"
+  d4 $ select (segment 8 $ wchoose [(0, 4), (1, 1)]) [combinedPat, fastPat]
+  d4 $ select ((/2) <$> "<[2 1 0 0] [2 1 1 <1 2>]>") [arpPat, scalePat, slow 2 $ (<~) (1/8) fastPat]
+  d4 $ while "f(3,8)" (ply 2) $ slow 2 $ n (bite 4 tones $ (scale "minor" "-3 0 1 2")) # s "violin"
 
 
-
-
+:t while
 
 
 
@@ -27,7 +27,7 @@ in do
   d2 $ splice 8 (segment 8 $ choose [2, 4]) $ s "break:4"
   d2 $ splice 8 (segment 8 $ choose [0, 4]) $ s "break:4"
   d2 $ slice 8 "[0 0 0? 0?] <[0|4]*6 [2|4]*6>@3" $ loopAt 1 $ s "break:4" # cut 1
-  d2 $ slice 8 (select ("0 1 1 1?0.2") [drumStart, drumMiddle]) $ loopAt 1 $ s "break:4" # cut 1 -- Equivalent to above, but with more potential for growth.
+  d2 $ slice 8 (select ("0 1 1 1?0.2") [drumStart, drumMiddle]) $ loopAt 1 $ s "break:4" # cut 1 # gain "1.1 1 1 1" -- Equivalent to above, but with more potential for growth.
 
 
 

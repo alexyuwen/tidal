@@ -383,8 +383,8 @@ d1 $ s "sax:0" # speed "<1 2 3 4>" # cut 1
 -- Mask.  Uses a binary pattern to mask another pattern.
 -- Note that Mask only masks events.  Sustained sounds will not be masked, even with cut 1.
 d1 $ stack [
-  mask "1 . [0 1] 1" $ segment 16 $ n (range 0 12 rand) # s "supervibe",
-  "cp"
+  "cp",
+  mask "1 . [0 1] 1" $ segment 16 $ n (range 0 12 rand) # s "supervibe"
 ]
 
 -- Stitch.
@@ -473,6 +473,19 @@ in do
   d2 $ select (segment 2 $ wchoose [(0, 1), (1, 3)]) [arpPat, scalePat]
   d2 $ sew (segment 2 $ "t|f|f|f") arpPat scalePat -- Random, with weighted probabilities, with mininotation.
   d2 $ select (segment 2 $ "0|1|1|1") [arpPat, scalePat]
+
+-- While.  Applies function based on boolean structure.
+do
+  d1 "cp"
+  d2 $ while "f(3,8)" (ply 2) $ n (scale "minor" $ run 8) # s "violin"
+
+
+
+
+
+
+
+
 
 
 

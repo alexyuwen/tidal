@@ -21,6 +21,7 @@ in do
 
 
 
+
 let
 drumStart = "[0 0 0?0.8 0?0.2]*4"
 drumMiddle = "<[0|4] [2|4]>*8"
@@ -36,6 +37,8 @@ in do
 
 once "break:4"
 
+d1 $ splice 16 "2*16" $ "break:4"
+
 -- Isolate segments of drum break.
 -- 0 and 3 are same.  cymbal + bd on strong beats
 -- 2 and 6 are same.  sd on strong beats
@@ -44,15 +47,23 @@ once "break:4"
 let
 m = 16
 randSlice = irand $ div m 2
+striateBeat = slow 2 $ striate 16 $ loopAt 1 $ s "break:4 !"
 randBeat = slice m (stitch (fast (m/2) $ "t f") (2 * randSlice) (2 * randSlice + 1)) $ loopAt 1 $ s "break:4"
+randBeatUr = ur 2 "randBeat" [
+  ("randBeat", randBeat)
+  ] []
+randCymbals = slice 16 "[1|2|7|8|13|14]*16" $ loopAt 1 $ s "break:4"
 in do
   d1 "cp"
-  d2 $ n "c2" # s "organDonor" # gain 1.5
-  d3 $ slow 2 $ striate 16 $ loopAt 1 $ s "break:4 !"
-  d3 $ randBeat
-  d3 $ seqPLoop [
-    (0, 1, randBeat)
-    ]
+  -- d2 $ n "c2" # s "organDonor" # gain 1.5
+  d3 $ striateBeat
+  d3 $ ur 4 "striateBeat _ _ _ . striateBeat _ _ _" [
+    ("striateBeat", striateBeat),
+    ("randBeat", randBeat)
+    ] []
+
+
+
 
 
 
@@ -61,7 +72,7 @@ in do
 -- Build a solo like a story, using only two patterns: gallop and hemiolia.
 let
 hemiola = splice 8 (fast (8/3) $ "[0|0|2] 1 [5|7|7]") $ s "break:4"
-gallop = fast 2 $ shuffle 2 $ slice 8 "0@3 2 . 0 2" $ loopAt 1 $ s "break:4"  -- How to add bass line onto gallop?
+gallop = fast 2 $ shuffle 2 $ slice 8 "0@3 2 . 0 2" $ loopAt 1 $ s "break:4"
 time = slow 2 $ striate 16 $ loopAt 1 $ s "break:4 !"
 silence = "~*8"
 in do
@@ -77,15 +88,6 @@ in do
 
 
 
--- Scale that speeds up on the way up and slows down on the way down.
-
-
-
--- Smooth transition between vowels.
-
-
-
--- "Double" instruments as a way of creating different sounds.  For example: violin + organ
 
 
 

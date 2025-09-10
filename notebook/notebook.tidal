@@ -412,20 +412,20 @@ do
   d1 "cp"
   d2 $ segment 8 $ n (unwrap $ wchoose [("0 1", 3), ("7 8", 1)]) # s "supervibe"
 
--- Spread.  Cycle through different values for pattern transformation.  Useful if the transformation function does not accept pattern input.
+-- Spread.  Spreads a function across several values.  Useful if the function doesn't accept pattern input.
 -- These two examples are equivalent.
-d1 $ spread fast[2,3] $ sound "[hc . hc hc]"  -- This example isn't useful, because fast does accept pattern input.
-d1 $ fast "<2 3>" $ sound "[hc . hc hc]"
+d1 $ spread fast[2,3] $ s "[hc . hc hc]"  -- This example isn't useful, because fast does accept pattern input.
+d1 $ fast "<2 3>" $ s "[hc . hc hc]"
 
--- Spreadf.  Shorthand for Spread ($)
+-- Spreadf.  Shorthand for Spread ($), which lets you put different functions as the list of values.
 -- These two examples are equivalent.
-d1 $ spreadf [fast 1, fast 2, fast 3, fast 4] $ sound "[hc . hc hc]"
-d1 $ spread ($) [fast 1, fast 2, fast 3, fast 4] $ sound "[hc . hc hc]"
+d1 $ spreadf [fast 1, fast 2, fast 3, fast 4] $ s "[hc . hc hc]"
+d1 $ spread ($) [fast 1, fast 2, fast 3, fast 4] $ s "[hc . hc hc]"
 
 -- SpreadChoose.  Spread, but select values randomly.
 -- SpreadR is alias.
-d1 $ spreadChoose fast[1,2,3,4] $ sound "[hc . hc hc]"
-d1 $ spreadr fast[1,2,3,4] $ sound "[hc . hc hc]"
+d1 $ spreadChoose fast[1,2,3,4] $ s "[hc . hc hc]"
+d1 $ spreadr fast[1,2,3,4] $ s "[hc . hc hc]"
 
 -- Haskell function definition.
 let

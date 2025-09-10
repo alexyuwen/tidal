@@ -132,3 +132,18 @@ do
   d1 "cp"
   d2 $ slice 8 (segment 8 $ unwrap $ wchoose [("<[0 1] [2 3]>", 3), ("<[4 5] [6 7]>", 1)]) $ loopAt 1 "break:4"
 
+-- Random slices, but keep even slices on even beats and odd slices on odd beats.
+let
+m = 4
+randSlice = irand $ div m 2
+in do
+  d1 "cp"
+  d2 $ slice m (stitch (fast (m/2) $ "t f") (2 * randSlice) (2 * randSlice + 1)) $ loopAt 1 $ s "break:4"
+
+
+
+
+
+
+
+

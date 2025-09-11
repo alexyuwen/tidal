@@ -13,7 +13,7 @@ in do
   d3 $ slice 8 (select ("0?0.1 1 1 [1?0.2 1]") [drumStart, drumMiddle]) $ loopAt 1 $ s "break:4" # cut 1 # gain "1.1 1 1 1"
   d4 $ select (segment 8 $ wchoose [(0, 4), (1, 1)]) [combinedPat, fastPat]
   d4 $ select ((/2) <$> "<[[2|2|2|0|1] 1 0 1] [[2|2|2|0|1] 1 <0 1> <1 2>]>") [arpPat, scalePat, slow 2 $ (<~) (1/8) fastPat] # s "violin" # vowel "o"
-  -- d4 $ while "f(3,8)" (ply 2) $ slow 2 $ n (bite 4 tones $ (scale "minor" "-3 0 1 2")) # s "violin"
+  -- d4 $ while "f(3,8)" (ply 2) $ slow 2 $ n </1>(bite 4 tones $ (scale "minor" "-3 0 1 2")) # s "violin"
   -- d4 $ slow 4 $ n (bite 4 tones $ (scale "minor" "-3 0 1 2")) # s "violin"
   -- d4 $ select (segment 4 $ wchoose [(0, 5), (1, 1)]) [arpPatSlow, slow 2 $ fastPat # vowel "u"] # s "violin" -- Is it possible to alternate the wchoose with a another choose, as the index selection?
 
@@ -22,22 +22,10 @@ in do
 
 
 
-let
-drumStart = "[0 0 0?0.8 0?0.2]*4"
-drumMiddle = "<[0|4] [2|4]>*8"
-in do
-  d1 "cp"
-  d2 $ splice 8 (segment 8 $ choose [2, 4]) $ s "break:4"
-  d2 $ splice 8 (segment 8 $ choose [0, 4]) $ s "break:4"
-  d2 $ slice 8 "[0 0 0? 0?] <[0|4]*6 [2|4]*6>@3" $ loopAt 1 $ s "break:4" # cut 1
-  d2 $ slice 8 (select ("0?0.2 1 1 [1?0.2 1]") [drumStart, drumMiddle]) $ loopAt 1 $ s "break:4" # cut 1 # gain "1.1 1 1 1" -- Equivalent to above, but with more potential for growth.
-
-
-
-
 once "break:4"
 
-d1 $ splice 16 "2*16" $ "break:4"
+do
+  d2 $ loopAt 1.2 $ "break:4"
 
 -- Isolate segments of drum break.
 -- 0 and 3 are same.  cymbal + bd on strong beats
@@ -86,6 +74,17 @@ in do
 
 
 
+
+
+-- Ornaments.
+let
+melody = ply 2 $ n (scale "major" "<[0..3] [4..7] [6..3] [2 1 . 0]>") |+ n "d5" # s "violin, organTonewheel3"
+ornaments = []
+chords = []
+bass = []
+in do
+  d1 "cp"
+  d2 $ melody
 
 
 

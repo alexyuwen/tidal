@@ -46,19 +46,4 @@ in do
 
 
 
--- How to time-shift by random amount, without breaking the thing being shifted?
--- Problem is the random amount is generated in the middle of the thing.
-let
-tetraChord = fastcat [
-  n $ scale "minor" "0 1 2 4",
-  n $ scale "minor" "0 1 2 4" + 12,
-  n $ scale "minor" "0 1 2 4" + 24,
-  n $ scale "minor" "0 1 2 _" + 36
-  ]
-pat = tetraChord # s "supervibe" # legato 8 # lpf 999 # vowel "o"
-in do
-  d1 "cp"
-  d2 $ (<~) (segment 0.75 $ rand) $ whenmod 2 1 (const silence) $ pat
-
-
 

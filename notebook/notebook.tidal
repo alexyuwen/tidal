@@ -206,6 +206,19 @@ d1 $ seqPLoop [
 -- Time shifting using <~ and ~>.  The arrow direction indicates which way the pattern shifts.
 d1 $ every 2 ((1/8) <~) $ n (scale "minor" "0 3 1 2") # s "supervibe"
 
+-- Time shifting by random amount.
+let
+tetraChord = fastcat [
+  n $ scale "minor" "0 1 2 4",
+  n $ scale "minor" "0 1 2 4" + 12,
+  n $ scale "minor" "0 1 2 4" + 24,
+  n $ scale "minor" "0 1 2 _" + 36
+  ]
+pat = tetraChord # s "supervibe" # legato 8 # lpf 999 # vowel "o"
+in do
+  d1 "cp"
+  d2 $ (<~) ((<~) 1 $ segment 0.5 $ rand) $ whenmod 2 1 (const silence) $ pat -- (<~) 1 makes sure random value isn't generated in middle of pattern
+
 -- Ratio shorthand (mini notation) using %.
 -- These three examples are equivalent.
 d1 $ "supervibe:0*8" # cps ("<8%10 16%10>")

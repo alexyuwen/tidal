@@ -94,19 +94,6 @@ in do
 
 
 
--- Random notes, but hardcoded.
-let
-randOffset = (segment 1 $ (irand 11) - 5)
-randTones = loopFirst $ (fast 2.1 . irand) 8 + "7..0" -- Change the "fast" argument to generate a new random sequence.
-randNotes = n (segment 8 $ scale "minor" randTones + ("c6" + randOffset))
-fixedNotes = n (scale "minor" "0 2 4 7" + ("c6" + randOffset))
-in do
-  d1 "cp"
-  d2 $ n "c5" |+ n randOffset # s "superpiano" # gain 1.2
-  d3 $ randNotes # s "violin"
-  d3 $ fastcat [fixedNotes, randNotes] # s "violin"
-  d3 $ fixedNotes # s "violin"
-
 
 
 

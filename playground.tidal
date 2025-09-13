@@ -7,10 +7,16 @@ fastPat = fast 4 $ n (scale "minor" "0 [2 1 . 0]")
 arpPatSlow = slow 4 $ n (bite 8 tones $ arpg $ "c4'min'8'i2")
 drumStart = "[0 0 0?0.8 0?0.2]*4"
 drumMiddle = "<[0|4] [2|4]>*8"
+tetraChord = fastcat [
+  n $ scale "minor" "0 1 2 4",
+  n $ scale "minor" "0 1 2 4" + 12,
+  n $ scale "minor" "0 1 2 4" + 24,
+  n $ scale "minor" "0 1 2 _" + 36
+  ]
 in do
   d1 $ "cp"
-  d2 $ n "c2" # s "organDonor" # gain 1.5
-  d3 $ slice 8 (select ("0?0.1 1 1 [1?0.2 1]") [drumStart, drumMiddle]) $ loopAt 1 $ s "break:4" # cut 1 # gain "1.1 1 1 1"
+  d2 $ slow 4 $ n "c2" # s "organDonor" # gain 1.6
+  d3 $ slice 8 (select ("0?0.1 1 1 [1?0.2 1]") [drumStart, drumMiddle]) $ loopAt 1 $ s "break:4" # cut 1 # gain "1.25 1.12@3"
   d4 $ select (segment 8 $ wchoose [(0, 4), (1, 1)]) [combinedPat, fastPat]
   d4 $ select ((/2) <$> "<[[2|2|2|0|1] 1 0 1] [[2|2|2|0|1] 1 <0 1> <1 2>]>") [arpPat, scalePat, slow 2 $ (<~) (1/8) fastPat] # s "violin" # vowel "o"
   -- d4 $ while "f(3,8)" (ply 2) $ slow 2 $ n </1>(bite 4 tones $ (scale "minor" "-3 0 1 2")) # s "violin"
@@ -21,8 +27,6 @@ in do
 
 
 
-
-once "break:4"
 
 do
   d2 $ loopAt 1.2 $ "break:4"
@@ -93,17 +97,22 @@ in do
 -- Random notes, but hardcoded.
 let
 randOffset = (segment 1 $ (irand 11) - 5)
-randNotes = loopFirst $ (fast 1.2 . irand) 8 + "7..0" -- Change the "fast" argument to generate a new random sequence.
+randTones = loopFirst $ (fast 2.1 . irand) 8 + "7..0" -- Change the "fast" argument to generate a new random sequence.
+randNotes = n (segment 8 $ scale "minor" randTones + ("c6" + randOffset))
+fixedNotes = n (scale "minor" "0 2 4 7" + ("c6" + randOffset))
 in do
   d1 "cp"
   d2 $ n "c5" |+ n randOffset # s "superpiano" # gain 1.2
-  d3 $ "[1!4]@1.25 [1!4] [1!4]@0.75" # n (scale "minor" randNotes) |+ n ("c6" + randOffset) # s "violin"
-  d3 $ off (1/16) (|+ n (scale "minor" "4, 2")) $ n (segment 8 $ scale "minor" randNotes) |+ n ("c6" + randOffset) # s "violin"
+  d3 $ randNotes # s "violin"
+  d3 $ fastcat [fixedNotes, randNotes] # s "violin"
+  d3 $ fixedNotes # s "violin"
 
 
 
 
-
+do
+  d1 "cp"
+  d2 $ "[1@0.7 1]*4" # n (run 8) # s "violin"
 
 
 

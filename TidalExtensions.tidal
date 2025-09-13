@@ -1,0 +1,8 @@
+-- This file contains my custom functions loaded in BootTidal.hs (ghci -e Paths_tidal.getDataDir)
+-- By having this file duplicated here, I can check it into git.
+
+truncStart :: Pattern Time -> Pattern a -> Pattern a
+truncStart = patternify' _truncStart
+
+_truncStart :: Time -> Pattern a -> Pattern a
+_truncStart t = compress (t, 1) . zoomArc (Arc t 1)

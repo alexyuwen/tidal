@@ -540,6 +540,19 @@ in do
   d1 "cp"
   d2 $ n chords # s "violin"
 
+-- Random notes, but hardcoded.
+let
+randOffset = (segment 1 $ (irand 11) - 5)
+randNotes = loopFirst $ (fast 1.3 . irand) 8 + "7..0" -- Change the "fast" argument to generate a new random sequence.
+in do
+  d1 "cp"
+  d2 $ n "c5" |+ n randOffset # s "superpiano" # gain 1.2
+  d3 $ n (scale "minor" (segment "16|12|15|17" $ randNotes)) |+ n ("c6" + randOffset + (scale "minor" "0, -3, -5")) # s "violin"
+
+
+
+
+
 
 
 

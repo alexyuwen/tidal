@@ -78,13 +78,29 @@ in do
 
 -- Ornaments.
 let
-melody = ply 2 $ n (scale "major" "<[0..3] [4..7] [6..3] [2 1 . 0]>") |+ n "d5" # s "violin, organTonewheel3"
-ornaments = []
+ornaments = fast 4 "[0.5 0 _ 0.5 . 0]"
+melody = ply 2 $ n (slow 8 $ scale "major" "[0..7] . [6..1]@3 0") |+ n "d5" + n (sew "t f t f" "0" ornaments) # s "organTonewheel3"
 chords = []
 bass = []
 in do
   d1 "cp"
   d2 $ melody
+
+
+
+
+
+-- Random notes, but hardcoded.
+let
+randOffset = (segment 1 $ (irand 11) - 5)
+randNotes = loopFirst $ (fast 1.2 . irand) 8 + "7..0" -- Change the "fast" argument to generate a new random sequence.
+in do
+  d1 "cp"
+  d2 $ n "c5" |+ n randOffset # s "superpiano" # gain 1.2
+  d3 $ "[1!4]@1.25 [1!4] [1!4]@0.75" # n (scale "minor" randNotes) |+ n ("c6" + randOffset) # s "violin"
+  d3 $ off (1/16) (|+ n (scale "minor" "4, 2")) $ n (segment 8 $ scale "minor" randNotes) |+ n ("c6" + randOffset) # s "violin"
+
+
 
 
 

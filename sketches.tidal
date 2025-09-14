@@ -116,6 +116,30 @@ in do
 
 
 
+-- Violin fiddle.
+let
+tones = "1 2 3 0 . 1 2 1 0 . 1 0 1 2 . 3 2 1 0"
+arpPat = n (bite 8 (scramble 4 tones) $ arpg $ "c4'min'8'i2")
+scalePat = n (bite 4 (scramble 4 tones) $ (scale "minor" "-3 0 1 2"))
+combinedPat = select (segment 2 $ irand 2) [arpPat, scalePat]
+fastPat = fast 4 $ n (scale "minor" "0 [2 1 . 0]")
+arpPatSlow = slow 4 $ n (bite 8 tones $ arpg $ "c4'min'8'i2")
+drumStart = "[0 0 0?0.8 0?0.2]*4"
+drumMiddle = "<[0|4] [2|4]>*8"
+tetraChord = fastcat [
+  n $ scale "minor" "0 1 2 4",
+  n $ scale "minor" "0 1 2 4" + 12,
+  n $ scale "minor" "0 1 2 4" + 24,
+  n $ scale "minor" "0 1 2 _" + 36
+  ]
+melodyPat = select ((/2) <$> "<[[0|1|2] 1 0 1] [[0|1|2] 1 <0 1> <1 2>]>") [arpPat, scalePat, slow 2 $ (<~) (1/8) fastPat] # s "violin" # vowel "o"
+melodiesPat = superimpose ((# octave 4) . (# gain 1.1) . (truncStart $ segment 1 $ range 0 0.8 rand) . (trunc $ segment 1 $ range 0.2 1 rand)) melodyPat
+in do
+  d1 $ "cp"
+  d2 $ slow 4 $ n "c2" # s "organDonor" # gain 1.6
+  d3 $ slice 8 (select ("0?0.1 1 1 [1?0.2 1]") [drumStart, drumMiddle]) $ loopAt 1 $ s "break:4" # cut 1 # gain "1.25 1.12@3"
+  d4 $ select (segment 8 $ wchoose [(0, 4), (1, 1)]) [combinedPat, fastPat]
+  d4 $ melodyPat
 
 
 

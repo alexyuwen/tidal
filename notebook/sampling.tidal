@@ -140,7 +140,26 @@ in do
   d1 "cp"
   d2 $ slice m (stitch (fast (m/2) $ "t f") (2 * randSlice) (2 * randSlice + 1)) $ loopAt 1 $ s "break:4"
 
+-- Isolate segments of drum break:4.
+-- 0 and 3 are same.  cymbal + bd on strong beats
+-- 2 and 6 are same.  sd on strong beats
+-- 1 and 4 are similar.  With 4, the accented offbeats are on sd, but with 1, they're on the bd
+-- 5 and 7 are similar.  5 is more grounded, because at least bd marks the strong beats
 
+
+-- Turn sample into palindrome.
+do
+  d1 "cp"
+  d2 $ pickF "0 1" [id, rev] $ chop 4 $ loopAt 1 $ s "break:4" -- With chop 4, you get indices 0, 1, 1, 0.
+  d2 $ pickF "0 1" [id, rev] $ chop 6 $ loopAt 1 $ s "break:4" -- On break:4 specifically, chop 6 works well.
+
+-- Cool.
+do
+  d1 $ "cp" # gain 0.8
+  d2 $ pickF "0 1" [id, fast 2] $ chop 2 $ loopAt 1 $ s "break:8" # cut 1 -- With chop 2, you get indices 0, 1, 0, 2
+  d2 $ pickF "0 1" [id, (<~) 0.25 . fast 2] $ chop 2 $ loopAt 1 $ s "break:8" # cut 1 -- With chop 2, you get indices 0, 1, 2, 0
+  d2 $ pickF "0 1" [id, fast 2] $ chop 4 $ loopAt 1 $ s "break:8" # cut 1 -- With chop 4, you get indices 0, 1, 2, 3, 0, 2, 4, 6
+  d2 $ pickF "0 1" [id, (<~) 0.125 . fast 2] $ chop 4 $ loopAt 1 $ s "break:8" # cut 1 -- With chop 4, you get indices 0, 1, 2, 3, 2, 4, 6, 0
 
 
 

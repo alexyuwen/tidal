@@ -63,7 +63,7 @@ let scale = getScale (scaleTable ++ [("microtonal", [0,1.5,3,5,7,8.5,10])])
 d1 $ slow 2 $ n (scale "microtonal" "0..7") # s "supervibe"
 
 -- Custom chord.
-let myChord = "[0,3.5,7]"
+let myChord = "[0, 3.5, 7]"
 d1 $ rolled $ n myChord |+ n "<c5 bf4>" # s "supervibe"
 
 -- Ur.  Pattern of patterns, over a given number of cycles.  It takes four parameters:
@@ -573,6 +573,29 @@ in do
 do
   d1 "cp"
   d2 $ n "0 1 3 1" # s "supervibe" # nudge 0.15
+
+-- Rangex.  Exponential version of Range.
+-- For example, range 20 2000 "0.5" gives 1010 - halfway between 20 and 2000.
+-- But rangex 20 2000 0.5 gives 200 - halfway between on a logarithmic scale.
+do
+  d1 "cp"
+  d2 $ n (scale "minor" (run 16)) # s "supervibe" # gain (rangex 0.5 1.25 rand)
+
+-- PickF.  Chooses between a list of functions, using a pattern of integers.
+do
+  d1 "cp"
+  d2 $ pickF "0 . 1 2" [id, const silence, (# gain 1.25)] $ chop 8 $ loopAt 1 $ s "break:4"
+
+-- SelectF.  Chooses between a list of functions, using a pattern of floats (from 0 to 1).
+-- I can't think of a reason to use SelectF over PickF.  They seem identical, except that SelectF's integer indices are more PickF.
+do
+  d1 "cp"
+  d2 $ selectF "0 . 0.34 0.67" [id, const silence, (# gain 1.25)] $ chop 8 $ loopAt 1 $ s "break:4"
+
+
+
+
+
 
 
 

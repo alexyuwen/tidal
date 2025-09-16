@@ -49,6 +49,7 @@ do
 -- TimeCat.  Fastcat, but with proportioning of patterns.
 -- Useful for combining patterns while maintaining constant subdivision.
 -- Equally useful for combining patterns at different subdivisions.
+-- Note that TimeCat accepts Time, not Pattern.
 do
   d1 "cp"
   d2 $ bite 5 (timeCat [
@@ -126,10 +127,11 @@ d2 $ scramble 2 $ stack [
 ]
 
 -- Shuffle.  Divides the pattern into parts, then permutes the parts, picking one of each per cycle.  Sampling without replacement.
-d1 $ shuffle 4 $ stack [
- "1 1*2 . 1 1 ~ 1" # s "hc",
- "1 . 1 1" # s "bd" # squiz 2 # gain 2
-]
+-- These two examples are equivalent.
+do
+  d1 $ "cp"
+  d2 $ shuffle 4 $ "1 . 1@3 1 . 1 1 . ~" # s "bd" # squiz 2 # gain 1.5
+  d2 $ shuffle 4 $ fastcat ["1", "1@3 1", "1 1", "~"] # s "bd" # squiz 2 # gain 1.5
 
 -- All the chords.
 import Sound.Tidal.Chords
@@ -566,8 +568,8 @@ randOffset = (segment 1 $ (irand 11) - 5)
 randNotes = loopFirst $ (fast 1.3 . irand) 8 + "7..0" -- Change the "fast" argument to generate a new random sequence.
 in do
   d1 "cp"
-  d2 $ n "c5" |+ n randOffset # s "superpiano" # gain 1.2
-  d3 $ n (scale "minor" (segment "16|12|15|17" $ randNotes)) |+ n ("c6" + randOffset + (scale "minor" "0, -3, -5")) # s "violin"
+  d2 $ n "c5" |+ n randOffset # s "superpiano" # gain 1
+  d3 $ n (scale "minor" (segment "16|12|13|15|17" $ randNotes)) |+ n ("c6" + randOffset + (scale "minor" "0, -3, -5")) # s "violin" # gain 0.7
 
 -- Nudge.  Shifts pattern in time.
 do
@@ -592,7 +594,11 @@ do
   d1 "cp"
   d2 $ selectF "0 . 0.34 0.67" [id, const silence, (# gain 1.25)] $ chop 8 $ loopAt 1 $ s "break:4"
 
-
+-- RepeatCycles.  Repeat something for cycles?
+-- Seems to work well with Inside and Outside functions.
+do
+  d1 "cp"
+  d2 $ inside 2 (repeatCycles 2) $ n (segment 16 $ irand 13) # s "violin"
 
 
 

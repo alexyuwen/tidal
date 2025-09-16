@@ -116,36 +116,12 @@ in do
 
 
 
--- Violin fiddle.
-let
-tones = "1 2 3 0 . 1 2 1 0 . 1 0 1 2 . 3 2 1 0"
-arpPat = n (bite 8 (scramble 4 tones) $ arpg $ "c4'min'8'i2")
-scalePat = n (bite 4 (scramble 4 tones) $ (scale "minor" "-3 0 1 2"))
-combinedPat = select (segment 2 $ wchoose [(0, 1), (1, 9)]) [arpPat, scalePat] # s "violin" # vowel "u" # legato 1.25
-fastPat = fast 4 $ n (scale "minor" "0 [2 1 . 0]")
-drumStart = "[0 0 0?0.8 0?0.2]*4"
-drumMiddle = "<[0|4] [2|4]>*8"
-drumPat = (<~) 8 $ slice 8 (select ("0?0.09 1?0.04 1?0.04 [1?0.2 1]") [drumStart, drumMiddle]) $ loopAt 1 $ s "break:4" # cut 1 # gain "1.25 1.12@3"
-melodyPat = (<~) 4 $ select ((/2) <$> "<[[1|2] 1 0 1] [[1|2] 1 <0 1> <1 2>]>") [arpPat, scalePat, slow 2 $ (<~) (1/8) fastPat] # s "violin" # vowel "u" # legato 1.25 # gain 1.2
-melodyPat2 = (<~) 20 $ pickF ((<~) (segment 1 $ rand) $ segment 1 $ wchoose [(0, 5), (1, 2)]) [id, fast 1.5] $ melodyPat # cps (segment 0.5 $ wchoose [(0.57, 6), (0.44, 1)])
-melodyIntro = (<~) (1/16) $ fast 0.5 $ melodyPat # vowel "o"
-organDrone = slow 4 $ n "c2" # s "organDonor" # gain 1.5
-in do
-  -- d1 $ slow 8 $ n (scale "minor" $ cat [run 8, rev $ run 8]) # s "supervibe" # gain 0.6
-  d5 $ rotR 8 $ seqPLoop [
-    (0, 7 + (9/16), melodyIntro # cps (range 0.3 0.57 $ slow 8 $ saw)),
-    (7 + (9/16), 8, melodyPat2),
-    (8, 31 + (9/16), melodyPat2),
-    (31 + (9/16), 36 + (9/16), melodyIntro # cps (range 0.3 0.57 $ slow 7 $ isaw)),
-    (36 + (9/16), 37, melodyPat2 # cps 0.57),
-    (37, 120, melodyPat2),
-    (4, 31.5, drumPat),
-    (39, 120, drumPat),
-    (4, 31.5, organDrone),
-    (40, 120, organDrone),
-    (120, 128, "cp")
-    ]
 
-resetCycles
 
-setcps 0.57
+
+
+
+
+
+
+

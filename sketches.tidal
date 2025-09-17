@@ -115,7 +115,39 @@ in do
     ] [] # s "organTonewheel3, violin" # vowel "a"
 
 
+-- Using euclidean rhythm as mask.
+let
+euclidPat = "t(3,8)"
+notes1 = slow 1 $ fastcat ["[0 2 4 7 2 4 [0 2 4]@2]","0 3 5 7 3 5 [0 3 5]@2"]
+notes = n (scale "minor" $ bite 8 (segment 8 $ irand 4 + "0 4") notes1)
+in do
+  d1 $ "cp" # gain 1
+  d3 $ euclidPat # n 0 # s "supervibe" # gain 1.1
+  d4 $ mask (inv euclidPat) $ notes # s "supervibe"
+  d5 $ pickF (segment 16 $ irand 2) [id, rev] $ chop 16 $ loopAt 1 $ s "break:4"
 
+
+
+-- Uneven rhythm.
+let
+baseNotes = n "<[0@6 1@8] [0@4 1@10]>" # octave 5 # legato 2 # s "supervibe" # gain 0.8
+chordTones = shuffle 4 "0 1 2 4"
+chordNotes = n (scale "minor" $ chordTones)
+harpsichordNotes = cat [
+  timeCat [
+    (6, chordNotes),
+    (8, chordNotes + n 1)
+    ],
+  timeCat [
+    (4, chordNotes),
+    (10, chordNotes + n 1)
+    ]
+  ] # s "harpsichord2" # gain 1.25
+in do
+  d1 "cp"
+  d2 $ s "hc*14" # gain 0.8
+  d3 $ baseNotes
+  d4 $ harpsichordNotes
 
 
 

@@ -1,15 +1,5 @@
-do
-  d1 "cp"
-  d2 $ slice 32 (segment 16 $ 2 * irand 16 + "[0 1]*8") $ loopAt 2 $ s "break:10"
-  d2 $ slice 16 ((fast 2 $ shuffle 4 "0 1 2 3") + 4 * "<[0 1] [2 3]>") $ loopAt 2 $ s "break:10" # cut 1
 
 
 
 
-
-
-
-do
-  d1 "cp"
-  d2 $ slow 1 $ n (scale "minor" $ run 1) # octave 5 # s "choruseffect"
 

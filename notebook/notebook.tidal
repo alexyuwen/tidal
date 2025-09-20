@@ -8,6 +8,7 @@ $ "hc(5, 7)"
 -- Bite.  Slice each cycle into a given number of equal sized bits, then pattern those bits by number.
 -- The sliced bits will be squeezed or contracted to fit.
 -- Slice is for samples.  Bite is for patterns (over one cycle).
+-- Another pattern similar to Bite is Fit.
 d1 $ bite 4 "0 1 1 2 3" "<[bd cp [~ bd] cp] [sd hc [~ sd] hc]>"
 
 -- Scale.
@@ -21,6 +22,7 @@ d1 $ ply 2 $ n (scale "minor" "0 2 1 4") # s "supersaw" # legato 0.1 # lpf 800
 
 -- Arp.
 -- up down; n;                      2  3  4  5  6
+-- converge diverge; n;             2  3  4  5  6
 -- updown downup; 2n - 2;           2  4  6  8  10
 -- pinkyup thumbup; 2n - 2;
 -- disconverge; 2n - 1;             3  5  7  9  11
@@ -82,6 +84,7 @@ d1 $ ur 2 "p1 p2 . p1:e1 p2:e1"
 ]
 
 -- Fit.  Plays from a list according to the sequence of indexes, but starts from a different index each cycle.
+-- Similar function is Bite.
 d1 $ n (fit 1 [0, 1, 4, 7] "0 1 2 3 0") # s "supervibe"
 
 -- Random pitches.

@@ -1,0 +1,17 @@
+let
+-- random double time, every other cycle
+p1 = stack [
+  fast (segment 8 $ wchoose [(1, "<8 1>"), (2, 1)]) $ chop 128 $ loopAt 1 $ s "break:1" # cut 1,
+  n "0 ~!15" # octave "2" # s "organTonewheel1" # gain 2
+  ]
+-- randomly drop the 1st, 6th, 7th, and 8th chunks
+p2 = stack [
+  mask (sew "[0 1 1 1] [1 0 0 0]" "1" $ segment 8 $ wchoose [(True, 4), (False, 1)]) $ fast 2 $ chop 128 $ loopAt 1 $ s "break:1" # cut 1,
+  n "<0 0 0 <[0!7 ~] [0!5 ~!3]>>" # octave 2 # s "organTonewheel0" # gain 1.5
+  ]
+in do
+  resetCycles
+  d1 $ seqPLoop [
+    (0, 8, p1),
+    (8, 16, p2)
+    ]

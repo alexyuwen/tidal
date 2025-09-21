@@ -1,0 +1,9 @@
+do
+  setcps (135/60/4)
+  hush
+  d1 $ "bd" # gain 2 # speed "1"
+  d2 $ "~ cp"
+  d3 $ n "0 7 ~ 0 . 8" |+ n "-5" # s "supermandolin" # vowel "o"
+  d4 $ "hc(9, 16, 3)" # gain "[0.7!3 0.8] !"
+  d5 $ "cp(5, 16)" # vowel "o" # gain 0.72
+  d6 $ "cp(5, 16, 2)" # vowel "e" # gain 0.66

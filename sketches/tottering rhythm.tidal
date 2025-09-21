@@ -1,0 +1,20 @@
+-- Uneven rhythm.
+let
+baseNotes = n "<[0@6 1@8] [0@4 1@10]>" # octave 5 # legato 2 # s "supervibe" # gain 0.8
+chordTones = shuffle 4 "0 1 2 4"
+chordNotes = n (scale "minor" $ chordTones)
+harpsichordNotes = cat [
+  timeCat [
+    (6, chordNotes),
+    (8, chordNotes + n 1)
+    ],
+  timeCat [
+    (4, chordNotes),
+    (10, chordNotes + n 1)
+    ]
+  ] # s "harpsichord2" # gain 1.25
+in do
+  d1 "cp"
+  d2 $ s "hc*14" # gain 0.8
+  d3 $ baseNotes
+  d4 $ harpsichordNotes

@@ -1,0 +1,3 @@
+let myChord = [0, 3.86314, 7.01955, 12, 15.86314] -- Just intonation major.
+in
+d1 $ rolledBy (0.75 * rand^3 + 0.25) $ n (stack myChord) |+ n "df5" # s "supervibe" # room 0.5 # cps (wchoose [(0.6, 4), (0.4, 4), (0.2, 1)])

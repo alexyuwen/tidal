@@ -311,6 +311,7 @@ d1 $ off 0.1 (|+ n "12") $ n "0" # s "supervibe"
 d2 $ press $ slow 2 $ "bd cp [bd bd] cp"
 
 -- PressBy.  Press, but with a variable time offset.
+-- Negative values do not work.
 d2 $ slow 2 $ pressBy "<0 0.5>" $ "bd cp [bd bd] cp"
 
 -- Rev.  Reverses a pattern.

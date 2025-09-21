@@ -1,0 +1,7 @@
+-- Euclidean polymeter.
+do
+  setcps (135/60/5)
+  d1 $ "bd" # gain 2
+  d2 $ "hc*5" # vowel "o"
+  d3 $ fast (5/2) $ "~ ~ ~ cp . ~ cp"
+  d4 $ fast (5/4) $ "ht(10,16)" # vowel "o"

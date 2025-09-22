@@ -307,6 +307,12 @@ d1 $ note (stretch "~ <0 ~> 1 5 8*4 ~") # s "superpiano"
 -- Superimpose.  Applies a function to a pattern, superimposed on the original pattern.
 d1 $ superimpose (|+ n "12") $ n "0" # s "supervibe"
 
+-- These two examples are identical.
+do
+  d1 "cp"
+  d2 $ chop slicesTotal $ loopAt 24 $ superimpose (# speed 2) $ s "bach"
+  d2 $ chop slicesTotal $ loopAt 24 $ s "bach" # speed "1, 2"
+
 -- Off.  Superimpose, but with a time offset for the transformed pattern.
 d1 $ off 0.1 (|+ n "12") $ n "0" # s "supervibe"
 

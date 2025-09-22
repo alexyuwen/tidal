@@ -355,7 +355,7 @@ do
   d2 $ inside 2 (fastGap 1.25) $ chop 512 $ loopAt 1 $ s "break:1" # cut 1
   d2 $ (fast 2 . fastGap 1.25 . slow 2) $ chop 512 $ loopAt 1 $ s "break:1" # cut 1
 
--- Outside.  Applies function "outside" a cycle.  Inside n f is equivalent to (slow n . f . fast n)
+-- Outside.  Applies function "outside" a cycle.  Outside n f is equivalent to (slow n . f . fast n)
 -- These two examples are equivalent.
 do
   d1 "cp"

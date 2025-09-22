@@ -67,6 +67,8 @@ d1 $ stack [
 -- Two-bar breaks that are cool.
 -- 10, 13, 20, 25, 28, 31
 
+-- bach: 134 bpm
+
 -}
 
 -- These two examples are equivalent.
@@ -162,6 +164,20 @@ do
   d2 $ pickF "0 1" [id, (<~) 0.125 . fast 2] $ chop 4 $ loopAt 1 $ s "break:8" # cut 1 -- With chop 4, you get indices 0, 1, 2, 3, 2, 4, 6, 0
 
 
+
+-- Faster tempo:
+-- fast 1.X, # cut 1
+do
+  d1 $ "cp" # gain 0.8
+  d2 $ fast 1.5 $ chop (16 * 24) $ loopAt 24 $ s "bach" # cut 1
+
+-- Lower key:
+-- # cut 1 # speed 0.X
+do
+  d1 $ "cp" # gain 0.8
+  d2 $ chop (16 * 24) $ loopAt 24 $ s "bach" # cut 1 # speed 0.75
+
+-- Slower tempo (without lowering key) and higher key (without slowing tempo) don't seem possible.
 
 
 

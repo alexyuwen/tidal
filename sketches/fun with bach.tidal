@@ -1,0 +1,46 @@
+-- Alternating between keys.
+let
+slicesTotal = 8 * 24
+in do
+  setcps (134/60/4)
+  d1 $ "cp" # gain 0.8
+  d2 $ slice slicesTotal (8 * (slow 48 $ run 24) + run 8) $ loopAt 24 $ s "bach" # speed "[1 0.944 0.944 1]*6"
+
+-- Shuffling within each measure.
+let
+slicesTotal = 8 * 24
+in do
+  setcps (134/60/4)
+  d1 $ "cp" # gain 0.8
+  d2 $ slice slicesTotal (8 * (slow 24 $ run 24) + (shuffle 4 $ run 8)) $ loopAt 24 $ s "bach"
+
+-- Transposing a diminished arpeggio.
+let
+slicesTotal = 8 * 24
+in do
+  setcps (134/60/4)
+  d1 $ "cp" # gain 0.8
+  d2 $ slice slicesTotal (8 + (fast 2 $ run 4)) $ loopAt 24 $ s "bach" # speed (segment 48 $ range 0.6 1 rand) # cut 1
+
+-- Play each measure forward then backward.
+let
+slicesTotal = 8 * 24
+in do
+  setcps (134/60/4)
+  d1 $ "cp" # gain 0.8
+  d2 $ every' 2 1 rev $ slice (2 * 24) (2 * (slow 48 $ run 24) + (run 2)) $ loopAt 24 $ s "bach"
+
+-- Ply 2.
+let
+slicesTotal = 8 * 24
+in do
+  setcps (134/60/4)
+  d1 $ "cp" # gain 0.8
+  d2 $ ply 2 $ slice slicesTotal (8 * (slow 24 $ run 24) + (run 8)) $ loopAt 24 $ s "bach" # cut 1
+
+
+
+
+
+
+

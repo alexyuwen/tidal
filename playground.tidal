@@ -1,11 +1,11 @@
 
 
 
+do
+  setcps (134/60/4)
+  d1 "cp"
+  d2 $ chop (16 * 24) $ loopAt 24 $ "bach" # cut 1
 
 
 
-
-
-
-
-
+panic

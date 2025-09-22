@@ -6,7 +6,7 @@ $ every 2 (const $ "hc")
 $ "hc(5, 7)"
 
 -- Bite.  Slice each cycle into a given number of equal sized bits, then pattern those bits by number.
--- The sliced bits will be squeezed or contracted to fit.
+-- The sliced bits will be time-adjusted to fit inside the cycle.
 -- Slice is for samples.  Bite is for patterns (over one cycle).
 -- Another pattern similar to Bite is Fit.
 d1 $ bite 4 "0 1 1 2 3" "<[bd cp [~ bd] cp] [sd hc [~ sd] hc]>"
@@ -83,9 +83,13 @@ d1 $ ur 2 "p1 p2 . p1:e1 p2:e1"
 ("e1", (# squiz 3))
 ]
 
--- Fit.  Plays from a list according to the sequence of indexes, but starts from a different index each cycle.
+-- Fit.  (Fit offset list indices) plays from list according to sequence of indices, but adds offset to indices each cycle.
 -- Similar function is Bite.
-d1 $ n (fit 1 [0, 1, 4, 7] "0 1 2 3 0") # s "supervibe"
+do
+  d1 "cp"
+  d2 $ n (fit 1 [0, 1, 4, 7] "0 1 2 3 0") # s "supervibe"
+
+:t fit
 
 -- Random pitches.
 d1 $ segment 16 $ n (10 * rand) # s "supervibe" # legato 0.5
@@ -331,7 +335,7 @@ do
   d1 "cp"
   d2 $ swingBy (1/3) 4 $ sound "hh*8"
 
--- Swing.  Alias for SwingBy (1/3).
+-- Swing.  Alias for SwingBy (1/3) n.
 -- These two examples are equivalent.
 do
   d1 "cp"

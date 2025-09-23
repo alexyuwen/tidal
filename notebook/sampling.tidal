@@ -178,7 +178,7 @@ do
   d2 $ chop (16 * 24) $ loopAt 24 $ s "bach" # cut 1 # speed 0.75
 
 -- Slower tempo (without lowering key) and higher key (without slowing tempo) don't seem possible.
-
+-- Slow it down in Ableton first.
 
 
 

@@ -603,7 +603,7 @@ do
   d2 $ pickF "0 . 1 2" [id, const silence, (# gain 1.25)] $ chop 8 $ loopAt 1 $ s "break:4"
 
 -- SelectF.  Chooses between a list of functions, using a pattern of floats (from 0 to 1).
--- I can't think of a reason to use SelectF over PickF.  They seem identical, except that SelectF's integer indices are more PickF.
+-- I can't think of a reason to use SelectF over PickF.  They seem identical, except that SelectF's float indices are harder to use.
 do
   d1 "cp"
   d2 $ selectF "0 . 0.34 0.67" [id, const silence, (# gain 1.25)] $ chop 8 $ loopAt 1 $ s "break:4"

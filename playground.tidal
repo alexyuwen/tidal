@@ -1,3 +1,7 @@
+
+
+
+
 -- Chord from different slices.
 let
 slicesTotal = 8 * 24

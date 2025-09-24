@@ -404,6 +404,7 @@ do
 
 -- Linger.  Trunc, but repeats the truncated part to fill the remainder of the cycle.
 -- Doesn't work for uneven denominators.  Turns into polymeter rather than resetting each cycle.
+-- Unexpected behavior: linger X $ slow X
 do
   d1 "hc"
   d2 $ linger "<0.25 1 0.5 1>" $ sound "sd cp [~ sn] cp"

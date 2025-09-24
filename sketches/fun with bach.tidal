@@ -93,14 +93,27 @@ in do
 
 
 
--- More PickF, but using chunks.
+-- More PickF, but using both chunks and slices.
 let
+slicesTotal = 8 * 24
 chunksTotal = 2 * 24
 sample = slice chunksTotal (2 * (slow 24 $ run 24) + (run 2)) $ loopAt 24 $ s "bach"
 in do
   setcps (134/60/4)
   d1 $ "cp" # gain 0.8
-  d2 $ pickF (segment 2 $ choose [0, 0, 1]) [id, (fast 2 . ply 2 . slow 2)] $ sample # cut 1
+  -- Chunk into 2 per measure so that ply applies to chunk.  Then, chop into 8 so that cut applies to each note.
+  d2 $ (chop 8 $ pickF (segment 1 $ irand 2) [id, (fast 2 . ply 2 . slow 2)] $ sample) # cut 1
+  -- Try using linger to do the same.
+
+  -- Try using fix, so that depending on slice, something happens.
+
+  -- Try using spreadf instead of pickF.
+
+
+
+
+resetCycles
+
 
 
 

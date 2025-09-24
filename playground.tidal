@@ -1,17 +1,25 @@
-
-
-
--- Random measure each cycle.
+-- Chord from different slices.
 let
 slicesTotal = 8 * 24
-speeds = [2 ** (-i / 12) | i <- [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]]
+chunksTotal = 2 * 24
 in do
-  setcps (134/60/4)
-  d1 $ "cp" # gain 0.8
-  d2 $ slice slicesTotal (8 * (slow 24 $ run 24) + (run 8)) $ loopAt 24 $ s "bach"
-  d2 $ slice slicesTotal (8 * (slow 24 $ run 24) + (run 8)) $ loopAt 24 $ s "bach"
+  setcps (134 / 60 / 4)
+  d1 $ "cp" # gain 0
+  d2 $ chop slicesTotal $ loopAt 24 $ s "bach"
+
+
+
+
+
+
 
 
 resetCycles
 
-:t fastcat
+
+
+
+
+
+
+

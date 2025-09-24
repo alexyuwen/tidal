@@ -6,6 +6,8 @@ in do
   d1 $ "cp" # gain 0.8
   d2 $ slice slicesTotal (8 * (slow 48 $ run 24) + run 8) $ loopAt 24 $ s "bach" # speed "[1 0.944 0.944 1]*6"
 
+
+
 -- Down a half step each measure.
 -- These two examples are equivalent.
 let
@@ -17,6 +19,8 @@ in do
   d2 $ slice slicesTotal (8 * (slow 24 $ run 24) + (run 8)) $ loopAt 24 $ s "bach" # speed (fit 0 speeds (run 24 |% 5)) # cut 1
   d2 $ slice slicesTotal (8 * (slow 24 $ run 24) + (run 8)) $ loopAt 24 $ s "bach" # speed (select ((/11) <$> (run 24 |% 12)) speeds) # cut 1
 
+
+
 -- Shuffling within each measure.
 let
 slicesTotal = 8 * 24
@@ -24,6 +28,8 @@ in do
   setcps (134/60/4)
   d1 $ "cp" # gain 0.8
   d2 $ slice slicesTotal (8 * (slow 24 $ run 24) + (shuffle 4 $ run 8)) $ loopAt 24 $ s "bach"
+
+
 
 -- Transposing a diminished arpeggio.
 let
@@ -33,6 +39,8 @@ in do
   d1 $ "cp" # gain 0.8
   d2 $ slice slicesTotal (8 + (fast 2 $ run 4)) $ loopAt 24 $ s "bach" # speed (segment 48 $ range 0.6 1 rand) # cut 1
 
+
+
 -- Play each measure forward then backward.
 let
 slicesTotal = 8 * 24
@@ -40,6 +48,8 @@ in do
   setcps (134/60/4)
   d1 $ "cp" # gain 0.8
   d2 $ every' 2 1 rev $ slice (2 * 24) (2 * (slow 48 $ run 24) + (run 2)) $ loopAt 24 $ s "bach"
+
+
 
 -- Ply 2.
 let
@@ -49,6 +59,8 @@ in do
   d1 $ "cp" # gain 0.8
   d2 $ ply 2 $ slice slicesTotal (8 * (slow 24 $ run 24) + (run 8)) $ loopAt 24 $ s "bach" # cut 1
 
+
+
 -- Random measure each cycle.
 let
 slicesTotal = 8 * 24
@@ -56,6 +68,71 @@ in do
   setcps (134/60/4)
   d1 $ "cp" # gain 0.8
   d2 $ slice slicesTotal (8 * (segment 1 $ irand 24) + (run 8)) $ loopAt 24 $ s "bach"
+
+
+
+-- Measures 0, 0..1, 0..2, 0..4, 0..8, 0..16, 0..23
+let
+slicesTotal = 8 * 24
+x = (concatMap (\n -> [0 .. 2^n - 1]) [0..4]) ++ [0 .. 23]
+in do
+  setcps (134/60/4)
+  d1 $ "cp" # gain 0.8
+  d2 $ slice slicesTotal (8 * (cat $ map pure x) + (run 8)) $ loopAt 24 $ s "bach" -- Without map pure, you would get the Enum error.
+
+
+
+-- Apply functions using PickF.
+let
+slicesTotal = 8 * 24
+sample = slice slicesTotal (8 * (slow 24 $ run 24) + (run 8)) $ loopAt 24 $ s "bach"
+in do
+  setcps (134/60/4)
+  d1 $ "cp" # gain 0.8
+  d2 $ pickF (slow 2 $ "0 0 0 [1 0 0 0]") [id, const silence] $ sample
+
+
+
+-- More PickF, but using chunks.
+let
+chunksTotal = 2 * 24
+sample = slice chunksTotal (2 * (slow 24 $ run 24) + (run 2)) $ loopAt 24 $ s "bach"
+in do
+  setcps (134/60/4)
+  d1 $ "cp" # gain 0.8
+  d2 $ pickF (segment 2 $ choose [0, 0, 1]) [id, (fast 2 . ply 2 . slow 2)] $ sample # cut 1
+
+
+
+-- Standing on the dominant.
+let
+chunksTotal = 2 * 24
+dominantChunks = [2, 3, 10, 13, 14, 17, 27, 31, 38, 39, 40, 42, 43, 46, 47]
+in do
+  setcps (134 / 60 / 4)
+  d1 $ "cp" # gain 0.7
+  -- segment 4, but each segment lasts half a cycle, so segments overlap
+  d2 $ slice chunksTotal (segment 4 $ cycleChoose dominantChunks) $ loopAt 24 $ s "bach"
+
+
+
+-- Chord from stacking multiple slices.
+let
+slicesTotal = 8 * 24
+in do
+  setcps (134 / 60 / 4)
+  d1 $ "cp" # gain 0
+  d2 $ bite 8 "[0, 1, 5, 6, 7]" $ loopFirst $ chop slicesTotal $ loopAt 24 $ s "bach"
+
+
+
+
+
+
+
+
+
+
 
 
 

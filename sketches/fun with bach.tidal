@@ -95,7 +95,6 @@ in do
 
 -- More PickF, but using both chunks and slices.
 let
-slicesTotal = 8 * 24
 chunksTotal = 2 * 24
 sample = slice chunksTotal (2 * (slow 24 $ run 24) + (run 2)) $ loopAt 24 $ s "bach"
 in do
@@ -103,12 +102,8 @@ in do
   d1 $ "cp" # gain 0.8
   -- Chunk into 2 per measure so that ply applies to chunk.  Then, chop into 8 so that cut applies to each note.
   d2 $ (chop 8 $ pickF (segment 1 $ irand 2) [id, (fast 2 . ply 2 . slow 2)] $ sample) # cut 1
-  -- Try using linger to do the same.
-
-  -- Try using fix, so that depending on slice, something happens.
-
   -- Try using spreadf instead of pickF.
-
+  -- d2 $ spread ($) [id, (fast 2 . ply 2 . slow 2)] $ sample # cut 1
 
 
 
@@ -139,11 +134,21 @@ in do
 
 
 
+-- Each chunk is the previous chunk shifted one note forward: [0 1 2 3] [1 2 3 4] [2 3 4 5]
+let
+slicesTotal = 8 * 24
+in do
+  d1 $ "cp" # gain 0.8
+  d2 $ slice slicesTotal (fast 2 $ (slow slicesTotal $ run slicesTotal) + run 4) $ s "bach"
 
 
 
-
-
+-- Repeat every chunk, but the chunk is either [0 1 2 3] or [4 1 2 3]
+let
+slicesTotal = 8 * 24
+in do
+  d1 $ "cp" # gain 0.8
+  d2 $ slice slicesTotal (4 * (slow 24 $ run 24) + (fast 2 $ "[4 1 2 3]|[0 1 2 3]")) $ s "bach"
 
 
 

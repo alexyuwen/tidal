@@ -467,8 +467,28 @@ d1 $ fast "<2 3>" $ s "[hc . hc hc]"
 
 -- Spreadf.  Shorthand for Spread ($), which lets you put different functions as the list of values.
 -- These two examples are equivalent.
-d1 $ spreadf [fast 1, fast 2, fast 3, fast 4] $ s "[hc . hc hc]"
-d1 $ spread ($) [fast 1, fast 2, fast 3, fast 4] $ s "[hc . hc hc]"
+do
+  d1 "cp"
+  d2 $ spreadf [fast 1, fast 2, fast 3, fast 4] $ s "[hc . hc hc]"
+  d2 $ spread ($) [fast 1, fast 2, fast 3, fast 4] $ s "[hc . hc hc]"
+
+-- Interesting behavior when pattern spans multiple cycles.
+let
+numNotes = (segment 1 $ 1 + irand 6)
+in do
+  d1 $ "cp" # gain 0.8
+  d2 $ spreadf [id, ply 2, ply 3] $ n (scale "minor" (segment 2 $ irand 8)) # s "supervibe"
+  -- fast 2
+  d2 $ spreadf [fast 1, fast 2, fast 3] $ n (segment "<1 4>" $ irand 12) # s "supervibe"
+  -- Using bite instead of fast so that the same random value is used for fast
+  d2 $ spreadf [id, bite "<1 4>" "<[0]*2 [0..3]*2>", bite "<1 4>" "<[0]*3 [0..3]*3>"] $ n (segment "<1 4>" $ irand 12) # s "supervibe"
+  -- Another bite example.
+  d2 $ spreadf [id, bite numNotes (fast 2 $ run numNotes), bite numNotes (fast 3 $ run numNotes)] $ n (segment numNotes $ irand 12) # s "supervibe"
+
+
+
+
+
 
 -- SpreadChoose.  Spread, but select values randomly.
 -- SpreadR is alias.

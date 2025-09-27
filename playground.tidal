@@ -2,14 +2,9 @@
 
 
 
--- Chord from different slices.
-let
-slicesTotal = 8 * 24
-chunksTotal = 2 * 24
-in do
-  setcps (134 / 60 / 4)
-  d1 $ "cp" # gain 0
-  d2 $ chop slicesTotal $ loopAt 24 $ s "bach"
+
+
+-- Randomly repeat a chunk.  Possible without state values?
 
 
 
@@ -17,9 +12,11 @@ in do
 
 
 
+
+
+panic
 
 resetCycles
-
 
 
 

@@ -89,8 +89,6 @@ do
   d1 "cp"
   d2 $ n (fit 1 [0, 1, 4, 7] "0 1 2 3 0") # s "supervibe"
 
-:t fit
-
 -- Random pitches.
 d1 $ segment 16 $ n (10 * rand) # s "supervibe" # legato 0.5
 

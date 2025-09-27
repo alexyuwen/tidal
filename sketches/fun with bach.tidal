@@ -134,12 +134,14 @@ in do
 
 
 
--- Each chunk is the previous chunk shifted one note forward: [0 1 2 3] [1 2 3 4] [2 3 4 5]
+-- Each chunk is the previous chunk shifted some notes forward
 let
 slicesTotal = 8 * 24
 in do
   d1 $ "cp" # gain 0.8
-  d2 $ slice slicesTotal (fast 2 $ (slow slicesTotal $ run slicesTotal) + run 4) $ s "bach"
+  d2 $ slice slicesTotal (fast 2 $ (slow slicesTotal $ run slicesTotal) + run 4) $ s "bach" -- 1: [0 1 2 3] [1 2 3 4] [2 3 4 5]
+  d2 $ slice slicesTotal (fast 2 $ (slow (slicesTotal / 2) $ listToPat [0, 2 .. slicesTotal - 2]) + run 4) $ s "bach" -- 2: [0 1 2 3] [2 3 4 5] [4 5 6 7]
+
 
 
 
@@ -147,10 +149,35 @@ in do
 let
 slicesTotal = 8 * 24
 in do
+  d1 $ "cp" # gain 0.7
+  d2 $ slice slicesTotal ((fit 1 [0, 4 .. slicesTotal - 4] "0") + ((<~) 2 $ scramble 2 "0 1 2 3 . 4 1 2 3")) $ s "bach"
+
+
+
+-- Play only the first half of each chunk: [0 1 4 5] [8 9 12 13]
+let
+slicesTotal = 8 * 24
+in do
   d1 $ "cp" # gain 0.8
-  d2 $ slice slicesTotal (4 * (slow 24 $ run 24) + (fast 2 $ "[4 1 2 3]|[0 1 2 3]")) $ s "bach"
+  d2 $ slice slicesTotal (8 * (slow 12 $ run 24) + "[0 1 4 5]*2") $ s "bach"
 
 
+
+-- Loop the first measure. Transpose it and make it a polymeter, with those two changes being coupled.
+let
+slicesTotal = 8 * 24
+speeds = [2 ** (-i / 12) | i <- [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]]
+randIndex = segment 1 $ irand 3
+in do
+  d1 $ "cp" # gain 0.8
+  d2 $ slice slicesTotal (fast (bite 3 randIndex "1 1.5 2") $ run 8) $ s "bach" # cut 1 # speed (bite 12 (2 * randIndex) $ listToPat speeds)
+
+
+
+
+
+
+resetCycles
 
 
 

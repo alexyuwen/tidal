@@ -496,10 +496,10 @@ d1 $ spreadr fast[1,2,3,4] $ s "[hc . hc hc]"
 -- Haskell function definition.
 let
 baseNotes = "0 4 2 1"
-notes x = fast 8 $ fastcat (map (+x) [2, 1, 2, 1]) -- Ornament.
+ornament x = baseNotes + (fast 8 $ fastcat [x, 0, x, 0]) -- Ornament function.
 in do
   d1 "hc"
-  d2 $ n (scale "minor" $ sew "1 1 1 [1 0]" baseNotes $ notes 0) # octave 4 # s "organTonewheel3" -- Insert ornament with sew.
+  d2 $ n (scale "minor" $ sew "1 1 1 [1 0]" baseNotes $ ornament 2) # octave 4 # s "organTonewheel3" -- Insert ornament with sew.
 
 -- Squeeze.  Squeezes patterns into each cycle.  Takes a pattern of integers and a list of patterns.
 -- Squeeze plays all patterns entirely in each cycle, whereas Select plays only portions of patterns each cycle.
@@ -633,8 +633,15 @@ do
   d1 "cp"
   d2 $ inside 2 (repeatCycles 2) $ n (segment 16 $ irand 13) # s "violin"
 
-
-
+-- #.
+-- These two examples are equivalent.
+let
+slicesTotal = 8 * 24
+speeds = [2 ** (-i / 12) | i <- [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]]
+in do
+  d1 $ "cp" # gain 0.8
+  d2 $ slice slicesTotal (run 8) $ s "bach" # cut 1 # speed (bite 12 ("<1 [1 1]>" # irand 12) $ listToPat speeds)
+  d2 $ slice slicesTotal (run 8) $ s "bach" # cut 1 # speed (bite 12 (struct "<1 [1 1]>" $ irand 12) $ listToPat speeds)
 
 
 

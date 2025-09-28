@@ -8,18 +8,20 @@ in do
 
 
 
--- Down a half step each measure.
--- These two examples are equivalent.
+-- Transpose by half step each measure.
 let
 slicesTotal = 8 * 24
 speeds = [2 ** (-i / 12) | i <- [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]]
 in do
   setcps (134/60/4)
   d1 $ "cp" # gain 0.8
+  -- Down a half step each measure.  These two examples are equivalent.
   d2 $ slice slicesTotal (8 * (slow 24 $ run 24) + (run 8)) $ loopAt 24 $ s "bach" # speed (fit 0 speeds (run 24 |% 5)) # cut 1
   d2 $ slice slicesTotal (8 * (slow 24 $ run 24) + (run 8)) $ loopAt 24 $ s "bach" # speed (select ((/11) <$> (run 24 |% 12)) speeds) # cut 1
+  -- Up a half step each measure.  These two examples are equivalent.
+  d2 $ slice slicesTotal (8 * (slow 24 $ run 24) + (run 8)) $ loopAt 24 $ s "bach" # speed (rev $ fit 0 speeds (1 + run 24 |% 5)) # cut 1
 
-
+resetCycles
 
 -- Shuffling within each measure.
 let
@@ -120,7 +122,7 @@ in do
   setcps (134 / 60 / 4)
   d1 $ "cp" # gain 0.7
   -- segment 4, but each segment lasts half a cycle, so segments overlap
-  d2 $ slice chunksTotal (segment 4 $ cycleChoose dominantChunks) $ loopAt 24 $ s "bach"
+  d2 $ slice chunksTotal (segment 4 $ choose dominantChunks) $ s "bach" # cut 1
 
 
 
@@ -130,7 +132,7 @@ slicesTotal = 8 * 24
 in do
   setcps (134 / 60 / 4)
   d1 $ "cp" # gain 0
-  d2 $ bite 8 "[0, 1, 5, 6, 7]" $ loopFirst $ chop slicesTotal $ loopAt 24 $ s "bach"
+  d2 $ bite 8 "[0, 1, 5, 6, 7]*8" $ loopFirst $ chop slicesTotal $ loopAt 24 $ s "bach"
 
 
 
@@ -170,7 +172,7 @@ speeds = [2 ** (-i / 12) | i <- [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]]
 randIndex = segment 1 $ irand 3
 in do
   d1 $ "cp" # gain 0.8
-  d2 $ slice slicesTotal (fast (bite 3 randIndex "1 1.5 2") $ run 8) $ s "bach" # cut 1 # speed (bite 12 (2 * randIndex) $ listToPat speeds)
+  d2 $ slice slicesTotal (fast (bite 3 randIndex "1 1.75 1.25") $ run 8) $ s "bach" # cut 1 # speed (bite 12 (2 * randIndex) $ listToPat speeds)
 
 
 

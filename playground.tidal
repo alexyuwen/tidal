@@ -1,25 +1,15 @@
 
 
 
--- Define the whole scale ascending and descending, then use bite.
--- Use timecat for uneven rhythm, unless better solution exists?
-let
-scaleUp = (scale "minor" $ "0 2 3 4" + "[0@3 1 . 0]*4" * "2 1 1 3") + "d5"
-scaleDown = (scale "minor" $ "7 4 3 2" + "[0@3 1 . 0]*4" * "2 3 1 1") + "d5"
-in do
-  d1 $ "cp" # gain 0.8
-  d2 $ n (cat [scaleUp, scaleDown]) # s "violin" # vowel "u"
+
+-- cpu: 0-22
+-- sax: 0-21
 
 
 
-
-panic
-
-resetCycles
-
-
-
-
+do
+  d1 $ "cp"
+  d2 $ slow 2 $ n (run 23) # s "cpu"
 
 
 

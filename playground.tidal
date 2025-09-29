@@ -1,15 +1,19 @@
 
 
 
+do
+  d1 $ "cp" # gain "0.8"
+  d2 $ n (segment 6 $ irand 4) # s "supervibe"
+  d3 $ n (segment 6 $ slow 2 $ irand 4) # s "supervibe"
+
+
 
 -- cpu: 0-22
--- sax: 0-21
+
+resetCycles
 
 
-
-do
-  d1 $ "cp"
-  d2 $ slow 2 $ n (run 23) # s "cpu"
+-- How to chop/slice sample without discontinuities? # cut doesn't seem to work...
 
 
 

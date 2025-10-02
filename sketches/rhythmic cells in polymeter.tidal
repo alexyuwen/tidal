@@ -1,0 +1,14 @@
+-- Rhythmic cells in polymeter
+let
+cells = [
+  "{0 0 ~ 4 _ 4}%8",
+  "{1 ~ 1 ~ 5 _ _}%8",
+  "{0 ~ ~ 0 ~ ~ ~}%8",
+  "{0 ~ ~ 0 ~ ~ ~}%16"
+  ]
+nPat = (scale "phrygian" $ select ((/3) <$> (segment 1 $ irand 4)) cells)
+in do
+  d1 $ "cp" # gain "0.8"
+  d2 $ fast "[8|12]" $ slow 6 $ n (scale "phrygian" "0 0 ~ 4 _ 4") # s "supervibe" # vowel "o"
+  d2 $ n nPat # s "supervibe" # vowel "o"
+

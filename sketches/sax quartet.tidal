@@ -1,8 +1,8 @@
 -- sax: 0-21
 -- Sax quartet.
 let
-factory x m = n (segment m $ (slow x $ irand 6) + 6 * (slow 99 $ run 99)) # s "sax" # cut 1 # begin 0.3
-m = 11
+factory x m = n (segment m $ (slow x $ irand 5) + 5 * (slow 99 $ run 99)) # s "sax" # cut 1 # begin 0.3 # speed "0.67, 1"
+m = 12
 in do
   d1 $ "cp" # gain "0.8"
   d2 $ factory 1 m

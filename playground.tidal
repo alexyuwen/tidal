@@ -1,19 +1,21 @@
 
 
-
+-- alphabet: 0-25
 do
   d1 $ "cp" # gain "0.8"
-  d2 $ n (segment 6 $ irand 4) # s "supervibe"
-  d3 $ n (segment 6 $ slow 2 $ irand 4) # s "supervibe"
+  d2 $ n (segment 4 $ irand 26) # s "alphabet" # begin 0.2
 
 
 
--- cpu: 0-22
+do
+  d1 $ "hc"
+  d2 $ s "[lo ! snare !]*4" # n (segment 16 $ irand 999)
+
+
+
+
+
 
 resetCycles
 
-
--- How to chop/slice sample without discontinuities? # cut doesn't seem to work...
-
-
-
+:t fast

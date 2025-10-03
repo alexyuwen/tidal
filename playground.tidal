@@ -1,21 +1,12 @@
 
 
--- alphabet: 0-25
-do
-  d1 $ "cp" # gain "0.8"
-  d2 $ n (segment 4 $ irand 26) # s "alphabet" # begin 0.2
-
-
-
-do
-  d1 $ "hc"
-  d2 $ s "[lo ! snare !]*4" # n (segment 16 $ irand 999)
 
 
 
 
 
 
-resetCycles
 
-:t fast
+
+
+

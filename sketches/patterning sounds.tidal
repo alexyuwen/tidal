@@ -1,0 +1,5 @@
+do
+  d1 $ "hc"
+  d2 $ s "[lo ! snare !]*4" # n (segment 16 $ irand 999)
+
+

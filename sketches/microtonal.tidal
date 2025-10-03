@@ -1,0 +1,13 @@
+-- Arpeggio.  One of the pitches is offset by random amount.
+do
+  d1 $ "hc"
+  d2 $ n (scale "minor" "0 3 6 9") |+ n (shuffle 4 $ fastcat [0, 0, 0, range 0 2.5 rand]) # s "supervibe"
+
+
+
+
+
+
+
+
+

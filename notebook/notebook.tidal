@@ -180,6 +180,7 @@ do
 
 -- Select.  Choose between a list of patterns using a pattern of floats (from 0 to 1).
 -- With three or more patterns, just use integer indices divided by (n - 1) where n is number of patterns.
+-- The equivalent for functions is PickF / SelectF.
 let
 pat1 = bite 5 "0 1 2 3 4 2 3 4" $ arpg $ n "c'min'5"
 pat2 = fast 8 $ n (scale "minor" "2 1 . 0") # octave 6
@@ -429,6 +430,7 @@ d1 $ s "sax:0" # speed "<1 2 3 4>" # cut 1
 
 -- Mask.  Uses a binary pattern to mask another pattern.
 -- Note that Mask only masks events.  Sustained sounds will not be masked, even with cut 1.
+-- I prefer using PickF, as it is easier to extend.
 d1 $ stack [
   "cp",
   mask "1 . [0 1] 1" $ segment 16 $ n (range 0 12 rand) # s "supervibe"
@@ -617,6 +619,7 @@ do
   d2 $ n (scale "minor" (run 16)) # s "supervibe" # gain (rangex 0.5 1.25 rand)
 
 -- PickF.  Chooses between a list of functions, using a pattern of integers.
+-- The equivalent for patterns is Select.
 do
   d1 "cp"
   d2 $ pickF "0 . 1 2" [id, const silence, (# gain 1.25)] $ chop 8 $ loopAt 1 $ s "break:4"

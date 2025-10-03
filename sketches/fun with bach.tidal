@@ -176,6 +176,12 @@ in do
 
 
 
+-- Use oscillator to modulate pitch in a fluid way.
+do
+  d1 $ "hc"
+  d2 $ slow 24 $ chop (8 * 24) $ s "bach" # cut 1 # speed (segment (8 * 24) $ fast (24 / 2) $ range 0.9 1 sine)
+
+
 
 
 

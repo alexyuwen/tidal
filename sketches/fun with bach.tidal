@@ -1,27 +1,82 @@
--- Repeat each measure in two keys.
+-- Sequence.
+-- Repeat and hurry every fourth chunk.
 let
+speeds = [2 ** (-i / 12) | i <- [0..11]]
+chunkIndexes = "<0 1 2 3 3 3>" + 4 * (slow (12 * 6) $ run 12)
+splicePat = fast 2 $ run 4 + 4 * chunkIndexes
+cpsPat = (slow 1.5 $ 134 * fit 0 speeds (cat ["0", "0 2 4", "4", "4 2 0"])) / 60 / 4
+in do
+  d1 $ "hc"
+  d2 $ splice (8 * 24) splicePat $ s "bach" # cut 1 # cps cpsPat
+
+resetCycles
+
+-- 2 + 2.
+-- Switch between two keys within each two-measure block.
+--
+-- pat0: 0 0' 1' 1 2 2' 3' 3
+-- pat1: 0 1 0' 1' 2' 3' 2 3
+--
+-- Possibilities:
+-- 0 0' 1' 1
+-- 0 0' 0' 1'
+-- 0 1 1' 1
+-- 0 1 0' 1'
+-- 2 2' 3' 3
+-- 2 2' 2 3
+-- 2' 3' 3' 3
+-- 2' 3' 2 3
+--
+let
+speeds = [2 ** (-i / 12) | i <- [0..11]]
 slicesTotal = 8 * 24
+speedIndexes = "0 1 1 0"
+pat0 = slice slicesTotal (8 * (slow 48 $ run 24) + run 8) $ loopAt 24 $ s "bach" # speed (fast 6 $ fit 0 speeds speedIndexes)
+pat1 = slice slicesTotal (slow 2 $ 16 * (slow 48 $ run 24) + run 16) $ loopAt 24 $ s "bach" # speed (fast 3 $ fit 0 speeds speedIndexes)
 in do
   setcps (134/60/4)
-  d1 $ "cp" # gain 0.8
-  d2 $ slice slicesTotal (8 * (slow 48 $ run 24) + run 8) $ loopAt 24 $ s "bach" # speed "[1 0.944 0.944 1]*6"
+  -- d1 $ "hc"
+  d2 $ select ((/1) <$> "[1|0]/2") [pat0, pat1]
+
+resetCycles
+
+-- Triangle.
+-- Use oscillator to modulate pitch in a fluid way.
+let
+speeds = [2 ** (-i / 12) | i <- [0..11]]
+in do
+  setcps (134/60/4)
+  -- d1 $ "hc"
+  d2 $ slow 24 $ chop (8 * 24) $ s "bach" # cut 1 # speed (segment (8 * 24) $ fast (24 / 48) $ range (fit 0 speeds "3") 1 $ 1 - tri)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 -- Transpose by half step each measure.
 let
 slicesTotal = 8 * 24
-speeds = [2 ** (-i / 12) | i <- [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]]
+speeds = [2 ** (-i / 12) | i <- [0..11]]
 in do
   setcps (134/60/4)
   d1 $ "cp" # gain 0.8
   -- Down a half step each measure.  These two examples are equivalent.
   d2 $ slice slicesTotal (8 * (slow 24 $ run 24) + (run 8)) $ loopAt 24 $ s "bach" # speed (fit 0 speeds (run 24 |% 5)) # cut 1
-  d2 $ slice slicesTotal (8 * (slow 24 $ run 24) + (run 8)) $ loopAt 24 $ s "bach" # speed (select ((/11) <$> (run 24 |% 12)) speeds) # cut 1
+  d2 $ slice slicesTotal (8 * (slow 24 $ run 24) + (run 8)) $ loopAt 24 $ s "bach" # speed (chooseBy ((/11) <$> (run 24 |% 12)) speeds) # cut 1
   -- Up a half step each measure.  These two examples are equivalent.
   d2 $ slice slicesTotal (8 * (slow 24 $ run 24) + (run 8)) $ loopAt 24 $ s "bach" # speed (rev $ fit 0 speeds (1 + run 24 |% 5)) # cut 1
 
-resetCycles
+
 
 -- Shuffling within each measure.
 let
@@ -173,14 +228,6 @@ randIndex = segment 1 $ irand 3
 in do
   d1 $ "cp" # gain 0.8
   d2 $ slice slicesTotal (fast (bite 3 randIndex "1 1.75 1.25") $ run 8) $ s "bach" # cut 1 # speed (bite 12 (2 * randIndex) $ listToPat speeds)
-
-
-
--- Use oscillator to modulate pitch in a fluid way.
-do
-  d1 $ "hc"
-  d2 $ slow 24 $ chop (8 * 24) $ s "bach" # cut 1 # speed (segment (8 * 24) $ fast (24 / 2) $ range 0.9 1 sine)
-
 
 
 

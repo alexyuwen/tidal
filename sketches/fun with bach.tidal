@@ -1,15 +1,17 @@
--- Sequence.
+-- Ladder.
 -- Repeat and hurry every fourth chunk.
 let
 speeds = [2 ** (-i / 12) | i <- [0..11]]
 chunkIndexes = "<0 1 2 3 3 3>" + 4 * (slow (12 * 6) $ run 12)
 splicePat = fast 2 $ run 4 + 4 * chunkIndexes
-cpsPat = (slow 1.5 $ 134 * fit 0 speeds (cat ["0", "0 2 4", "4", "4 2 0"])) / 60 / 4
+speedsPat = slow 1.5 $ fit 0 speeds (cat ["0", "0 2 4", "4", "4 2 0"])
+cpsPat = (134 * speedsPat) / 60 / 4
 in do
-  d1 $ "hc"
+  setCycle 0
+  -- d1 $ "hc"
   d2 $ splice (8 * 24) splicePat $ s "bach" # cut 1 # cps cpsPat
 
-resetCycles
+
 
 -- 2 + 2.
 -- Switch between two keys within each two-measure block.
@@ -38,7 +40,7 @@ in do
   -- d1 $ "hc"
   d2 $ select ((/1) <$> "[1|0]/2") [pat0, pat1]
 
-resetCycles
+
 
 -- Triangle.
 -- Use oscillator to modulate pitch in a fluid way.

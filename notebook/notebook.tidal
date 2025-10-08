@@ -646,9 +646,24 @@ in do
   d2 $ slice slicesTotal (run 8) $ s "bach" # cut 1 # speed (bite 12 ("<1 [1 1]>" # irand 12) $ listToPat speeds)  -- Not sure how this works.
   d2 $ slice slicesTotal (run 8) $ s "bach" # cut 1 # speed (bite 12 (struct "<1 [1 1]>" $ irand 12) $ listToPat speeds)
 
+-- Binary.  Turns integer between 0 and 255 to 8-bit binary pattern.
+-- Integers outside that range will be modulo 256.
+-- Binary ... = BinaryN 8 ...
+do
+  setCycle 0
+  d1 "hc"
+  d2 $ struct (binary $ slow 8 $ listToPat $ map (2^) $ [0, 1, 2, 3, 4, 5, 6, 7]) $ "sn" -- TODO: easier way to do this?
 
+-- BinaryN.  Binary, but specify number of bits for boolean pattern.
+do
+  setCycle 0
+  d1 "hc"
+  d2 $ struct (binaryN 12 $ slow 8 $ listToPat $ map (2^) $ [0, 1, 2, 3, 4, 5, 6, 7]) $ "sn" -- TODO: easier way to do this?
 
-
-
+-- Ascii.  Turns characters into 8-bit binary patterns, using their ASCII encoding.
+do
+  setCycle 0
+  d1 "hc"
+  d2 $ struct (ascii "<a b c x y z>") $ "sn" -- TODO: easier way to do this?
 
 

@@ -2,6 +2,10 @@
 
 
 
+do
+  d1 $ "hc" # gain 0.7
+  d2 $ n (scale "minor" $ run 4) # s "scSin"
 
 
 
+resetCycles

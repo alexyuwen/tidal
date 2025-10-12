@@ -4,15 +4,17 @@
 
 (
 
-SynthDef(\basicSynth, {
+SynthDef(\scTemplate, {
 	arg gate=1, out=0, sustain=1, freq=440, speed=1, begin=0, end=1, pan=0, accelerate, offset;
-	var line, tone, env, volume, outAudio;
+	var amp, tone, env, volume, outAudio;
 
-	line = Line.ar(begin,end,sustain,doneAction: Done.freeSelf);
+	// var line = Line.ar(begin,end,sustain,doneAction: Done.freeSelf);
+	amp = 0.5;
 	// env = Env.perc(0.01, 1.0);
-	env = Env.adsr(0.01, 0.4, 0.5, 0.1).kr(gate: gate, doneAction: 2);
-	tone = Pulse.ar(freq);
-	outAudio = tone*env;
+	env = Env.adsr(0, 0, sustain, 0.1).kr(gate: gate, doneAction: 2);
+	env = 1
+	tone = Pulse.ar(freq); // To avoid clicks, try using #legato 0.99 in TidalCycles
+	outAudio = tone * env * amp;
 
 	OffsetOut.ar(out, DirtPan.ar(outAudio, ~dirt.numChannels, pan));
 }).add;

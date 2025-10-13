@@ -1,0 +1,61 @@
+let
+scale = getScale (scaleTable ++ [("microtonal", [0,1.5,3,5,7,8.5,10])])
+hihatSimple = fast (segment 16 $ wchoose [(1, 8), (2, 1)]) $ "1!16" # s "hc:0" # hpf 1800 # gain 0.9
+hihatSimple2 = pickF (segment 8 $ wchoose [(0, 8), (1, 1)]) [id, const silence] hihatSimple
+hihatComplex = select ((/1) <$> (segment 16 $ wchoose [(0, 5), (1, "<1 3>")])) [
+  degradeBy "<0 0.16>" $ "1!16" # s "hc:0" # hpf "1800",
+  "1!32" # s "hc:0" # hpf "<1800 4000>"
+  ] # gain 0.9
+sd = "~ 1 ~ 1" # s "snare:0" # gain 1.2 # hpf 333
+bd = "[~ <~ 1> ~ 1 . ~ 1] . [~ <~ ~ 1> ~ 1 . ~]" # s "bskick:2" # speed 1.33 # gain 1.6
+melodyBassLow = n (scale "microtonal" $ slow 2 $ "~@2 1@2 0@2 _@3 ~ 1 -1 0@5 ~ 1@2 0@2 _@3 ~ 1 -1 0@4") |+ n "ef" # octave "2" # s "superhammond" # voice 3 # gain 1.2
+melodyBassLow2 = melodyBassLow # octave "3" |* gain 0.66
+melodyBass = stack [melodyBassLow # orbit 1, melodyBassLow2 # orbit 2]
+melodyBassDoubledHigh = melodyBassLow # s "superhammond" |+ n "0, -0.12" # voice 9 # octave "6, 7" |* gain 0.4 # legato 1.1
+melodyBassShifted = shiftFunc melodyBass # cut 1
+melody1 = n (scale "microtonal" "0 0 1 ~ 2 _ ~ 2 . 2? 2 1 ~ 0 _ ~ _") |+ n "ef" # octave "5, 6" # s "supermandolin" # legato 0.6 # gain (1.66 * "[1 0.6]*8") # vowel "o" # lpf 1111 # room 0.1 # sz 0.5 # orbit 3
+melody1Shifted = shiftFunc melody1
+rhythm = stack [sd, bd, hihatSimple2]
+chorusRhythm = stack [sd, bd, sew "t f" hihatSimple2 hihatComplex]
+hihatSoloFunc randSeed = seqPLoop [
+  (0, 1, stack [melodyBass, melodyBassDoubledHigh, chorusRhythm]),
+  (1.125, 2, (<~) randSeed $ stack [sd, bd, hihatComplex])
+  ]
+shiftFunc x = (~>) (segment 1 $ irand 4 / 4) x
+fullPatFunc randSeed verseLength1 verseLength2 =
+  let
+  verse1Start = 2
+  verse1End = verse1Start + verseLength1
+  chorus2Start = verse1End
+  chorus2End = chorus2Start + 3
+  verse2Start = chorus2End + 0.125
+  verse2End = verse2Start + verseLength2 - 0.125
+  hihatSoloStart = verse2End
+  in
+  seqPLoop [
+  -- -- Rhythm intro
+  -- (0, 1.125, stack [hihatSimple, sd]),
+  (0, 0.125, silence),
+  -- Chorus intro
+  (0.125, 2, stack [melodyBass, melodyBassDoubledHigh, bd, hihatSimple2]),
+  -- Verse 1
+  (verse1Start, verse1End, (<~) randSeed $ stack [melodyBassShifted, melody1Shifted, rhythm]),
+  -- Chorus 2
+  (chorus2Start, chorus2End, stack [melodyBass, melodyBassDoubledHigh, chorusRhythm]),
+  -- Verse 2
+  (verse2Start, verse2End, (<~) (randSeed + 32) $ stack [melodyBassShifted, melody1Shifted, rhythm]),
+  -- Hihat solo
+  (hihatSoloStart, hihatSoloStart + 2, hihatSoloFunc (randSeed + 3)),
+  (hihatSoloStart + 2, hihatSoloStart + 4, hihatSoloFunc (randSeed + 11))
+  ]
+in do
+  setcps 0.32
+  setCycle 27
+  hush
+  d1 $ seqPLoop [
+    (0, 25, fullPatFunc 0 7 9),
+    (25, 50, fullPatFunc 144 7 9),
+    (50, 51 + (7 / 8), (<~) 2 $ stack [sd, bd, hihatComplex]),
+    (99, 999, silence)
+    ]
+

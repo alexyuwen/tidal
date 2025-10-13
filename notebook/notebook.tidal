@@ -666,4 +666,13 @@ do
   d1 "hc"
   d2 $ struct (ascii "<a b c x y z>") $ "sn" -- TODO: easier way to do this?
 
+-- Room.  Sz.  Dry.
+-- Room is reverb amount/depth/feedback: how much of the signal is fed back into the reverb.  It's how reverberant the space is.
+-- Sz is delay time / space dimension: higher = bigger space, longer decay.
+-- Dry is how much of the original sound is mixed in: 0 = only reverb (fully wet), 1 = completely dry (no reverb).
+
+
+
+
+
 

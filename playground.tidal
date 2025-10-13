@@ -3,15 +3,13 @@
 
 
 do
-  d1 $ "hc" # gain 0.7
-  d2 $ n (scale "minor" $ run 8) # s "scSin" # fadeTime 1
+  d1 $ "cp" # gain 0.7
+  d2 $ n (segment 8 $ "1") # s "superhammond" # cut 1
 
 
 
 
-do
-  setcps
-  setCycle 0
+
 
 
 resetCycles

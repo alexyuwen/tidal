@@ -22,7 +22,7 @@ fullPat = seqPLoop [
   ]
 in do
   setcps 0.32
-  setCycle 43
+  setCycle 0
   d1 $ seqPLoop [
     (0, 24, fullPat),
     (24, 48, fullPat |* gain "<1!19 [1@5 0@3] 1!4>") -- Even gain = 0 does not seem to cut off sustains.

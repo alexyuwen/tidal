@@ -33,29 +33,28 @@ fullPatFunc randSeed verseLength1 verseLength2 =
   hihatSoloStart = verse2End
   in
   seqPLoop [
-  -- -- Rhythm intro
-  -- (0, 1.125, stack [hihatSimple, sd]),
   (0, 0.125, silence),
-  -- Chorus intro
+  -- Chorus 1
   (0.125, 2, stack [melodyBass, melodyBassDoubledHigh, bd, hihatSimple2]),
   -- Verse 1
   (verse1Start, verse1End, (<~) randSeed $ stack [melodyBassShifted, melody1Shifted, rhythm]),
   -- Chorus 2
   (chorus2Start, chorus2End, stack [melodyBass, melodyBassDoubledHigh, chorusRhythm]),
   -- Verse 2
-  (verse2Start, verse2End, (<~) (randSeed + 32) $ stack [melodyBassShifted, melody1Shifted, rhythm]),
+  (verse2Start, verse2End, (<~) (randSeed + 32) $ stack [melodyBassShifted. melody1Shifted, rhythm]),
   -- Hihat solo
   (hihatSoloStart, hihatSoloStart + 2, hihatSoloFunc (randSeed + 3)),
   (hihatSoloStart + 2, hihatSoloStart + 4, hihatSoloFunc (randSeed + 11))
   ]
 in do
   setcps 0.32
-  setCycle 27
+  setCycle 0
   hush
   d1 $ seqPLoop [
     (0, 25, fullPatFunc 0 7 9),
     (25, 50, fullPatFunc 144 7 9),
     (50, 51 + (7 / 8), (<~) 2 $ stack [sd, bd, hihatComplex]),
-    (99, 999, silence)
+    (99, 996, silence),
+    (996, 1000, "hc cp hc cp")
     ]
 

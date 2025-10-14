@@ -383,9 +383,10 @@ d1 $ fix (# octave 6) (n (scale "minor" "[0, 4, 7]")) $ n (scale "minor" "0..7")
 -- Unfix.  Fix, but applies function only when the testing pattern is not a match.
 d1 $ unfix (# octave 6) (n (scale "minor" "[0, 4, 7]")) $ n (scale "minor" "0..7") # s "supervibe"
 
--- Contrast.  Basically an if-else-statement over patterns.  For contrast t f p, think of t as the true-branch, f as the false branch, and p as the test.
+-- Contrast.  If-else-statement over patterns, using a control pattern as the equality test.
+-- For contrast t f p1 p2, think of t as the true-branch function, f as the false branch function, p1 as the test pattern, and p2 as the pattern being transformed.
 -- These two examples are equivalent.
-d1 $ contrast (# octave 6) (# legato 0.3) (n (scale "minor" "[0, 4, 7]")) $ n (scale "minor" "0..7") # s "supervibe"
+d1 $ contrast (# octave 6) (# legato 0.2) (n (scale "minor" "[0, 4, 7]")) $ n (scale "minor" "0..7") # s "supervibe"
 d1 $ contrastBy (==) (# octave 6) (# legato 0.3) (n (scale "minor" "[0, 4, 7]")) $ n (scale "minor" "0..7") # s "supervibe"
 
 -- ContrastBy.  A more general version of contrast that takes an abritrary boolean function that is used to compare the control patterns.

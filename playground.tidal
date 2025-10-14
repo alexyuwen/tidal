@@ -2,5 +2,26 @@
 
 
 
+let
+-- hh = "1!16" # s "hc:0" # hpf 5555 # room 0.04 # orbit 1
+-- sd = "~ 1 ~ 1" # s "snare:0" # gain 1.2 # hpf 333 # room 0.08 # orbit 2
+vibeNotes = contrast () $ n (scale "minor" "[0 1 2 4]*4") |+ n "ef" # octave 5
+in do
+  setcps 0.32
+  setCycle 0
+  -- d1 $ "hc"
+  d2 $ vibeNotes # s "supervibe" # legato 8 # vowel "a" # lpf 666
+
+
+do
+  setCycle 0
+  d1 "hc"
+  d2 $ n (scale "minor" $ fast 2 $ run 8) |+ n "ef" # octave "<[3 4] [5 6] [7 8]>" # s "supervibe" # vowel "a" # lpf 666
+
+
+
+
+
+d1 $ contrast (# octave 6) (# legato 0.3) (n (scale "minor" "[0, 4, 7]")) $ n (scale "minor" "0..7") # s "supervibe"
 
 

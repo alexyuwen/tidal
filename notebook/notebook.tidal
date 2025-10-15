@@ -356,7 +356,7 @@ do
 
 -- Outside.  Applies function "outside" a cycle.  Outside n f is equivalent to (slow n . f . fast n)
 -- These two examples are equivalent.
-do
+doz
   d1 "cp"
   d2 $ outside 2 rev $ n (scale "minor" $ slow 2 $ run 8) # s "supervibe"
   d2 $ (slow 2 . rev . fast 2) $ n (scale "minor" $ slow 2 $ run 8) # s "supervibe"
@@ -377,14 +377,16 @@ d1 $ foldEvery [2,3] (ply 2) $ n (scale "minor" "0 2 1 4") # s "supervibe"
 d1 $ every 2 (ply 2) $ every 3 (ply 2) $ n (scale "minor" "0 2 1 4") # s "supervibe"
 d1 $ (every 2 (ply 2) . every 3 (ply 2)) $ n (scale "minor" "0 2 1 4") # s "supervibe"
 
--- Fix. Applies function to matching events in a pattern of controls. Fix is contrast where the false-branching function is set to the identity id.
+-- Fix. Applies function to matching events in a pattern of controls.
+-- Contrast, but the false-branching function is set to the identity id.
 d1 $ fix (# octave 6) (n (scale "minor" "[0, 4, 7]")) $ n (scale "minor" "0..7") # s "supervibe"
 
 -- Unfix.  Fix, but applies function only when the testing pattern is not a match.
 d1 $ unfix (# octave 6) (n (scale "minor" "[0, 4, 7]")) $ n (scale "minor" "0..7") # s "supervibe"
 
 -- Contrast.  If-else-statement over patterns, using a control pattern as the equality test.
--- For contrast t f p1 p2, think of t as the true-branch function, f as the false branch function, p1 as the test pattern, and p2 as the pattern being transformed.
+-- For contrast t f p1 p2, think of t as the true-branch function, f as the false branch function,
+-- p1 as the pattern for testing control pattern equality, and p2 as the pattern being transformed.
 -- These two examples are equivalent.
 d1 $ contrast (# octave 6) (# legato 0.2) (n (scale "minor" "[0, 4, 7]")) $ n (scale "minor" "0..7") # s "supervibe"
 d1 $ contrastBy (==) (# octave 6) (# legato 0.3) (n (scale "minor" "[0, 4, 7]")) $ n (scale "minor" "0..7") # s "supervibe"
@@ -429,7 +431,7 @@ d1 $ s "sax:0" # accelerate 1 # cut 1
 -- Negative values play the sample backwards.
 d1 $ s "sax:0" # speed "<1 2 3 4>" # cut 1
 
--- Mask.  Uses a binary pattern to mask another pattern.
+-- Mask.  Uses a binary pattern to mask another pattern.  If true, then sound; if false, then silence.
 -- Note that Mask only masks events.  Sustained sounds will not be masked, even with cut 1.
 -- I prefer using PickF, as it is easier to extend.
 d1 $ stack [

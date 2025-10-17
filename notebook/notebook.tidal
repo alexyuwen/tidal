@@ -259,7 +259,7 @@ in do
   d1 $ "hc"
   d2 $ (<~) (cycleChoose fractions) $ (euclid 3 8 $ s "cp")
   d2 $ (<~) (cycleChoose [0, 1/8 .. 7/8]) $ (euclid 3 8 $ s "cp")
-  d2 $ (<~) ((segment 1 $ irand 8) / 8) $ euclid 3 8 $ s "cp"
+  d2 $ (<~) (segment 1 $ irand 8 / 8) $ euclid 3 8 $ s "cp"
 
 -- EuclidInv and EuclidFull.
 -- These two examples are equivalent.

@@ -1,34 +1,69 @@
 
+let
+binaryPat0 = "{t ~ ~ t ~}%8"
+binaryPat1 = (<~) (segment 1 $ irand 8 / 8) "t(3,8)"
+binaryPat2 = fast (16/11) "t(4,11)"
+binaryPat = sew "t|f" binaryPat0 binaryPat1
+in do
+  hush
+  setCycle 0
+  -- d2 "hc*4"
+  d1 $ slice 16 (segment 8 $ 3 + run 2) $ s "break:10" # pan "0 1"
+  d1 $ slice 16 (segment 8 $ fast 2 $ 3 + run 2) $ s "break:10" # pan "[0 1]*2"
+  d1 $ slice 16 (segment 8 $ fast 4 $ 3 + run 2) $ s "break:10" # pan "[0 1]*4"
+  d1 $ slice 16 (struct binaryPat2 0) $ s "break:10"
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 -- What about repeated slices according to some across-the bar euclidean polymeter, first 2 slices, then 4, then 6?
 let
-slicePat = fast 4 $ bite 2 "[0 1]*2" $ segment 2 $ irand 32
-sectionA = slice 32 slicePat $ s "break:10, break:20" # cut 1
+-- [a b a b . c d c d . e f e f . g h g h]
+slicePat = slice 32 $ fast 4 $ bite 2 "[0 1]*2" $ segment 2 $ irand 32
+sectionA = slicePat $ s "break:10, break:20" # cut 1 -- both s share the same orbit for cut 1
+-- sectionA = stack [
+--   slicePat $ s "break:10" # orbit 1,
+--   slicePat $ s "break:20" # orbit 2
+--   ] # cut 1
 sectionBSlicePat = slice 16 (segment 8 $ segment 2 $ irand 16)
+-- Use mask to switch between "[a a a a b b b b] [c c c c d d d d]" and "[- - a' a' a' a' b' b'] [b' b' c' c' c' c' d' d']"
 sectionB = stack [
+  mask "[t|f]*8" $ sectionBSlicePat $ s "break:10",
+  mask "[f|t]*8" $ (~>) 0.25 $ sectionBSlicePat $ s "break:20"
+  ]
+sectionB2 = stack [
   sectionBSlicePat $ s "break:10",
   (~>) 0.25 $ sectionBSlicePat $ s "break:20"
   ]
-sectionCBeatsFunc randSeed = slice 16 (slow 2 $ ply 4 $ segment 1 $ fast randSeed $ irand 16) $ s "break:20" # pan "<0 1>"
-sectionCOnbeats = sectionCBeatsFunc 1.2
-sectionCOffbeats = (~>) 1.25 $ sectionCBeatsFunc 1.5
-sectionC = stack [sectionCOnbeats, sectionCOffbeats]
--- finalPat = seqPLoop [
---   (0, 10, sectionA),
---   (10, 20, sectionB),
---   (20, 30, sectionC)
---   ]
-finalPat = ur 12 "sectionA sectionB sectionC" [
+sectionCSlicePatFunc randSeed = slice 16 $ slow 2 $ ply 4 $ segment 1 $ fast randSeed $ irand 16
+sectionC = stack [
+  sectionCSlicePatFunc 1.2 $ s "break:10" # legato 0.2,
+  (~>) 1.25 $ sectionCSlicePatFunc 1.5 $ s "break:10" # legato 0.2,
+  (~>) (3/16) $ sectionCSlicePatFunc 1.0 $ s "break:20",
+  (~>) (3/16) $ (~>) 1.25 $ sectionCSlicePatFunc 1.1 $ s "break:20"
+  ] # pan "0 1"
+urPat = ur 20 "sectionA sectionB" [
   ("sectionA", sectionA),
-  ("sectionB", sectionB),
-  ("sectionC", sectionC)
+  ("sectionB", sectionB2)
   ] []
+finalPat = sew ((<~) (1/16) $ segment (8 / 3) $ wchoose [(True, 3), (False, 0)]) urPat sectionC
 in do
   hush
   setcps 0.5
   setCycle 0
+  -- d2 $ "hc*2"
   d1 $ finalPat
 
 

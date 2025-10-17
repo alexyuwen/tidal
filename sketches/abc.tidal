@@ -1,0 +1,36 @@
+let
+bd = s "bd:23" # gain 1.5
+hh = s "hc:2" # vowel "i" # legato 0.4
+cp = s "clap:5" # gain 0.9
+-- bd
+bdRhythm = "1!4" # bd
+bdPolymeterFunc x = inside 2 loopFirst $ fast (20 / x) $ "1"
+bdSoloPolymeter = select ((/5) <$> (segment 1 $ irand 6)) [bdPolymeterFunc x | x <- [3, 4, 5, 6, 7, 8]] # bd
+bdSolo = sew "t f" bdRhythm bdSoloPolymeter
+-- hh
+hhRhythm = sew "[f|t|t|t]*2" silence ("[~ ~ 1 ~ [~ 1]]*4") # hh
+hhRhythm2 = "[1 _ 1? 1]*10" # hh
+-- hhRhythm2Reduced changes pattern every cycle: 0 2 1 2
+hhRhythm2Reduced = mask (select ((/2) <$> "<0 2 1 2>") ["[f t t t f]*4", "[f t t t t]*4", "[f t t t f . f t t t t]*2"]) hhRhythm2
+hhSolo = mask "[t . f t t t t]*2" $ inside 10 (shuffle 2) $ mask (fastcat ["t", "[t f|t|t]*10"]) hhRhythm2
+-- cp
+cpRhythm = sew "[f|t|t|t]*2" (fast (20 / "[2|3|4|6|7]*2") $ "1") ("[~ ~ 1 _ _]*4")
+cpRhythmPanned = cpRhythm # pan (slow 2 $ "<0 1>") # cp
+cpRhythm2 = "~ 1 ~ 1" # cp
+cpSectionC = mask "f!11 t!9" bdSolo # cp
+-- sections
+sectionAFunc randSeed = (<~) (randSeed * 4) $ stack [bdRhythm, hhRhythm, cpRhythmPanned]
+sectionB = stack [bdRhythm, hhSolo, cpRhythm2]
+sectionC = stack [bdSolo, hhRhythm2Reduced, cpSectionC]
+finalPat randSeed = seqPLoop [
+  (0, 5, sectionAFunc randSeed),
+  (5, 10, (<~) (randSeed * 2) sectionB),
+  (10, 16, (<~) (randSeed * 3) sectionC)
+  ]
+in do
+  hush
+  setcps 0.24
+  setCycle 5
+  -- d4 $ n "0" # s "supervibe" # legato 0.1
+  d1 $ finalPat 9
+

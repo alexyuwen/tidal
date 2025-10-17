@@ -2,13 +2,29 @@
 
 
 
-
+-- What about repeated slices according to some across-the bar euclidean polymeter, first 2 slices, then 4, then 6?
 let
 slicePat = fast 4 $ bite 2 "[0 1]*2" $ segment 2 $ irand 32
-sectionA = slice 32 slicePat $ s "break:20, break:10" # cut 1
-finalPat = seqPLoop [
-  (0, 99, sectionA)
+sectionA = slice 32 slicePat $ s "break:10, break:20" # cut 1
+sectionBSlicePat = slice 16 (segment 8 $ segment 2 $ irand 16)
+sectionB = stack [
+  sectionBSlicePat $ s "break:10",
+  (~>) 0.25 $ sectionBSlicePat $ s "break:20"
   ]
+sectionCBeatsFunc randSeed = slice 16 (slow 2 $ ply 4 $ segment 1 $ fast randSeed $ irand 16) $ s "break:20" # pan "<0 1>"
+sectionCOnbeats = sectionCBeatsFunc 1.2
+sectionCOffbeats = (~>) 1.25 $ sectionCBeatsFunc 1.5
+sectionC = stack [sectionCOnbeats, sectionCOffbeats]
+-- finalPat = seqPLoop [
+--   (0, 10, sectionA),
+--   (10, 20, sectionB),
+--   (20, 30, sectionC)
+--   ]
+finalPat = ur 12 "sectionA sectionB sectionC" [
+  ("sectionA", sectionA),
+  ("sectionB", sectionB),
+  ("sectionC", sectionC)
+  ] []
 in do
   hush
   setcps 0.5

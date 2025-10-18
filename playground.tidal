@@ -1,19 +1,26 @@
 
+
+
 let
-binaryPat0 = "{t ~ ~ t ~}%8"
-binaryPat1 = (<~) (segment 1 $ irand 8 / 8) "t(3,8)"
-binaryPat2 = fast (16/11) "t(4,11)"
-binaryPat = sew "t|f" binaryPat0 binaryPat1
+binaryPat = (<~) (segment 1 $ irand 8 / 8) "t(3,8)"
+sectionAFunc n = slice 16 (struct binaryPat n) $ s "break:10" # cps "<0.5 0.7>"
+sectionA0 = sectionAFunc 1
+sectionA1 = sectionAFunc 3
+sectionA2 = sectionAFunc 6
+sectionB = ""
+-- [0 1 2 3 4 5 6 7] [. . . . . . . .] where . is random
+sectionC = slice 16 (cat [fast ("11|12|13"/8) "[0..7]", segment 12 $ 8 + irand 8]) $ s "break:10" # cut 1 # orbit 1 # cps 0.5 |* cps (cat [1, (2/3)])
+finalPat = ur 16 "[sectionA0 sectionA1 sectionA2] sectionC" [
+  ("sectionA0", sectionA0),
+  ("sectionA1", sectionA1),
+  ("sectionA2", sectionA2),
+  ("sectionB", sectionB),
+  ("sectionC", stack [sectionC])
+  ] []
 in do
   hush
   setCycle 0
-  -- d2 "hc*4"
-  d1 $ slice 16 (segment 8 $ 3 + run 2) $ s "break:10" # pan "0 1"
-  d1 $ slice 16 (segment 8 $ fast 2 $ 3 + run 2) $ s "break:10" # pan "[0 1]*2"
-  d1 $ slice 16 (segment 8 $ fast 4 $ 3 + run 2) $ s "break:10" # pan "[0 1]*4"
-  d1 $ slice 16 (struct binaryPat2 0) $ s "break:10"
-
-
+  d1 $ finalPat
 
 
 
@@ -30,22 +37,18 @@ in do
 
 -- What about repeated slices according to some across-the bar euclidean polymeter, first 2 slices, then 4, then 6?
 let
--- [a b a b . c d c d . e f e f . g h g h]
-slicePat = slice 32 $ fast 4 $ bite 2 "[0 1]*2" $ segment 2 $ irand 32
-sectionA = slicePat $ s "break:10, break:20" # cut 1 -- both s share the same orbit for cut 1
--- sectionA = stack [
---   slicePat $ s "break:10" # orbit 1,
---   slicePat $ s "break:20" # orbit 2
---   ] # cut 1
-sectionBSlicePat = slice 16 (segment 8 $ segment 2 $ irand 16)
+slicePat0 = slice 32 $ fast 4 $ bite 2 "[0 1]*2" $ segment 2 $ irand 32 -- [a b a b . c d c d . e f e f . g h g h]
+slicePat1 = slice 32 $ bite 4 "0 1 0 1 . 2 3 2 3 . 0 1 2 3 . 0 1 2 3" $ segment 4 $ irand 32
+sectionA = stack [
+  mask "[t|t|f]*16" $ slicePat0 $ s "break:10" # orbit 1,
+  mask "[f|t|t]*16" $ slicePat1 $ s "break:20" # orbit 2
+  ] # cut 1
+sectionBSlicePat = slice 32 (segment 16 $ (segment 2 $ 2 * irand 16 + "[1 2]*8")) -- "[a a a a b b b b]" where a and b are 1/8 cycle but offset 1/16
 -- Use mask to switch between "[a a a a b b b b] [c c c c d d d d]" and "[- - a' a' a' a' b' b'] [b' b' c' c' c' c' d' d']"
+sectionBBinaryPat = "[t t t f . f f f f]*2"
 sectionB = stack [
-  mask "[t|f]*8" $ sectionBSlicePat $ s "break:10",
-  mask "[f|t]*8" $ (~>) 0.25 $ sectionBSlicePat $ s "break:20"
-  ]
-sectionB2 = stack [
   sectionBSlicePat $ s "break:10",
-  (~>) 0.25 $ sectionBSlicePat $ s "break:20"
+  (~>) (3/16) $ sectionBSlicePat $ s "break:20"
   ]
 sectionCSlicePatFunc randSeed = slice 16 $ slow 2 $ ply 4 $ segment 1 $ fast randSeed $ irand 16
 sectionC = stack [
@@ -56,13 +59,12 @@ sectionC = stack [
   ] # pan "0 1"
 urPat = ur 20 "sectionA sectionB" [
   ("sectionA", sectionA),
-  ("sectionB", sectionB2)
+  ("sectionB", sectionB)
   ] []
 finalPat = sew ((<~) (1/16) $ segment (8 / 3) $ wchoose [(True, 3), (False, 0)]) urPat sectionC
 in do
   hush
-  setcps 0.5
-  setCycle 0
+  setCycle 10
   -- d2 $ "hc*2"
   d1 $ finalPat
 

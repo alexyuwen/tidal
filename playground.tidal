@@ -7,8 +7,6 @@ do
 
 
 let
-fullPatLength = 60
-sectionAFullLength = fullPatLength / 4
 randSlice = choose [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15]
 speeds = [2 ** (-i / 24) | i <- [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]]
 sectionABinaryPat = (<~) (segment 1 $ irand 8 / 8) "t(3,8)"
@@ -30,8 +28,8 @@ sectionCPatDetuned = stack [
   sectionCPat # speed (1 / speeds !! 1) # orbit 2,
   sectionCPat # speed (speeds !! 1) # orbit 3
   ] |* gain 0.9
-sectionC0 = select ((~>) (1/8) $ segment 4 $ wchoose [(0, 9), (1, 1)]) [sectionCPat, ply 2 $ sectionCPatDetuned]
-sectionC = sew (segment 1 $ wchoose [(True, 6), (False, 1)]) sectionC0 sectionADetuned
+sectionC0 = select ((~>) (1/8) $ segment 4 $ wchoose [(0, 7), (1, 1)]) [sectionCPat, ply 2 $ sectionCPatDetuned]
+sectionC = sew (segment 1 $ wchoose [(True, 4), (False, 1)]) sectionC0 sectionADetuned
 sectionDDetuneSpeedPat = bite 12 (segment 1 $ wchoose [(0, 2), (1, 1)]) (listToPat speeds)
 sectionDCpsPat = segment 1 $ wchoose [(0.75, 2), (1.5, 1)]
 sectionDFunc speedArg = slice 16 (bite 3 ((<~) ("0|3|6" / 8) "0 1 2 0 1 2 0 1") $ segment 3 $ randSlice) $ s "break:10" # cps sectionDCpsPat # cut 1 # legato 1.03 # speed speedArg
@@ -41,14 +39,23 @@ sectionD = stack [
   sectionD0 # orbit 4,
   sectionD1 # orbit 5
   ] |* gain 0.84
-finalPat = ur fullPatLength "sectionA sectionD sectionC" [
-  ("sectionA", sectionA),
-  ("sectionC", sectionC),
-  ("sectionD", (<~) 90 sectionD)
-  ] []
+sectionAFullLength = 7
+seqPLoopFunc randSeed = seqPLoop [
+  (0, 2.33, sectionA0),
+  (2.33, 4.66, sectionA1),
+  (4.66, 7, sectionA2),
+  (7, 29.66, (<~) (randSeed + 66) sectionD),
+  (30, 54.66, (<~) (randSeed + 99) sectionC),
+  (55, 79.66, (<~) (randSeed + 155) sectionD)
+  ]
+finalPat = seqPLoop [
+  (0, 79.5, seqPLoopFunc 0),
+  (80, 80 + 79.5, seqPLoopFunc 101),
+  (160, 200, silence)
+  ]
 in do
   hush
-  setCycle 40
+  setCycle 0
   d1 $ finalPat
 
 

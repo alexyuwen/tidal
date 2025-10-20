@@ -511,8 +511,8 @@ in do
 -- These two examples are equivalent.
 do
   d1 "cp"
-  d2 $ n (squeeze "0 . 1 1" [listToPat [0, 7], listToPat [2, 3]]) # s "organTonewheel3"
-  d2 $ n (squeeze "0 . 1 1" [fastcat [0, 7], fastcat [2, 3]]) # s "organTonewheel3"
+  d2 $ n (squeeze "0 . 1 1" [listToPat [0, 7], listToPat [2, 3]]) # s "organTonewheel3" -- listToPat. :: [a] -> Pattern a
+  d2 $ n (squeeze "0 . 1 1" [fastcat [0, 7], fastcat [2, 3]]) # s "organTonewheel3" -- fastcat. :: [Pattern a] -> Pattern a
 
 -- <$>.  Infix synonym for fmap.  fmap f x === f <$> x
 d1 $ bite 8 (segment 8 $ floor <$> range 0 8 perlin) $ arpg $ n "c'min'8" # s "violin"
@@ -550,7 +550,7 @@ in do
   d2 $ sew (segment 2 $ "t|f|f|f") arpPat scalePat -- Random, with weighted probabilities, with mininotation.
   d2 $ select (segment 2 $ "0|1|1|1") [arpPat, scalePat]
 
--- While.  Applies function based on boolean structure.
+-- While.  Apply function based on boolean structure.
 do
   d1 "cp"
   d2 $ while "f(3,8)" (ply 2) $ n (scale "minor" $ run 8) # s "violin"

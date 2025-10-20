@@ -1,73 +1,55 @@
 
+do
+  setCycle 0
+  d1 $ slice 32 "8..15" $ s "break:10" # cps 0.5
+
+
 
 
 let
-binaryPat = (<~) (segment 1 $ irand 8 / 8) "t(3,8)"
-sectionAFunc n = slice 16 (struct binaryPat n) $ s "break:10" # cps "<0.5 0.7>"
+fullPatLength = 60
+sectionAFullLength = fullPatLength / 4
+randSlice = choose [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15]
+speeds = [2 ** (-i / 24) | i <- [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]]
+sectionABinaryPat = (<~) (segment 1 $ irand 8 / 8) "t(3,8)"
+sectionAFunc n = slice 16 (struct sectionABinaryPat n) $ s "break:10" # cps "<0.5 0.75>"
 sectionA0 = sectionAFunc 1
 sectionA1 = sectionAFunc 3
 sectionA2 = sectionAFunc 6
-sectionB = ""
--- [0 1 2 3 4 5 6 7] [. . . . . . . .] where . is random
-sectionC = slice 16 (cat [fast ("11|12|13"/8) "[0..7]", segment 12 $ 8 + irand 8]) $ s "break:10" # cut 1 # orbit 1 # cps 0.5 |* cps (cat [1, (2/3)])
-finalPat = ur 16 "[sectionA0 sectionA1 sectionA2] sectionC" [
+sectionA = ur sectionAFullLength "sectionA0 sectionA1 sectionA2" [
   ("sectionA0", sectionA0),
   ("sectionA1", sectionA1),
-  ("sectionA2", sectionA2),
-  ("sectionB", sectionB),
-  ("sectionC", stack [sectionC])
+  ("sectionA2", sectionA2)
   ] []
-in do
-  hush
-  setCycle 0
-  d1 $ finalPat
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--- What about repeated slices according to some across-the bar euclidean polymeter, first 2 slices, then 4, then 6?
-let
-slicePat0 = slice 32 $ fast 4 $ bite 2 "[0 1]*2" $ segment 2 $ irand 32 -- [a b a b . c d c d . e f e f . g h g h]
-slicePat1 = slice 32 $ bite 4 "0 1 0 1 . 2 3 2 3 . 0 1 2 3 . 0 1 2 3" $ segment 4 $ irand 32
-sectionA = stack [
-  mask "[t|t|f]*16" $ slicePat0 $ s "break:10" # orbit 1,
-  mask "[f|t|t]*16" $ slicePat1 $ s "break:20" # orbit 2
-  ] # cut 1
-sectionBSlicePat = slice 32 (segment 16 $ (segment 2 $ 2 * irand 16 + "[1 2]*8")) -- "[a a a a b b b b]" where a and b are 1/8 cycle but offset 1/16
--- Use mask to switch between "[a a a a b b b b] [c c c c d d d d]" and "[- - a' a' a' a' b' b'] [b' b' c' c' c' c' d' d']"
-sectionBBinaryPat = "[t t t f . f f f f]*2"
-sectionB = stack [
-  sectionBSlicePat $ s "break:10",
-  (~>) (3/16) $ sectionBSlicePat $ s "break:20"
-  ]
-sectionCSlicePatFunc randSeed = slice 16 $ slow 2 $ ply 4 $ segment 1 $ fast randSeed $ irand 16
-sectionC = stack [
-  sectionCSlicePatFunc 1.2 $ s "break:10" # legato 0.2,
-  (~>) 1.25 $ sectionCSlicePatFunc 1.5 $ s "break:10" # legato 0.2,
-  (~>) (3/16) $ sectionCSlicePatFunc 1.0 $ s "break:20",
-  (~>) (3/16) $ (~>) 1.25 $ sectionCSlicePatFunc 1.1 $ s "break:20"
-  ] # pan "0 1"
-urPat = ur 20 "sectionA sectionB" [
+sectionADetuned = stack [
+  sectionA # speed (1 / speeds !! 1),
+  sectionA # speed (speeds !! 1)
+  ] |* gain 0.9
+sectionCPat = slice 16 (segment 8 randSlice) $ s "break:10" # cut 1 # legato 1.03 # cps 0.75
+sectionCPatDetuned = stack [
+  sectionCPat # speed (1 / speeds !! 1) # orbit 2,
+  sectionCPat # speed (speeds !! 1) # orbit 3
+  ] |* gain 0.9
+sectionC0 = select ((~>) (1/8) $ segment 4 $ wchoose [(0, 9), (1, 1)]) [sectionCPat, ply 2 $ sectionCPatDetuned]
+sectionC = sew (segment 1 $ wchoose [(True, 6), (False, 1)]) sectionC0 sectionADetuned
+sectionDDetuneSpeedPat = bite 12 (segment 1 $ wchoose [(0, 2), (1, 1)]) (listToPat speeds)
+sectionDCpsPat = segment 1 $ wchoose [(0.75, 2), (1.5, 1)]
+sectionDFunc speedArg = slice 16 (bite 3 ((<~) ("0|3|6" / 8) "0 1 2 0 1 2 0 1") $ segment 3 $ randSlice) $ s "break:10" # cps sectionDCpsPat # cut 1 # legato 1.03 # speed speedArg
+sectionD0 = sectionDFunc $ 1 / sectionDDetuneSpeedPat
+sectionD1 = sectionDFunc $ sectionDDetuneSpeedPat
+sectionD = stack [
+  sectionD0 # orbit 4,
+  sectionD1 # orbit 5
+  ] |* gain 0.84
+finalPat = ur fullPatLength "sectionA sectionD sectionC" [
   ("sectionA", sectionA),
-  ("sectionB", sectionB)
+  ("sectionC", sectionC),
+  ("sectionD", (<~) 90 sectionD)
   ] []
-finalPat = sew ((<~) (1/16) $ segment (8 / 3) $ wchoose [(True, 3), (False, 0)]) urPat sectionC
 in do
   hush
-  setCycle 10
-  -- d2 $ "hc*2"
+  setCycle 40
   d1 $ finalPat
-
 
 
 

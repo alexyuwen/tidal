@@ -5,7 +5,7 @@ do
 
 
 
-
+-- euclid(3,8)
 let
 randSlice = choose [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15]
 speeds = [2 ** (-i / 24) | i <- [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]]
@@ -40,18 +40,19 @@ sectionD = stack [
   sectionD1 # orbit 5
   ] |* gain 0.84
 sectionAFullLength = 7
-seqPLoopFunc randSeed = seqPLoop [
+seqPLoopLength = 84
+seqPLoopFunc randSeed randSeedD = seqPLoop [
   (0, 2.33, sectionA0),
   (2.33, 4.66, sectionA1),
   (4.66, 7, sectionA2),
-  (7, 29.66, (<~) (randSeed + 66) sectionD),
-  (30, 54.66, (<~) (randSeed + 99) sectionC),
-  (55, 79.66, (<~) (randSeed + 155) sectionD)
+  (7, 29.875, (<~) (randSeed + 101) sectionD), -- 21 cycles
+  (30, 54.875, (<~) (randSeed + 98) sectionC), -- 25 cycles
+  (55, 84, (<~) (randSeed + randSeedD + 155) sectionD) -- 29 cycles
   ]
 finalPat = seqPLoop [
-  (0, 79.5, seqPLoopFunc 0),
-  (80, 80 + 79.5, seqPLoopFunc 101),
-  (160, 200, silence)
+  (0, seqPLoopLength, seqPLoopFunc 0 128),
+  (seqPLoopLength, 2 * seqPLoopLength - 0.5, seqPLoopFunc 128 91),
+  (2 * seqPLoopLength, 1000, silence)
   ]
 in do
   hush

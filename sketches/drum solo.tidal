@@ -1,0 +1,56 @@
+
+-- (3,8)
+let
+randSlice = choose [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15]
+speeds = [2 ** (-i / 24) | i <- [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]]
+sectionABinaryPat = (<~) (segment 1 $ irand 8 / 8) "t(3,8)"
+sectionAFunc n = slice 16 (struct sectionABinaryPat n) $ s "break:10" # cps "<0.5 0.75>"
+sectionA0 = sectionAFunc 1
+sectionA1 = sectionAFunc 3
+sectionA2 = sectionAFunc 6
+sectionA = ur sectionAFullLength "sectionA0 sectionA1 sectionA2" [
+  ("sectionA0", sectionA0),
+  ("sectionA1", sectionA1),
+  ("sectionA2", sectionA2)
+  ] []
+sectionADetuned = stack [
+  sectionA # speed (1 / speeds !! 1),
+  sectionA # speed (speeds !! 1)
+  ] |* gain 0.9
+sectionCPat = slice 16 (segment 8 randSlice) $ s "break:10" # cut 1 # legato 1.03 # cps 0.75
+sectionCPatDetuned = stack [
+  sectionCPat # speed (1 / speeds !! 1) # orbit 2,
+  sectionCPat # speed (speeds !! 1) # orbit 3
+  ] |* gain 0.9
+sectionC0 = select ((~>) (1/8) $ segment 4 $ wchoose [(0, 7), (1, 1)]) [sectionCPat, ply 2 $ sectionCPatDetuned]
+sectionC = sew (segment 1 $ wchoose [(True, 4), (False, 1)]) sectionC0 sectionADetuned
+sectionDDetuneSpeedPat = bite 12 (segment 1 $ wchoose [(0, 2), (1, 1)]) (listToPat speeds)
+sectionDCpsPat = segment 1 $ wchoose [(0.75, 2), (1.5, 1)]
+sectionDFunc speedArg = slice 16 (bite 3 ((<~) ("0|3|6" / 8) "0 1 2 0 1 2 0 1") $ segment 3 $ randSlice) $ s "break:10" # cps sectionDCpsPat # cut 1 # legato 1.03 # speed speedArg
+sectionD0 = sectionDFunc $ 1 / sectionDDetuneSpeedPat
+sectionD1 = sectionDFunc $ sectionDDetuneSpeedPat
+sectionD = stack [
+  sectionD0 # orbit 4,
+  sectionD1 # orbit 5
+  ] |* gain 0.84
+sectionAFullLength = 7
+seqPLoopLength = 73
+seqPLoopFunc randSeed randSeedD1 randSeedD2 = seqPLoop [
+  (0, 2.33, sectionA0),
+  (2.33, 4.66, sectionA1),
+  (4.66, 7, sectionA2),
+  (7, 29.875, (<~) (randSeed + randSeedD1 + 102) sectionD), -- 21 cycles
+  (30, 54.875, (<~) (randSeed + 98) sectionC), -- 25 cycles
+  (55, 73, (<~) (randSeed + randSeedD2 + 155) sectionD) -- 18 cycles
+  ]
+finalPat = seqPLoop [
+  (2, seqPLoopLength, (<~) 2 $ seqPLoopFunc 0 65 4),
+  (seqPLoopLength, 2 * seqPLoopLength - 2 - 0.5, (<~) 2 $ seqPLoopFunc 128 22 84 |* cps 1.025),
+  (2 * seqPLoopLength - 2, 2 * seqPLoopLength - 2 + 0.5, sectionA0),
+  (2 * seqPLoopLength, 1000, silence)
+  ]
+in do
+  hush
+  setCycle $ 0
+  d1 $ finalPat
+

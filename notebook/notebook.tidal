@@ -203,6 +203,7 @@ d1 $ wrandcat [
 ]
 
 -- SeqPLoop.
+-- If multiple events coincide, then it seems the last-applied cps overrides earlier ones.
 d1 $ seqPLoop [
 (0, 2, "bd bd" # gain 2),
 (2, 4, "bd(3,8)" # gain 2),

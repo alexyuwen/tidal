@@ -1,11 +1,11 @@
 
 
--- (3,8)
+-- ε
 let
 randSlice = choose [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15]
 speeds = [2 ** (-i / 24) | i <- [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]]
 sectionABinaryPat = (<~) (segment 1 $ irand 8 / 8) "t(3,8)"
-sectionAFunc n = slice 16 (struct sectionABinaryPat n) $ s "break:10" # cps "<0.5 0.75>"
+sectionAFunc n = slice 16 (struct sectionABinaryPat n) $ s "break:10" # cps "<0.5 0.75>" # legato 1.36
 sectionA0 = sectionAFunc 1
 sectionA1 = sectionAFunc 3
 sectionA2 = sectionAFunc 6
@@ -30,7 +30,7 @@ sectionDSlicePat = (<~) ("0|3|6" / 8) "0 1 2 0 1 2 0 1"
 sectionDRandBool = segment 1 $ wchoose [(True, 2), (False, 1)] -- bool indicates whether or not normal "half" speed. cps is coupled to gain and detuning
 sectionDDetuneSpeed = bite 12 (sew sectionDRandBool 0 1) (listToPat speeds)
 sectionDCpsMult = sew sectionDRandBool 1 2
-sectionDGain = bite 3 (fast (sew sectionDRandBool 1 2) $ (<~) ("0|3|6" / 8) "2 0 0 1 0 0 1 0") "0.84 1 1.025"
+sectionDGain = bite 3 (fast (sew sectionDRandBool 1 2) $ (<~) ("0|3|6" / 8) "2 0 0 1 0 0 1 0") "0.84 0.96 1.025"
 sectionDFunc speedArg = slice 16 (bite 3 sectionDSlicePat $ segment 3 $ randSlice) $ s "break:10" # cps 0.75 |* cps sectionDCpsMult # cut 1 # legato 1.03 # speed speedArg # gain sectionDGain
 sectionD0 = sectionDFunc $ 1 / sectionDDetuneSpeed
 sectionD1 = sectionDFunc $ sectionDDetuneSpeed

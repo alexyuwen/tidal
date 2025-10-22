@@ -1,6 +1,11 @@
-do
-  d2 "hc"
-  d1 $ n (segment 8 $ loopFirst $ slow 2 $ range 0 22 cosine) # s "supervibe"
+
+
+
+
+
+
+
+
 
 
 -- (3,8)
@@ -32,9 +37,9 @@ sectionC = sew (segment 1 $ wchoose [(True, 4), (False, 1)]) sectionC0 sectionAD
 sectionDSlicePat = (<~) ("0|3|6" / 8) "0 1 2 0 1 2 0 1"
 sectionDRandBool = segment 1 $ wchoose [(True, 2), (False, 1)] -- bool indicates whether or not normal "half" speed. cps is coupled to gain and detuning
 sectionDDetuneSpeed = bite 12 (sew sectionDRandBool 0 1) (listToPat speeds)
-sectionDCps = sew sectionDRandBool 0.75 1.5
+sectionDCpsMult = sew sectionDRandBool 1 2
 sectionDGain = bite 3 (fast (sew sectionDRandBool 1 2) ((<~) ("0|3|6" / 8) "2 0 0 1 0 0 1 0")) "0.84 1 1.025"
-sectionDFunc speedArg = slice 16 (bite 3 sectionDSlicePat $ segment 3 $ randSlice) $ s "break:10" # cps sectionDCps # cut 1 # legato 1.03 # speed speedArg # gain sectionDGain
+sectionDFunc speedArg = slice 16 (bite 3 sectionDSlicePat $ segment 3 $ randSlice) $ s "break:10" # cps 0.75 |* cps sectionDCpsMult # cut 1 # legato 1.03 # speed speedArg # gain sectionDGain
 sectionD0 = sectionDFunc $ 1 / sectionDDetuneSpeed
 sectionD1 = sectionDFunc $ sectionDDetuneSpeed
 sectionD = stack [
@@ -49,8 +54,10 @@ seqPLoopFunc randSeed randSeedD1 randSeedD2 = seqPLoop [
   (4.66, 7, sectionA2),
   (7, 29.875, (<~) (randSeed + randSeedD1 + 102) sectionD), -- 21 cycles
   (30, 54.875, (<~) (randSeed + 98) sectionC), -- 25 cycles
-  -- (55, 73, (<~) (randSeed + randSeedD2 + 155) sectionD), -- 18 cycles
-  (55, 73, slice 16 "[0..16]/2" $ s "break:10" # cut 1 # orbit 6 # gain 0.9 # cps sectionDCps) -- 18 cycles
+  (55, 73, stack [
+    (<~) (randSeed + randSeedD2 + 155) sectionD, -- 18 cycles
+    slice 16 "[0..15]/2" $ s "break:10" # gain 0.1 # cut 1 # legato 0.97 # orbit 6
+    ]) -- 18 cycles
   ]
 finalPat = seqPLoop [
   (2, seqPLoopLength, (<~) 2 $ seqPLoopFunc 0 65 4),
@@ -60,6 +67,6 @@ finalPat = seqPLoop [
   ]
 in do
   hush
-  setCycle $ 52
+  setCycle $ 53
   d1 $ finalPat
 

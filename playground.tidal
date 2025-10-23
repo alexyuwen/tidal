@@ -1,16 +1,21 @@
 
-do
-  setCycle 0
-  d1 $ slice 32 "8..15" $ s "break:10" # cps 0.5
 
 
-do
-  hush
-  setcps 0.5
-  setCycle 0
-  d1 $ "hc"
-  d2 $ n 0 |+ n "cs" # octave 3 # s "superhammond" # voice 0 # gain 2
-  -- d2 $ n (scale "minor" $ run 8) |+ n "cs" # octave 5 # s "superhammond" # voice 0 # legato 1.05
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

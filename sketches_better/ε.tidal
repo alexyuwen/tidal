@@ -63,6 +63,6 @@ finalPat = seqPLoop [
   ]
 in do
   hush
-  setCycle $ 0
+  setCycle $ 992
   d1 $ finalPat
 

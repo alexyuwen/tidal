@@ -23,7 +23,7 @@ sectionCPatDetuned = stack [
   sectionCPat # speed (speeds !! 1) # orbit 3 # pan 0
   ] |* gain 0.9
 sectionC0Gain = segment 8 $ wchoose [(0.9, 4.5), (1.05, 1)]
-sectionC0 = select ((~>) (1/8) $ segment 4 $ wchoose [(0, 7), (1, 1)]) [sectionCPat # gain sectionC0Gain, ply 2 $ sectionCPatDetuned |* gain 1.05]
+sectionC0 = sew ((~>) (1/8) $ segment 4 $ wchoose [(True, 7), (False, 1)]) (sectionCPat # gain sectionC0Gain) (ply 2 $ sectionCPatDetuned |* gain 1.05)
 sectionC = sew (segment 1 $ wchoose [(True, 4), (False, 1)]) sectionC0 sectionADetuned
 sectionDSlicePat = (<~) ("0|3|6" / 8) "0 1 2 0 1 2 0 1"
 sectionDRandBool = segment 1 $ wchoose [(True, 2), (False, 1)] -- bool indicates whether or not normal "half" speed. cps is coupled to gain and detuning
@@ -37,14 +37,14 @@ sectionD = stack [
   sectionD0 # orbit 4,
   sectionD1 # orbit 5
   ] |* gain 0.84
-sectionESpeed1 = while "[t|f]*8" (1/) (bite 12 "1*8" $ listToPat speeds)
+sectionESpeed1 = while "[t|f]*8" (1/) (bite 12 "[0|1]*8" $ listToPat speeds)
 sectionESpeed2 = while "[t|f]*8" (1/) (bite 12 "[0|1|2]*8" $ listToPat speeds)
-sectionELpf1 = ((<~) ("0|3|6" / 8) "1@3 1@3 1@2") # rangex 100 9999 rand
+sectionELpf1 = ((<~) ("0|3|6" / 8) "1@3 1@3 1@2") # rangex 150 9999 rand
 sectionELpf2 = ((<~) ("0|3|6" / 8) "1@3 1@3 1@2") # rangex 300 9999 rand
 sectionE1 = slice 16 "[0..15]/2" $ s "break:10" # gain 0.84 # cut 1 # legato 0.97 # orbit 6 # cps 0.75 |* cps sectionDCpsMult # lpf sectionELpf1 # speed sectionESpeed1
 sectionE2 = slice 16 "[0..15]/2" $ s "break:10" # gain 0.84 # cut 1 # legato 0.97 # orbit 6 # cps 0.75 |* cps sectionDCpsMult # lpf sectionELpf2 # speed sectionESpeed2
 sectionAFullLength = 7
-seqPLoopLength = 73 -- real length is actually two less
+seqPLoopLength = 71 -- real length is actually two less
 seqPLoopFunc randSeed randSeedC randSeedD1 randSeedD2 = seqPLoop [
   (0, 2.33, sectionA0),
   (2.33, 4.66, sectionA1),
@@ -56,13 +56,13 @@ seqPLoopFunc randSeed randSeedC randSeedD1 randSeedD2 = seqPLoop [
   (55, 73, (<~) (randSeed + randSeedD2 + 155) sectionE2)
   ]
 finalPat = seqPLoop [
-  (2, seqPLoopLength, (<~) 2 $ seqPLoopFunc 0 0 65 4),
-  (seqPLoopLength, 2 * seqPLoopLength - 2 - 0.5, (<~) 2 $ seqPLoopFunc 128 330 22 84),
-  (2 * seqPLoopLength - 2, 2 * seqPLoopLength - 2 + 0.5, sectionA0),
-  (2 * seqPLoopLength, 1000, silence)
+  (0, seqPLoopLength, (<~) 2 $ seqPLoopFunc 0 0 65 4),
+  (seqPLoopLength, 2 * seqPLoopLength - 0.5, (<~) 2 $ seqPLoopFunc 128 330 22 84),
+  (2 * seqPLoopLength, 2 * seqPLoopLength + 0.5, sectionA0),
+  (992, 1000, "hc cp" # cps 0.5)
   ]
 in do
   hush
-  setCycle $ 71 + 26
+  setCycle $ 0
   d1 $ finalPat
 

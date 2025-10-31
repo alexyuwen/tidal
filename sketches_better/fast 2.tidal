@@ -11,6 +11,7 @@ p2 = stack [
   ]
 in do
   resetCycles
+  setCycle 0
   d1 $ seqPLoop [
     (0, 8, p1),
     (8, 16, p2)

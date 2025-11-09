@@ -1,0 +1,13 @@
+let
+pat0 = n (scale "minor" "[0 2 4 7 9 7 4 2]*4") # octave 3 # s "superhammond" # voice 7
+in do
+  setcps 0.3
+  setCycle 1
+  d9 $ "hc"
+  d1 $ pat0 # pan (fast 4 cosine)
+  -- d1 $ pat0 |+ n (segment 16 $ irand 13)
+  -- d1 $ pickF (segment 8 $ irand 2) [id, inside 8 rev] pat0 # octave 4
+  -- d1 $ bite 8 "<[0 0 1 1 2 2 3 3] [4 4 5 5 6 6 7 7]>" pat0
+  d1 $ (<~) ((<~) (1/32) $ segment 4 $ irand 8 / 32) $ pat0
+  -- d2 $ mask (segment 32 $ wchoose [(True, 1), (False, 15)]) pat0 # octave 5 # s "supervibe" # legato 32 # vowel "u" # lpf 250 # room 0.3
+

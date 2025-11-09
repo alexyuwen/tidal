@@ -1,0 +1,19 @@
+
+import Prelude hiding (all)
+
+all $ (* gain 0.6)
+
+-- Test.
+d1 $ "hc*32"
+
+
+
+-- Template.
+do
+  setcps 0.3
+  setCycle 0
+  d1 $ "hc"
+
+
+
+panic

@@ -1,0 +1,5 @@
+do
+  setcps 0.3
+  setCycle 0
+  d1 "hc"
+  d2 $ ply 2 $ n (segment 12 $ 12 * rand) |+ n "[0 0.5]*12" # s "superhammond" # voice 1 -- TODO: Do this with off or echo or superimpose instead.

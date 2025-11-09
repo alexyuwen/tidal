@@ -41,7 +41,7 @@ fullPatFunc randSeed verseLength1 verseLength2 =
   -- Chorus 2
   (chorus2Start, chorus2End, stack [melodyBass, melodyBassDoubledHigh, chorusRhythm]),
   -- Verse 2
-  (verse2Start, verse2End, (<~) (randSeed + 32) $ stack [melodyBassShifted. melody1Shifted, rhythm]),
+  (verse2Start, verse2End, (<~) (randSeed + 32) $ stack [melodyBassShifted, melody1Shifted, rhythm]),
   -- Hihat solo
   (hihatSoloStart, hihatSoloStart + 2, hihatSoloFunc (randSeed + 3)),
   (hihatSoloStart + 2, hihatSoloStart + 4, hihatSoloFunc (randSeed + 11))

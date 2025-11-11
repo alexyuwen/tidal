@@ -1,0 +1,2 @@
+randBits n = segment n ((/= 0) <$> irand 2)
+

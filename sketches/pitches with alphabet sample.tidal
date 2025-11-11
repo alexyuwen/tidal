@@ -2,10 +2,12 @@
 -- Pitches with "alphabet" sample.
 let
 speeds = [2 ** (-i / 12) | i <- [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]]
-speedPat = 1 / (fit 0 speeds "0..11")
+speedIndex = segment 16 $ irand 12
+speedPat = 2 / (fit 0 speeds speedIndex)
+nPat = segment 16 $ irand 26
 in do
   setcps 0.3
   setCycle 0
-  d1 $ "hc*4"
-  d2 $ n "0*12" # s "alphabet" # begin 0.3 # speed speedPat
+  -- d1 $ "hc*4"
+  d2 $ speed speedPat # n nPat # s "alphabet" # begin 0.3
 

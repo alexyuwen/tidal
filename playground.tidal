@@ -1,11 +1,11 @@
 
 -- Template.
-do
+let
+x = 0
+in do
   setcps 0.3
   setCycle 0
   d1 $ "hc"
-
-
 
 
 

@@ -192,6 +192,14 @@ in do
 -- Cat.
 d1 $ cat ["hc(3,8)", "hc(9,16,7)"]
 
+-- Note that if the patterns last more than a cycle, they are stitched together.
+let
+x = n (scale "minor" "<[0 1 2 3] [4 5 6 7]>")
+y = n (scale "minor" "<[0 1 2 3] [4 5 6 7]>") |+ n "df" # octave 6
+in do
+  setCycle 0
+  d2 $ cat [x, y] # s "violin"
+
 -- Randcat.
 d1 $ randcat ["sd", "sd(3,8)", "sd(9,16)"]
 

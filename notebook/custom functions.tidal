@@ -1,2 +1,11 @@
+-- RandBits.
 randBits n = segment n ((/= 0) <$> irand 2)
 
+-- Slide.
+let
+slide x = accelerate (2 **| (x |/ 12) - 1)
+in do
+  setcps 0.6
+  setCycle 0
+  d1 "hc"
+  d2 $ n "0 24 0 6" # cut 1 # slide "12" # s "superchip"

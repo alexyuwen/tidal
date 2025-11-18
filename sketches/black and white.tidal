@@ -22,13 +22,13 @@ finalPat = stack [
   bassDroneFinal
   ]
 seqPLoopPat = seqPLoop [
-  (0, 2, bassDroneFinal),
-  (2, 996, (<~) 108 finalPat),
+  (0, 992, bassDroneFinal),
+  (2, 78, (<~) 108 melody),
   (992, 1000, "hc")
   ]
 in do
   setcps 0.6
-  setCycle 2
+  setCycle 0
   -- d2 "hc"
   d1 $ seqPLoopPat
 

@@ -442,6 +442,12 @@ do
   setCycle 0
   d1 $ accelerate "[0.7 -0.3]*2" # n "0 12" # s "superchip" # speed "[1 1.7]*2" # legato 1.01
 
+-- Crude vibrato.
+do
+  setcps 0.4
+  setCycle 0
+  d1 $ accelerate "[0.1 -0.1]*16" # n "0 12 7" # s "superchip" # speed "[1 1.1]*16" # legato 1.01
+
 -- Speed.  Changes the speed of sample playback.  Both sample duration and pitch will be modified.
 -- Negative values play the sample backwards.
 d1 $ s "sax:0" # speed "<1 2 3 4>" # cut 1

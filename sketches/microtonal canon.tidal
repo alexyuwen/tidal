@@ -19,5 +19,5 @@ in do
   d9 $ "hc"
   d1 $ seqPLoop [
     -- 1, 40, 69
-    (0, 2, (<~) 1 $ pat0) -- Loop same two bars
+    (0, 2, (<~) 1 $ stack [pat0, pat1]) -- Loop same two bars
     ]

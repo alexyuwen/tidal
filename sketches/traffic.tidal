@@ -1,0 +1,18 @@
+-- traffic
+-- 6-7
+let
+nPat = n (segment 13 $ 7 * rand + "[[0..6] | [7..1]]")
+maskPat = mask "t f@5 t f@6"
+nPatMasked = maskPat nPat # legato 9
+twoNotes = nPatMasked # s "supervibe" # vowel "a"
+allNotes = (nPat # octave 5 # s "supervibe" # legato 0.5) # vowel "[a|e|i|o|u|x]*13"
+seqPLoopPat = seqPLoop [
+  (0, 2, loopFirst $ twoNotes),
+  -- (2, 99, twoNotes # octave 4),
+  (2, 99, allNotes)
+  ]
+in do
+  setcps 0.4
+  setCycle 0
+  d1 $ "hc"
+  d2 $ seqPLoopPat

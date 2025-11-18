@@ -1,0 +1,33 @@
+-- black and white
+let
+segmentPat = segment ((<~) 0.25 "[27|26|25|24|23]*2")
+melodyShape = slow 1.5 "<[0..5] [6..11] [12..1]>"
+customScale = toScale [0, 1, 4, 6, 7, 10]
+scalePat1 = customScale $ segmentPat $ irand 7 + melodyShape
+scalePat2 = mask ("[t|t|f|f|f]*1.3") $ customScale $ segmentPat $ irand 7 + melodyShape - 2
+scalePat3 = mask ("[f|f|t|f|f]*1.3") $ customScale $ segmentPat $ irand 7 + melodyShape - 1
+nPat = n $ stack [scalePat1, scalePat2, scalePat3]
+voicePat = voice "[9|1|1]*2.1"
+maskPat = mask $ sew "f|f|t" "[t|t|f|f|f]*9" (scramble 4 "[t t t t f]*1.12")
+bassDrone = fast 110 $ stack [
+  n 0 # octave 4 # s "superhammond" # voice 6 # gain 1.5,
+  n (scale "major" 4) # octave 4 # s "superhammond" # voice 6 # gain 0.88,
+  n (scale "major" 7) # octave 4 # s "superhammond" # voice 6 # gain 0.75
+  ]
+bassDroneFinal = bassDrone # legato "[0.2|0.4|0.7|0.7]*0.97" |* gain "[1.24|1.12|1|1]*0.97"
+melody = maskPat $ nPat # s "superhammond" # voicePat
+finalPat = stack [
+  melody,
+  bassDroneFinal
+  ]
+seqPLoopPat = seqPLoop [
+  (0, 996, (<~) 99 finalPat),
+  (992, 1000, "hc")
+  ]
+in do
+  setcps 0.6
+  setCycle 0
+  d1 $ seqPLoopPat
+
+
+panic

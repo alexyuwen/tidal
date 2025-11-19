@@ -28,7 +28,7 @@ seqPLoopPat = seqPLoop [
   ]
 in do
   setcps 0.6
-  setCycle 0
+  setCycle 992
   -- d2 "hc"
   d1 $ seqPLoopPat
 

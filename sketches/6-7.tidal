@@ -1,15 +1,16 @@
 -- 6-7
 let
-baseCps = 0.54
+baseCps = 0.5
 nPat = n (segment 13 $ "<3 7 2 5>" * rand + "[[0..5] | [6..1]]")
-maskPat = mask "t f@5 t f@6"
+maskPat = mask $ (~>) (cycleChoose [0, 0, 0, 0, 0, 0, 2/13, 3/13, 5/13]) "t f@5 t f@6"
 nPatMasked = maskPat nPat # legato 9
--- twoNotes = stack [
---   nPatMasked # s "supervibe, kalimba",
---   nPatMasked # s "violin" # octave 8
---   ]
-twoNotes = nPatMasked # s "supervibe" # octave 9 --- TODO: add kalimba after I figure how to apply octave...
-pickFPat = pickF "[2|2|2|1|1|0]*13" [const silence, (|* gain "[1.24|1.4] 1@5 [1.24|1.4] 1@6"), off (1/13/2) (|+ n "[0.5|-0.5]*13")]
+pickFPat2 = pickF pickFIndices [const silence, id, id] -- TODO: replace const silence with low gong
+twoNotes = pickFPat2 $ stack [
+  nPatMasked # s "supervibe" # octave 5,
+  nPatMasked # s "ksBass" # octave 5 # legato 12
+  ] # vowel "u"
+pickFIndices = "[2|2|2|1|1|0]*13"
+pickFPat = pickF pickFIndices [const silence, (|* gain "[1.24|1.4] 1@5 [1.24|1.4] 1@6"), off (1/13/2) (|+ n "[0.66|-0.66]*13")]
 vibeNotes = pickFPat $ nPat # octave 5 # s "supervibe" # legato 1.6 # vowel "[a|e|i|o|u|x]*13"
 mandolinNotes = pickFPat $ nPat # octave "[6|5|6|5|7]*0.88" # s "violin" # legato 0.3 |* gain 1 # vowel "i" # lpf 1777
 allNotes = stack [
@@ -17,9 +18,9 @@ allNotes = stack [
   mandolinNotes
   ]
 seqPLoopPat = seqPLoop [
-  (0, 2, loopFirst $ twoNotes # vowel "a"),
-  (2, 99, twoNotes # octave 4 # vowel "o"),
-  (2, 99, allNotes)
+  (0, 2, loopFirst $ twoNotes),
+  (2, 99, twoNotes |- octave 1),
+  (2, 99, allNotes |* gain 0.9)
   ]
 in do
   setCycle 2
@@ -28,6 +29,4 @@ in do
 
 
 
-
-d1 $ n "0..7" # s "kalimba" # octave 8
 

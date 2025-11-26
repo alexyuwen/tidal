@@ -472,9 +472,6 @@ do
   d1 "cp"
   d2 $ sew "t(3,8)" (segment 16 $ n 0 # s "supervibe") ("bd*8")
 
--- Generating a tone with segment.
-d1 $ segment 90 $ n 0 # octave 1 # s "acidOto3091" # gain 2
-
 -- Whenmod.  (Whenmod a n ...) applies function to pattern when current loop number mod a >= n.
 d2 $ whenmod 5 3 (fast 2) $ chop 8 $ loopAt 1 $ "break:1" # cut 1 -- Normal on loops 0, 1, 2, fast on loops 3, 4
 

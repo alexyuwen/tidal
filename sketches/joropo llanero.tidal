@@ -1,0 +1,26 @@
+-- joropo llanero
+-- speed is approximately 152 bpm
+let
+-- bass
+bass = s "pluck:1" # gain 1.33 # legato 9 -- legato is just so release sustains into rests.  the release from the sample is short
+offset = 1.172 * 0.5
+speeds = [offset * 2 ** (i / 12) | i <- [0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23, 24]]
+bassNotes = speed (fit 0 speeds $ 7 + "~ 0 4 ~ -3 4")
+-- harp / bandola
+harp = s "supermandolin" # legato 2.5
+harpNotes = n (scale "major" "0 4 ~ 2 0 ~ . -1 4 ~ 3 1 ~") # octave 6
+-- cuatro
+-- maracas
+in do
+  setcps 0.5
+  setCycle 0
+  d1 $ "hc"
+  d2 $ harpNotes # harp
+  d3 $ bassNotes # bass
+
+
+
+panic
+
+
+

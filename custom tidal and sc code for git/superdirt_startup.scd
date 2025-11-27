@@ -1,5 +1,4 @@
 /*
-~/Library/Application Support/SuperCollider/downloaded-quarks/SuperDirt/superdirt_startup.scd
 This is an example startup file.
 If you want to modify it, best copy it elsewhere to keep the git repository clean.
 
@@ -23,6 +22,7 @@ s.reboot { // server options are only updated on reboot
 	s.options.maxNodes = 1024 * 32; // increase this if you are getting drop outs and the message "too many nodes"
 	s.options.numOutputBusChannels = 2; // set this to your hardware output channel size, if necessary
 	s.options.numInputBusChannels = 2; // set this to your hardware output channel size, if necessary
+	// s.options.sampleRate = 44100; // 44100 for TOZO earbuds
 	// boot the server and start SuperDirt
 	s.waitForBoot {
 		~dirt.stop; // stop any old ones, avoid duplicate dirt (if it is nil, this won't do anything)
@@ -31,7 +31,29 @@ s.reboot { // server options are only updated on reboot
 		// for example: ~dirt.loadSoundFiles("/Users/myUserName/Dirt/samples/*");
 		// ~dirt.loadSoundFiles("/Users/alexyuwen/Desktop/tidal/samples-extra/*");
 		~dirt.loadSoundFiles(Platform.userAppSupportDir +/+ "downloaded-quarks/Custom-Samples/samples-extra/*"); // Folder recursion not possible.  * inludes only for all the folders, one level down.
-		~dirt.loadSoundFiles(Platform.userAppSupportDir +/+ "downloaded-quarks/Custom-Samples/*"); // for folders without subfolders.  The folder name becoems the sample name in Tidal, with the "n" sample number specifying the file number in the folder, sorted alphabetically
+		~dirt.loadSoundFiles(Platform.userAppSupportDir +/+ "downloaded-quarks/Custom-Samples/*"); // for folders without subfolders.  The folder name becomes the sample name in Tidal, with the "n" sample number specifying the file number in the folder, sorted alphabetically
+
+		// Load tidal-drum-machines
+		// https://github.com/geikha/tidal-drum-machines/tree/main
+		// https://club.tidalcycles.org/t/a-huge-drum-machine-library-for-tidal-72-drum-machines/3408
+		// The code below is adapted from the script from the above repo, as I'm interested in only the samples not the drum machine logic.
+		~drumMachinesDir = PathName.new(Platform.userAppSupportDir +/+ "downloaded-quarks/Custom-Samples/machines");
+		~machines = ~drumMachinesDir.folders;
+
+		(
+			~machines.do({
+				arg machine;
+				var folders = machine.folders;
+				postln("LOADING DRUM MACHINE: " ++ machine.folderName);
+				folders.do({
+					arg folder;
+					// ~dirt.loadSoundFiles(folder.fullPath, namingFunction: { |x| x.basename.replace("-","")});
+					~dirt.loadSoundFiles(folder.fullPath);
+				});
+			});
+		);
+
+
 		// s.sync; // optionally: wait for samples to be read
 		~dirt.start(57120, 0 ! 12);   // start listening on port 57120, create two busses each sending audio to channel 0
 		SuperDirt.default = ~dirt; // make this instance available in sclang (optional)

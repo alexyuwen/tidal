@@ -32,7 +32,19 @@ panic
 
 
 
-once $ s "hc:1"
+-- maracas
+let
+maraca = s "akailinn-sh" # speed 1.6 # gain 0.8
+maracaRhythm = "[~ 1 1]*4"
+in do
+  setcps 0.5
+  setCycle 0
+  d1 $ "hc"
+  d5 $ maracaRhythm # maraca
+
+
+
+once $ s "sh"
 
 
 

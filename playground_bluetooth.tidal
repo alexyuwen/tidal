@@ -14,7 +14,8 @@ all id
 let
 x = 0
 in do
-  setcps 0.3
+  hush
+  setcps 0.5
   setCycle 0
   d1 $ "hc"
 

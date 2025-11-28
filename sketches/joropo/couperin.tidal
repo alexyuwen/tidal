@@ -25,7 +25,7 @@ bassNotes = cat [
   -- bb. 7
   "5 . 0 -2",
   "-4 . 2",
-  "-5 ~ 2 . 7 ~ 2",
+  "-5 ~ 2 . 7 2",
   "7 5 . 3 2"
   ]
 bassSpeed = speed (fit 0 speeds $ 12 + bassNotes)
@@ -33,28 +33,28 @@ bassPat = bassSpeed # bass
 -- harp / bandola
 -- harp melody
 harpMelody = s "supermandolin" # legato 4 # room 0.25 # dry 0.5 # vowel "o" # gain 1.2 # lpf 8888
-harpMelodyNotes = cat [ -- TODO try uneven pickup duration to emulate rubato keyboard style
-  "12 . ~ 0 _ 2 _ 3",
-  "5 2 . 7@5 2",
-  "3 0 . 7@5 9",
+harpMelodyNotes = cat [
+  "[3, 7, 12] . [~ 0 _ . 2 3]",
+  "5 2 . 7@3 2",
+  "3 0 . [0, 2, 3, 7]@3 9",
   "10 7 . 12 _ _ 11 _ 12",
   -- bb. 3
-  "11@5 14 . 14@5 14",
-  "15@5 14 . 12@5 12",
-  "12 _ _ _ 10 9 . 10@5 10",
-  "10 _ _ 8 7 . 8@5 10",
+  "11@3 14 . 14@3 14",
+  "15@3 14 . 12@3 12",
+  "12 _ _ _ 10 9 . 10@3 10",
+  "10 _ _ 8 7 . 8@3 10",
   -- bb. 5
-  "7 3 . 7@5 8",
-  "10@5 8 . 7 _ 5 3 _ 2",
-  "0@5 12 . 4@5 5",
-  "7 . 8@5 7",
+  "7 3 . 7@3 8",
+  "10@3 8 . 7 _ 5 3 _ 2",
+  "0@3 12 . 4@3 5",
+  "7 . 8@3 7",
   -- bb. 7
-  "8 . 7@5 7",
-  "7@5 8 . 5 _ _ _ 3 5",
+  "8 . 7@3 7",
+  "7@3 8 . 5 _ _ _ 3 5",
   "7 _ 7 2 . -1",
-  "~ . ~"
+  "~ . ~@3 12"
   ]
-harpMelodyN = (n $ harpMelodyNotes + "fs") # octave 5
+harpMelodyN = pickF "<1 0 [0 1] 0>" [id, rolledBy 0.2] $ (n $ harpMelodyNotes + "fs") # octave 5
 harpMelodyPat = harpMelodyN # harpMelody
 -- harpBass
 harpBassNotes = cat [
@@ -70,22 +70,22 @@ harpBassNotes = cat [
   -- bb. 5
   "",
   "~ -2 . 3",
-  "",
-  "~ -5 . 0",
+  "~ 0 . -2 -4",
+  "-5 . 0",
   -- bb. 7
-  "",
-  "",
-  "",
-  ""
+  "~ . 3 2",
+  "0 . 2",
+  "2 . ~",
+  "~ . ~"
   ]
 harpBassN = (n $ harpBassNotes + "fs") # octave 4
 -- harpBass1
-harpBass1 = s "supermandolin" # legato 0.7 # room 0.24 # dry 0.2 # vowel "u" # gain 1.2 # lpf 1111
+harpBass1 = s "supermandolin" # legato 1.2 # room 0.24 # dry 0.2 # gain 1.32 # lpf 1600
 harpBass1N = harpBassN
 harpBass1Pat = harpBass1N # harpBass1
 -- harpBass2
-harpBass2 = s "ksBass" # gain 1 # legato 9 # lpf 1111
-harpBass2N = (<~) (1/12/67) harpBassN
+harpBass2 = s "doubleBass" # legato 9 # room 0.6 # gain 2
+harpBass2N = (<~) (1/12/4) harpBassN
 harpBass2Pat = harpBass2N # harpBass2
 harpBassPat = stack [harpBass1Pat, harpBass2Pat]
 -- cuatro
@@ -122,7 +122,7 @@ maracaPat = pickF "[1 1 0]*4" [id, ply "[2|1|1|1|1|1]*12"] $ maracaSpeed # marac
 in do
   hush
   setcps 0.5
-  setCycle 0
+  setCycle (-2)
   d2 $ harpMelodyPat
   d3 $ harpBassPat
   d4 $ bassPat

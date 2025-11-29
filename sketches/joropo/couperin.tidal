@@ -19,7 +19,7 @@ bassNotes = cat [
   "-7 ~ 5 . -7 ~ 5",
   -- bb. 5
   "-12 0 . -2 -4",
-  "-5 . -5",
+  "-5 . ~ -5",
   "-4 . -5 -7",
   "-8 . 4",
   -- bb. 7
@@ -40,21 +40,21 @@ harpMelodyNotes = cat [
   "10 7 . ~ [12, 7, -4]@5",
   -- bb. 3
   "[-5, 7, 11]@3 14 . 14@3 14",
-  "15@3 14 . [14, 12, 3]@3 12",
+  "[~@0.1 15]@3 14 . [14, 12, 3]@3 12",
   "[[2, 5, 12] . ~@0.2 10 9] . 10@3 10",
-  "[[10, 5, 0] . ~@0.2 8 7] . 8@3 10",
+  "[~@0.18 [10, 5, 0] . ~@0.2 8 7] . 8@3 10",
   -- bb. 5
   "7 3 . 7@3 8",
-  "10@3 8 . [7 5 . 3 2]",
+  "10@3 8 . [7 5@1.24 . 3 2@1.24]",
   "0@3 12 . 4@3 5",
-  "7 . 8@3 7",
+  "7 [8 10@1.24] . 8@3 7",
   -- bb. 7
-  "8 . 7@3 7",
-  "7@3 8 . 5 _ _ _ 3 5",
+  "[0, 7, 8] . 7@3 7",
+  "[~@0.1 [7, 0, -4]]@3 8 . [-4, 0, 5] _ _ _ 3 5",
   "7 _ 7 2 . -1",
   "~ . ~@3 12"
   ]
-harpMelodyN = rolledBy "< 0.24 >" $ (n $ harpMelodyNotes + "fs") # octave 5 -- TODO try changing rolledBy arg for different bars
+harpMelodyN = rolledBy "< 0.24 0 0.25 0.28 0.28 0.32 0.36 0.42   0 0 0 0 0.2 0.32 0 0>" $ (n $ harpMelodyNotes + "fs") # octave 5
 harpMelodyPat = harpMelodyN # harpMelody
 -- harpBass
 harpBassNotes = cat [
@@ -73,10 +73,10 @@ harpBassNotes = cat [
   "~ 0 . -2 -4",
   "-5 . 0",
   -- bb. 7
-  "~ . 3 2",
+  "0 . 3 2",
   "0 . 2",
-  "2 . ~",
-  "~ . ~"
+  "7 . -5",
+  "-5 . ~"
   ]
 harpBassN = (n $ harpBassNotes + "fs") # octave 4
 -- harpBass1
@@ -89,8 +89,8 @@ harpBass2N = (<~) (1/12/4) harpBassN
 harpBass2Pat = harpBass2N # harpBass2
 harpBassPat = stack [harpBass1Pat, harpBass2Pat]
 -- cuatro
-cuatro = s "supermandolin" # vowel "i" # legato 1.6 # lpf 6666 # gain 1.36 # room 0.12
-cuatroRhythm = "[0 ~ ~ . 0 0 ~]*2"
+cuatro = s "supermandolin" # vowel "i" # legato 1.6 # lpf 6666 # room 0.12
+cuatroGain = gain $ "[1.1 ~ ~ . 1 1 ~]*2" * 1.36
 cuatroNotes = bite 11 (cat [
   "0 . 0",
   "1 . 2",
@@ -113,7 +113,7 @@ cuatroNotes = bite 11 (cat [
   "2 . 2"
   ]) "[0, 3, 7] [0, 2, 5] [-1, 2, 7] [0, 3] [-2, 2] [-4, 0] [2, 5] [0, 5] [3, 7, 10] [0, 3, 8] [0, 4, 7]"
 cuatroN = (n $ cuatroNotes + "fs") # octave 4
-cuatroPat = rolledBy 0.18 $ cuatroRhythm # cuatroN # cuatro
+cuatroPat = rolledBy 0.32 $ cuatroGain # cuatroN # cuatro
 -- maraca
 maraca = s "akailinn-sh" # gain 0.7 # room 0.05 # legato 0.8
 maracaSpeed = speed "[1.7 1.7 1.2]*4"
@@ -122,7 +122,7 @@ maracaPat = pickF "[1 1 0]*4" [id, ply "[2|1|1|1|1|1]*12"] $ maracaSpeed # marac
 in do
   hush
   setcps 0.5
-  setCycle (0)
+  setCycle (8)
   d2 $ harpMelodyPat
   d3 $ harpBassPat
   d4 $ bassPat

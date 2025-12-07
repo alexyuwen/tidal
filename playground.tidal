@@ -12,12 +12,7 @@ in do
 
 
 
-
-
-
-
-
-
+d1 $ n "0 2 4" # s "superpiano"
 
 
 panic

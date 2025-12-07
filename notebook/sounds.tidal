@@ -43,7 +43,9 @@ Mallets:
 Bowed strings:
 - violin, prophet5pwmStrings
 
-
+"rd" Ride cymbal samples that don't cut off the sustain:
+- akaixr10-rd (short)
+- alesissr16-rd (0, 1, 2)
 
 
 -}

@@ -55,7 +55,7 @@ harpMelodyNotes = cat [
   "~ . ~@3 12"
   ]
 harpMelodyN = rolledBy "< 0.25 0 0.26 0.28 0.3 [0.16 0.36] 0.4 0.42   1.32 0 1.32 0 0.2 0.32 0.5 0>" $ (n $ harpMelodyNotes + "fs") # octave 5
-harpMelodyLegatoMult = "< 1 1 1 1 1 1 1 [1@11 9]   [1@11 9] 1 [1@11 9] 1 1 1 1 1 >"
+harpMelodyLegatoMult = "< 1 1 1 1 1 1 1 [1@11 9]   [1@11 9] 1 [1@11 9] 1 1 1 1 [1@7 12] >"
 harpMelodyPat = harpMelodyN # harpMelody |* legato harpMelodyLegatoMult
 -- harpBass
 harpBassNotes = cat [
@@ -132,8 +132,8 @@ stackPat = stack [
   maracaPat
   ]
 seqPLoopPat = seqPLoop [
-  (0, 64, stackPat), -- stackPat is 16 cycles long
-  (992, 1000, "hc" # gain 0.8)
+  (0, 640, stackPat), -- stackPat is 16 cycles long
+  (992, 1000, "hc hc" # gain "1 0.8")
   ]
 in do
   hush

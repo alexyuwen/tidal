@@ -1,0 +1,19 @@
+
+-- bird sounds
+let
+bird = s "birds3" # room 0.075
+birdPat1 = degradeBy 0.7 $ "1*7" # n (segment 99 $ irand 19) # bird |* gain 1.24
+birdPat2a = segment 9 $ speed (0.82 + 0.12 * (every 3 (const tri) (slow 1.3 saw))) # n 9 # bird
+birdPat2b = fast 11 $ n 9 # bird
+birdPat2 = sew "t|f|f" birdPat2a birdPat2b
+selectPat = select (segment 0.3 $ wchoose [(0, 4), (1, 3)]) [birdPat1, birdPat2]
+seqPLoopPat = seqPLoop [
+  (0, 500, (<~) 16 selectPat),
+  (992, 1000, gain "1 0.8" # s "hc")
+  ]
+in do
+  hush
+  setcps 0.5
+  setCycle 0
+  d2 $ seqPLoopPat
+

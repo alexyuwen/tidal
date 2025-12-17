@@ -6,13 +6,16 @@ in do
   hush
   setcps 0.5
   setCycle 0
-  d1 $ "hc"
+  d1 $ "hc" # gain 0.8
 
 
 
 
 
-d1 $ n "0 2 4" # s "superpiano"
+
+
+
+
 
 
 panic

@@ -469,7 +469,7 @@ do
 -- Sew.  Uses a binary pattern to switch between two other patterns.
 -- Stitch gets the structure from the binary pattern, whereas Sew gets it from the two source patterns.
 do
-  d1 "cp"
+  d1 $ "cp" # gain 0.8
   d2 $ sew "t(3,8)" (segment 16 $ n 0 # s "supervibe") ("bd*8")
 
 -- Whenmod.  (Whenmod a n ...) applies function to pattern when current loop number mod a >= n.

@@ -436,12 +436,6 @@ d1 $ "hc*18" # amp (1 - saw)
 -- Accelerate 0 does nothing.  Negative values decelerate.
 d1 $ s "sax:0" # accelerate 1 # cut 1
 
--- Combining Accelerate with Speed to smoothly slide between notes.
-do
-  setcps 0.4
-  setCycle 0
-  d1 $ accelerate "[0.7 -0.3]*2" # n "0 12" # s "superchip" # speed "[1 1.7]*2" # legato 1.01
-
 -- Crude vibrato.
 do
   setcps 0.4

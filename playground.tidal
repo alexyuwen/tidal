@@ -17,5 +17,42 @@ in do
 
 
 
+-- Different set of ornaments.
+let
+-- ornaments
+ornamentRhythm0 = "[0@1.6 1@0.8 0@1.4 1@0.6 0@1.32] !"
+ornamentRhythm1 = "[0@0.8 1 0@0.66]*4"
+ornamentRhythm2 = "[0 1@1.1 0]*8"
+-- scale 0
+scaleUp0 = scale "minor" $ "<[0 2] [3 4]>" + ornamentRhythm0 * "<[2 1] [1 3]>"
+scaleDown0 = scale "minor" $ "<[7 4] [3 2]>" + ornamentRhythm0 * "<[2 3] [1 1]>"
+scale0 = sew "<t t f f>" scaleUp0 scaleDown0
+-- scale 1
+scaleUp1 = scale "minor" $ "0 2 3 4" + ornamentRhythm1 * "2 1 1 3"
+scaleDown1 = scale "minor" $ "7 4 3 2" + ornamentRhythm1 * "2 3 1 1"
+scale1 = cat [scaleUp1, scaleDown1]
+-- scale 2
+scaleUp2 = scale "minor" $ "[0 2 3 4] !" + ornamentRhythm2 * "[2 1 1 3] !"
+scaleDown2 = scale "minor" $ "[7 4 3 2] !" + ornamentRhythm2 * "[2 3 1 1] !"
+scale2 = sew "t f" scaleUp2 scaleDown2
+-- pats
+nPat = n (select ((/4) <$> "<0 0 1 1 2 3 4>") [scaleUp0, scaleDown0, scaleUp1, scaleDown1, scale2]) |+ n "d5"
+nPat2 = seqPLoop [ -- Wrap nPat in seqPLoop so that on the loop, all patterns reset to the start.
+  (0, 7, nPat)
+  ]
+-- offset scales
+scale0Offset = (~>) (1/4) $ scale0
+scale1Offset = (~>) (1/8) $ scale1
+scale2Pat = bite 8 ("[0..7]/3" + "[0 1 2]*8%3") scale2
+in do
+  setcps 0.6
+  setCycle 0
+  d1 $ "hc" # gain 0.8
+  d2 $ scale2Pat # s "sin"
+  d2 $ select ((/2) <$> (segment 2 $ irand 3)) [scale0Offset, scale1Offset, scale2Pat] # s "sin"
+
+
+
+
 
 panic

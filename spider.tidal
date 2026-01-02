@@ -1,0 +1,11 @@
+let
+arpeggio = n (scale "minor" "[0 2 4 7 9 7 4 2]*4") # octave 3 # s "superhammond" # voice 7
+hits = n "~ ~ ~ [~ 0 ~@6]" # s "akaixr10-misc" # gain 0.9
+finalPat = stack [arpeggio, hits]
+in do
+  hush
+  setcps 0.3
+  setCycle 1
+  -- d9 $ "hc"
+  d1 $ (<~) ((<~) (1/32) $ segment 4 $ irand 32 / 32) $ finalPat
+  -- d1 $ finalPat

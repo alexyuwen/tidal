@@ -4,7 +4,7 @@
 let
 -- arpeggio
 superhammond = s "superhammond" # voice 7 # legato 1.01 # room 0.6 # dry 0.5 # orbit 1
-arpeggio1 = bite 4 "[0 1 2 1 3 2 1 2] [0 1 2 3 1 2 0 1] [2 3 1 2 0 1 2 3] [2 3 2 1 0 1 0 2]" $ n (scale "minor" "-3 0 2 4") # octave 3 # gain "1.16 1 1 1" # superhammond
+arpeggio1 = bite 4 "[0 1 2 1 3 2 1 2] [0 1 2 3 1 2 0 1] [2 3 1 2 0 1 2 3] [2 3 2 1 0 1 0 2]" $ n (scale "minor" "-3 0 2 4") # octave 3 # gain "1.16 1 1 0.9" # superhammond
 arpeggio2 = bite 8 (segment 8 $ irand 8) arpeggio1
 arpeggioPat = cat [arpeggio1, arpeggio2] # lpf (sew "<f t f t t>/2.7" (cat [300, rangex 200 300 saw]) 200)
 -- hits
@@ -14,14 +14,18 @@ hitsPat = (<~) (1/32/3.2) $ mask "<f t f t t>/2.7" $ mask "<t f>" $ mask "{t f!4
 drums = s "yamahatg33-bd:1" # lpf (sew "t(11, 13)/3" "[300 300 420]/4.4" "666") # gain 0.9 # room 0.25 # dry 0.5 # orbit 3
 drumsPat = struct "t([13|18|19|20|21], 32)" $ drums
 finalPat = stack [arpeggioPat, hitsPat, drumsPat]
+t1 = 19.45
+t2 = 19.9
 seqPLoopPat = seqPLoop [
-  (0, 900, finalPat),
-  (994, 1000, "hc !" # gain "1 0.7")
-  ]
+  (0, t1, finalPat),
+  (t1, t2, drumsPat),
+  (994, 999, "hc !" # gain "1 0.7"),
+  (999, 1000, s "cp . hc yamahatg33-perc:4" # gain "1 . 0.7 1.25" # room "0 . 0 0.05" # dry 0.6 # orbit 4)
+  ] |* gain 1.2
 in do
   hush
   setcps 0.3
-  setCycle 0
+  setCycle 996
   d1 $ seqPLoopPat
 
 

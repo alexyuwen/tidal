@@ -1,0 +1,7 @@
+let
+pat0 = n (scale "minor" "[0 2 4 7 9 7 4 2]*4") # octave 3 # s "superhammond" # voice 7
+in do
+  hush
+  setcps 0.3
+  setCycle 0
+  d1 $ pat0 |+ n (segment 16 $ irand 13)

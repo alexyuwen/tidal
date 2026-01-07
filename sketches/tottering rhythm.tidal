@@ -14,6 +14,9 @@ harpsichordNotes = cat [
     ]
   ] # s "harpsichord2" # gain 1.25
 in do
+  hush
+  setcps 0.4
+  setCycle 0
   d1 "cp"
   d2 $ s "hc*14" # gain 0.8
   d3 $ baseNotes

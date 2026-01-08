@@ -31,21 +31,19 @@ bassNotes = cat [
 bassSpeed = speed (fit 0 speeds $ 12 + bassNotes)
 bassPat = bassSpeed # bass
 -- ride
-ride = s "alesissr16-rd:1"
+ride = s "alesissr16-rd:1" # gain 1.5
 ridePat = "1 1" # ride
---
+-- patterns
+finalPat = stack [chordsPat, ridePat, bassPat, melodyPat]
 in do
   hush
   setcps 0.38
   setCycle 0
-  d1 $ chordsPat
-  d2 $ ridePat
-  d3 $ bassPat
-  d4 $ melodyPat
+  d1 $ finalPat
 
-do
-  d1 $ "hc" # gain 0.8
-  d2 $ n (segment 22 $ 20 * (1 - saw))  # s "superhammond"
+
+
+
 
 
 panic

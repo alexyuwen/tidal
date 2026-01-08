@@ -144,7 +144,7 @@ chordList
 
 -- Choose. By itself, it produces a continuous stream, with no structure.
 -- With choose, the parameters to choose from are a list of values, not patterns -- the pattern equivalent is Randcat.
--- As such, you can't normally use mininotation there.  A supposed workaround is innerJoin but that isn't working.
+-- So, you can't normally use mininotation there.  A supposed workaround is innerJoin but that isn't working.
 d1 $ rolledBy (choose [0.25, 0.5, 0.7]) $ n "df'maj'5" # s "supervibe" # room 0.5
 
 -- These two examples are identical.

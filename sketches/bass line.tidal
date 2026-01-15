@@ -1,9 +1,0 @@
--- Bass line.
-let
-gallop = fast 2 $ shuffle 2 $ stack [
-  slice 8 "0@3 2 . 0 2" $ loopAt 1 $ s "break:4",
-  n (scale "minor" "[0 . ~ -3] [0 ~ -3 ~]") # octave 3 # s "moogBass" # gain 1.8
-  ]
-in do
-  d1 "cp"
-  d2 $ gallop

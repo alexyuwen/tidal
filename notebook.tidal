@@ -344,13 +344,14 @@ d1 $ jux (+| n "-12, 12") $ segment "9|12" $ n (12 * rand) # s "supervibe"
 -- JuxBy 0 = pan at 0.5 and 0.5
 d1 $ juxBy 0.5 (+| n "-12, 12") $ segment "9|12" $ n (12 * rand) # s "supervibe"
 
--- SwingBy.  The function swingBy x n breaks each cycle into n slices, then delays events in the second half of each slice by x.
+-- SwingBy.  SwingBy x n breaks each cycle into n slices, where the second half of each slice occurs at x.
 do
   d1 "cp"
-  d2 $ swingBy (1/3) 4 $ sound "hh*8"
+  d2 $ swingBy (2/3) 4 $ sound "hh*8"
 
 -- Swing.  Alias for SwingBy (1/3) n.
 -- These two examples are equivalent.
+-- NOTE: Don't use Swing. SwingBy doesn't work as expected, so neither does Swing.
 do
   d1 "cp"
   d2 $ swingBy (1/3) 4 $ sound "hh*8"

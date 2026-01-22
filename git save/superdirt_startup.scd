@@ -31,9 +31,10 @@ s.reboot { // server options are only updated on reboot
 		// for example: ~dirt.loadSoundFiles("/Users/myUserName/Dirt/samples/*");
 		// ~dirt.loadSoundFiles("/Users/alexyuwen/Desktop/tidal/samples-extra/*");
 		~dirt.loadSoundFiles(Platform.userAppSupportDir +/+ "downloaded-quarks/Custom-Samples/samples-extra/*"); // Folder recursion not possible.  * inludes only for all the folders, one level down.
+		~dirt.loadSoundFiles(Platform.userAppSupportDir +/+ "downloaded-quarks/Custom-Samples/media/*");
 		~dirt.loadSoundFiles(Platform.userAppSupportDir +/+ "downloaded-quarks/Custom-Samples/*"); // for folders without subfolders.  The folder name becomes the sample name in Tidal, with the "n" sample number specifying the file number in the folder, sorted alphabetically
 
-		// Load tidal-drum-machines
+		// Load tidal-drum-machines.
 		// https://github.com/geikha/tidal-drum-machines/tree/main
 		// https://club.tidalcycles.org/t/a-huge-drum-machine-library-for-tidal-72-drum-machines/3408
 		// The code below is adapted from the script from the above repo, as I'm interested in only the samples not the drum machine logic.
@@ -47,7 +48,6 @@ s.reboot { // server options are only updated on reboot
 				postln("LOADING DRUM MACHINE: " ++ machine.folderName);
 				folders.do({
 					arg folder;
-					// ~dirt.loadSoundFiles(folder.fullPath, namingFunction: { |x| x.basename.replace("-","")});
 					~dirt.loadSoundFiles(folder.fullPath);
 				});
 			});

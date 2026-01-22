@@ -1,0 +1,42 @@
+-- sin
+let
+bass = s "supermandolin" # sustain 3.3 # cut 1 # octave 3 # vowel "o" # gain 1
+bassPat = n "0(5, 16, 6)" # bass
+melody = s "supervibe" # sustain 1 # cut 1 # vowel "i" # octave 6 # gain 0.75
+melodyNotes1 = cat [
+  -- 1st time
+  "7 [9 8] 7 4 . [2 1] 0 0 -3",
+  "0 -3 0 1 . [2 1] 0 ~ -3",
+  "0 -3 0 1 . [2 1] 0 0 -3",
+  "0 [2 1] 0 -3 . 0 ~ ~ 4",
+  -- 2nd time
+  "7 [9 8] 7 4 . [2 1] 0 0 -3",
+  "0 -3 0 1 . [2 1] 0 ~ -3",
+  "0 -3 0 1 . [2 1] 0 0 -3",
+  "0 [2 1] 0 -3 . 0 ~ [~ -3] ~"
+  ]
+melodyNotes2 = cat [
+   -- 1st time
+  "0 [2 1] 0 4 . [0 1] [2 1] 0 -3",
+  "0 -3 0 1 . [2 1] 0 _ -3",
+  "0 [2 1] 0 4 . [0 1] [2 1] 0 -3",
+  "0 [2 1] 0 -3 . 0 _ ~ -3",
+  -- 2nd time
+  "0 [2 1] 0 4 . [0 1] [2 1] 0 -3",
+  "0 -3 0 1 . [2 1] 0 _ -3",
+  "0 [2 1] 0 4 . [0 1] [2 1] 0 -3",
+  "0 [2 1] 0 -3 . 0 _ [~ 4] ~"
+  ]
+melodyN = n $ scale "harmonicMinor" $ seqPLoop [
+  (0, 8, melodyNotes1),
+  (8, 16, melodyNotes2)
+  ]
+melodyPat = melodyN # melody
+in do
+  hush
+  setcps 0.5
+  setCycle (-3/16)
+  d1 $ "hc" # gain 0.8
+  d2 $ bassPat
+  d3 $ melodyPat
+

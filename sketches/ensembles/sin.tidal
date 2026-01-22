@@ -1,0 +1,16 @@
+-- sin
+let
+bass = s "sin2" # sustain 1.6 # gain 1.2
+bassPat = slow 1 $ n "0*4" # octave 4 # bass
+melody = s "sin2" # sustain 2 # cut 1 # gain 0.88
+melodyNotes = "[0..7]*2"
+melodyN = n $ scale "harmonicMinor" $ melodyNotes
+melodyPat = melodyN # melody
+in do
+  hush
+  setcps 0.5
+  setCycle 0
+  d1 $ "hc" # gain 0.8
+  -- d2 $ bassPat
+  d3 $ melodyPat
+

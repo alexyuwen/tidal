@@ -1,13 +1,18 @@
 --
 let
 -- drums
-hihat = s "hc:0" # hpf 1800 # gain 0.7
-hihatPat = "1!16" # hihat
+hihat = s "hc:0" # hpf 2000 # gain 0.8
+hihatPat = "1!16" # hihat |* gain ((<~) (6/16) $ euclidFull 5 16 1 0.84)
+-- pad
+pad = s "supervibe" # octave 7 # sustain 12 # gain 0.7 # vowel "a" # lpf 4200
+padPat = mask "<t t f f>/4" $ n (scale "minor" "[4, 7]/4") # pad
+-- subbass
+subbassPat = n "0*65.4064" # octave 4 # s "modalMarimba" # gain 0.7 # legato 5 # vowel "<i o>/8"
 -- bass
-bass = s "superhammond" # legato 2 # cut 1 # octave 3 # vowel "o" # gain 1
-bassPat = n "0(5, 16, 6)" # bass
+bass = s "bd:23" # gain 1.12
+bassPat = "1(5, 16, 6)" # bass
 -- melody
-melody = s "supervibe" # sustain 0.5 # cut 1 # vowel "o" # octave 5 # gain 0.84
+melody = s "superhammond" # voice 1 # octave 5 # legato 1.1 # vowel "o" # gain 0.7 # room 0.9 # sz 0.9 # orbit 2
 melodyNotes1 = cat [
   -- 1st time
   "7 [9 8] 7 4 . [2 1] 0 0 -3",
@@ -23,12 +28,12 @@ melodyNotes1 = cat [
 melodyNotes2 = cat [
    -- 1st time
   "0 [2 1] 0 4 . [0 1] [2 1] 0 -3",
-  "0 -3 0 1 . [2 1] 0 _ -3",
+  "0 -3 0 1 . [2 1] 0 ~ -3",
   "0 [2 1] 0 4 . [0 1] [2 1] 0 -3",
-  "0 [2 1] 0 -3 . 0 _ ~ -3",
+  "0 [2 1] 0 -3 . 0 ~ ~ -3",
   -- 2nd time
   "0 [2 1] 0 4 . [0 1] [2 1] 0 -3",
-  "0 -3 0 1 . [2 1] 0 _ -3",
+  "0 -3 0 1 . [2 1] 0 ~ -3",
   "0 [2 1] 0 4 . [0 1] [2 1] 0 -3",
   "0 [2 1] 0 -3 . 0 ~ ~ 4"
   ]
@@ -37,11 +42,22 @@ melodyN = n $ scale "harmonicMinor" $ seqPLoop [
   (8, 16, melodyNotes2)
   ]
 melodyPat = melodyN # melody
+-- pats
+finalPat = stack [
+  hihatPat,
+  bassPat,
+  subbassPat,
+  padPat,
+  melodyPat
+  ]
+seqPLoopPat = seqPLoop [
+  (0, 999, finalPat)
+  ]
 in do
   hush
   setcps 0.5
-  setCycle (-2/16)
-  d1 $ hihatPat
-  d2 $ bassPat
-  d3 $ melodyPat
+  setCycle (-0/16)
+  d1 $ finalPat
 
+
+panic

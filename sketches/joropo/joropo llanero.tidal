@@ -38,9 +38,9 @@ in do
   hush
   setcps 0.5
   setCycle 0
-  d2 $ harpMelodyPat
+  -- d2 $ harpMelodyPat
   -- d3 $ harpBassPat
-  -- d4 $ bassPat
+  d4 $ bassPat
   -- d5 $ cuatroPat
   -- d6 $ maracaPat
 

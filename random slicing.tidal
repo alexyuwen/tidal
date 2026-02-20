@@ -1,0 +1,11 @@
+-- random slicing.
+let
+x = 0
+in do
+  hush
+  setcps 0.5
+  setCycle 0
+  d1 $ slice 16 (segment 16 $ irand 16) $ loopAt 1 $ s "break:6"
+
+
+

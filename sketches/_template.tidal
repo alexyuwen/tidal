@@ -1,8 +1,14 @@
 -- Template.
 let
 x = 0
+-- pats
+finalPat = s "cp"
+seqPLoopPat = seqPLoop [
+  (0, 900, finalPat),
+  (996, 1000, gain "1 0.7" # s "hc")
+  ]
 in do
   hush
   setcps 0.5
   setCycle 0
-  d1 $ "hc"
+  d1 $ seqPLoopPat

@@ -1,15 +1,4 @@
 
-import Prelude hiding (all)
-
-all $ (* gain 0.6)
-
--- Test.
-d1 $ "hc*32"
-
--- At end of session, restore "all"
-all id
-
-
 -- Template.
 let
 x = 0
@@ -24,7 +13,3 @@ in do
   setcps 0.5
   setCycle 0
   d1 $ seqPLoopPat
-
-
-
-panic

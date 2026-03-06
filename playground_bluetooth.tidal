@@ -17,7 +17,7 @@ x = 0
 finalPat = s "cp"
 seqPLoopPat = seqPLoop [
   (0, 900, finalPat),
-  (996, 1000, gain "1 0.7" # s "hc")
+  (996, 1000, gain "0.8 0.5" # s "hc")
   ]
 in do
   hush

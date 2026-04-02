@@ -1,0 +1,33 @@
+
+-- drum phrases
+let
+-- break:13
+-- bd: 0, 5, 9, 13
+-- hh: 1, 8  ||  3, 4, 7, 11, 12, 15
+-- sd: 2, 6, 10, 14
+-- [0|5|9|13]
+-- [1|3|4|7|8|11|12|15]
+-- [2|6|10|14]
+-- slicePat = slice 16 $ while "f t t" (ply "[1 2 1 2 2]*3") $ "[13 4 2 4 4]*3"
+hhSliceVal = "[~ 4 4 4 4]*3"
+hhSlicePat = slice 16 hhSliceVal $ loopAt 2 $ s "break:13" # legato 1.12 # cut 1 # gain 0.8
+plyPat = ply $ slow (4/3) $ shuffle 4 "1!5 . 1 2 1 1 1 . 1 1 1 2 1 . 1 1 1 1 2"
+hhPat = plyPat hhSlicePat
+otherPat = slice 16 "[13 ~ <~ 2 2 2> ~ ~]*3" $ loopAt 2 $ s "break:13" # legato 1.12 # cut 1 # gain 0.8
+finalPat = stack [
+  hhPat,
+  otherPat
+  ]
+-- pats
+seqPLoopPat = seqPLoop [
+  (0, 900, finalPat),
+  (996, 1000, gain "0.8 0.5" # s "hc")
+  ]
+in do
+  hush
+  setcps 0.33 -- 0.46
+  setCycle 0
+  d1 $ seqPLoopPat
+
+
+

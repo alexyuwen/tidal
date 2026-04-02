@@ -357,14 +357,14 @@ do
   d2 $ swingBy (1/3) 4 $ sound "hh*8"
   d2 $ swing 4 $ sound "hh*8"
 
--- Inside.  Applies function "inside" a cycle.  Inside n f is equivalent to (fast n . f . slow n)
+-- Inside.  Applies function "inside" a cycle.  Inside n f x is equivalent to (fast n . f . slow n . x)
 -- These two examples are equivalent.
 do
   d1 "cp"
   d2 $ inside 2 (fastGap 1.25) $ chop 512 $ loopAt 1 $ s "break:1" # cut 1
   d2 $ (fast 2 . fastGap 1.25 . slow 2) $ chop 512 $ loopAt 1 $ s "break:1" # cut 1
 
--- Outside.  Applies function "outside" a cycle.  Outside n f is equivalent to (slow n . f . fast n)
+-- Outside.  Applies function "outside" a cycle.  Outside n f x is equivalent to (slow n . f . fast n . x)
 -- These two examples are equivalent.
 doz
   d1 "cp"

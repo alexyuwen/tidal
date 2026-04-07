@@ -9,24 +9,27 @@ let
 -- [1|3|4|7|8|11|12|15]
 -- [2|6|10|14]
 -- hh
--- plyVal and hhMaskVal2 not working together
--- plyVal = slow (4/3) $ shuffle 4 "1!5 . 1 2 1 1 1 . 1 1 2 1 1 . 1 2 1 2 1"
 plyVal = shuffle 3 "[1!5 . 1 2 1 1 1 . 1 1 2 1 1 . 1 2 1 2 1]*3/4"
+-- TODO finetune gains
+gainVal = 0.81 * (shuffle 3 "[1!5 . 0.8 0.92 0.8 1 1 . 0.8 1 0.92 0.8 1 . 0.8 0.92 0.8 0.92 0.8]*3/4") -- lower gain on every matra following ply 2
 hhMaskVal2 = shuffle 3 "[t f t t t . t . t . t]*3/4" -- mask matra 2 when plyVal is 1!5
 hhMaskVal = "[t t t t <t t f  t f  t t t t f  t t f  t t t t t t t f>]*3" -- mask when matra 4 has bd (otherPat)
-hhSlicePat = slice 16 "[~ 4 4 4 4]*3" $ loopAt 2 $ s "break:13" # legato 1.12 # cut 1 # gain 0.81 # orbit 2
-hhPat = mask hhMaskVal2 $ mask hhMaskVal $ ply plyVal hhSlicePat
+hhSlicePat = slice 16 "[~ 4 4 4 4]*3" $ loopAt 2 $ s "break:13" # legato 1.12 # cut 1
+hhPat = mask hhMaskVal2 $ mask hhMaskVal $ ply plyVal hhSlicePat # orbit 2 # pan (segment 3 rand) # gain gainVal
 --other
 -- 3 + 4 = 7
 -- 3 + 2 + 5 + 3 + 8 = 18
+ -- TODO separate bd and sn so you can have one without the other
 otherSliceVal = "[13 . ~ . <~ 2 2 ~ 2 2 2> . ~ . <~ ~ 9  ~ 9  ~ ~ ~ ~ 9  ~ ~ 9  ~ ~ ~ ~ ~ ~ ~ 9>]*3"
 otherPat = slice 16 otherSliceVal $ loopAt 2 $ s "break:13" # legato 1.12 # cut 1 # gain 0.81 # orbit 3
 -- pats
 finalPat1 = stack [
   hhPat,
+  (<~) (99 + (1/5)) hhPat,
+  (<~) (199 + (2/5)) hhPat,
   otherPat
   ]
-finalPat2 = slice 16 "0..7" $ loopAt 2 $ s "break:13" # gain 0.84 # orbit 4
+finalPat2 = slice 16 "0..7" $ loopAt 2 $ s "break:13" # gain 0.84 # orbit 4 # pan (segment 16 rand)
 finalPat = sew (outside 7 (shuffle 7) "<t t t t t t t>") finalPat1 finalPat2 -- switching between subdivision of 3*5=15 and 4*4=16
 seqPLoopPat = seqPLoop [
   (0, 900, finalPat),
@@ -34,9 +37,7 @@ seqPLoopPat = seqPLoop [
   ]
 in do
   hush
-  setcps 0.3 -- 0.46
-  setCycle 7
+  setcps 0.46 -- 0.46
+  setCycle 4
   d1 $ seqPLoopPat
-
-
 

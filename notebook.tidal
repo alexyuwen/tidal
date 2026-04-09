@@ -186,8 +186,9 @@ pat1 = bite 5 "0 1 2 3 4 2 3 4" $ arpg $ n "c'min'5"
 pat2 = fast 8 $ n (scale "minor" "2 1 . 0") # octave 6
 in do
   d1 "cp"
-  d2 $ select (listToPat $ map (/1) [0, 0, 0, 0, 1, 0, 0, 0]) [pat1, pat2] # s "violin"  -- If there were three patterns, then map (/2).
-  d2 $ select ((/1) <$> "0 0 0 0 1 0 0 0") [pat1, pat2] # s "violin" -- Equivalent to above, but more concise.
+  d2 $ select ("0 0 0 0 1 0 0 0" / 1) [pat1, pat2] # s "violin" -- If there were three patterns, then /2.
+  d2 $ select ((/1) <$> "0 0 0 0 1 0 0 0") [pat1, pat2] # s "violin" -- <$> may be needed.
+  d2 $ select (listToPat $ map (/1) [0, 0, 0, 0, 1, 0, 0, 0]) [pat1, pat2] # s "violin"  -- Even less concise.
 
 -- Cat.
 d1 $ cat ["hc(3,8)", "hc(9,16,7)"]
@@ -463,6 +464,7 @@ do
 
 -- Sew.  Uses a binary pattern to switch between two other patterns.
 -- Stitch gets the structure from the binary pattern, whereas Sew gets it from the two source patterns.
+-- For alternating between more than two patterns, use Select.
 do
   d1 $ "cp" # gain 0.8
   d2 $ sew "t(3,8)" (segment 16 $ n 0 # s "supervibe") ("bd*8")

@@ -1,0 +1,26 @@
+--
+let
+cpPat = s "sd" # gain 0.7
+subdv = slow 2 $ "12|12|16|18|24|24"
+-- vibePat
+vibeNPat = (segment subdv $ slow 2 $ range 0 12 saw) |+ (segment 5.5 $ range (-4.4) 4.4 rand) |+ (segment 10 $ range (-2.2) 2.2 rand)
+vibePat = n vibeNPat # s "supervibe" # vowel "a" # gain (segment 21 $ (wchoose [(0, 0.06), (0.8, 2), (1, 1)]) + (range (-0.3) 0.3 rand))
+-- vibe2Pat
+vibe2NPat = quantise (1/6) $ segment 2 vibeNPat
+vibe2Pat = n vibe2NPat # s "supervibe" # vowel "[a|e|i|o|u|x]" # cut 1 # gain (0.9 - 0.3 * rand)
+-- vibeSewPat
+vibeOutsidePat = outside 3 (shuffle 6) (sew "<t [t f] t>" vibePat vibe2Pat)
+-- finalPat
+finalPat = stack [
+  -- cpPat,
+  vibeOutsidePat
+  ]
+seqPLoopPat = seqPLoop [
+  (0, 34, finalPat),
+  (992, 1000, gain "0.8 0.5" # s "hc")
+  ]
+in do
+  hush
+  setcps 0.5
+  setCycle 992
+  d1 $ seqPLoopPat

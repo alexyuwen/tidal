@@ -689,7 +689,7 @@ do
 -- Sz is delay time / space dimension: higher = bigger space, longer decay.
 -- Dry is how much of the original sound is mixed in: 0 = only reverb (fully wet), 1 = completely dry (no reverb).
 
-
+-- Quantise.
 
 
 

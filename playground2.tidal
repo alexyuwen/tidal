@@ -1,0 +1,18 @@
+
+-- Template.
+do
+  hush
+  setCycle 0
+  setcps 0.5
+  d1 $ "cp" # gain 0.8
+  d2 $ sew "[t|f]*2" "hc(11,16,[0|1|2|3|4|5|6])" "[hc(3,8)]*4" # gain 0.9
+  -- d3 $ mask "t f" $ "bd(3,16,[0|3|6|7|8])" # gain 2
+
+
+
+:t sew
+
+
+panic
+
+

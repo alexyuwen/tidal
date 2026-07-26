@@ -1,0 +1,24 @@
+--
+let
+cpPat = s "sd"
+-- vibePat
+vibeNPat = (segment 16 $ slow 2 $ range 0 12 saw) |+ (segment 4.4 $ 6 * rand)
+vibePat = n vibeNPat # s "supervibe" # vowel "a"
+-- vibe2Pat
+vibe2Pat = fast (16/11) $ n 6 # s "supervibe" # vowel "e" # cut 1
+-- vibeSewPat
+vibeSewPat = sew (fast (16/11) "[t|t|f]") vibePat vibe2Pat
+-- finalPat
+finalPat = stack [
+  cpPat,
+  vibeSewPat
+  ]
+seqPLoopPat = seqPLoop [
+  (0, 900, finalPat),
+  (996, 1000, gain "0.8 0.5" # s "hc")
+  ]
+in do
+  hush
+  setcps 0.5
+  setCycle 0
+  d1 $ seqPLoopPat

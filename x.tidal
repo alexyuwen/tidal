@@ -1,10 +1,13 @@
 
--- Template.
+-- x
 let
 cpPat = s "cp" # gain 0.7
+-- pat
+notePat = n "[0 1 0@5 . ~]*4" # s "violin" # legato 1
 -- finalPat
 finalPat = stack [
-  cpPat
+  cpPat,
+  notePat
   ]
 seqPLoopPat = seqPLoop [
   (0, 900, finalPat),
@@ -12,6 +15,6 @@ seqPLoopPat = seqPLoop [
   ]
 in do
   hush
-  setcps 0.5
+  setcps 0.44
   setCycle 0
   d1 $ seqPLoopPat

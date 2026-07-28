@@ -235,7 +235,7 @@ tetraChord = fastcat [
 pat = tetraChord # s "supervibe" # legato 8 # lpf 999 # vowel "o"
 in do
   d1 "cp"
-  d2 $ (<~) ((<~) 1 $ segment 0.5 $ rand) $ whenmod 2 1 (const silence) $ pat -- (<~) 1 makes sure random value isn't generated in middle of pattern
+  d2 $ (<~) ((<~) 1 $ segment 0.5 $ rand) $ whenmod 2 1 (const silence) $ pat -- (<~) 1 so random value isn't generated in middle of pattern
 
 -- Ratio shorthand (mini notation) using %.
 -- These three examples are equivalent.

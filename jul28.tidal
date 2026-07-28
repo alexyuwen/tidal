@@ -1,0 +1,42 @@
+
+-- x
+let
+-- vPat
+vS = s "violin" # gain (0.8 * (sew "[t f]" "1" 0.99))
+vN = n (cat [
+  "[0 ~ 7 . 6 7 0 . 6 7 -5] . [0 ~ 1 . 0 1 -6 . 0 1 -5]",
+  "[0 ~ -5 . 0 1 -6 . 0 1 -5] . [0 1 -5 . 0 1 -6 . 0 1 -5]",
+  "[0 ~ 7 . 6 7 0 . 6 7 -5] . [0 ~ 1 . 0 1 -6 . 0 1 -5]", -- repeat of line 1
+  "[0 ~ -5 . 6 7 0 . 6 7 -5] . [6 7 -5 . 6 7 0 . 6 7 -5]"
+  ])
+-- vN2 = n (sew "<t!16 f!16>" (-0.2) 0.2)
+-- v1Pat1 = vN # vS # vowel "x" # octave 5
+-- v1Pat2 = v1Pat1 |+ vN2
+-- v1Pat = stack [v1Pat1, v1Pat2] -- detuned
+-- v2Pat = (<~) (segment 1 $ irand 16 / 16) v1Pat # vowel "u"
+vPat = vN # vS
+-- bs
+bs = n "c/2" # octave 3 # s "supermandolin" # vowel "u" # legato 5 # gain 0.82 # cut 1 # room 0.5 # orbit 2
+-- drums
+offsets = [0, 1/9, 2/9, 3/9, 4/9, 5/9, 6/9, 7/9, 8/9]
+offsetF x = (<~) (select ("0|1" / 8) offsets) x
+hhMid = offsetF "[1(5,9)]*2" # s "hc:0" # hpf 4444 # cut 1 # gain 0.69 -- 0,1,6,8  2,3,4  5,7
+-- hhHigh = "1!6" # s "hc:0" # hpf 9999 # cut 1 # gain 0.8
+-- kick = "1" # s "bskick:2" # speed 1 # gain 1 -- "bskick:2" "rolandd70-bd:0"
+-- sd = "1" # s "snare:0" # gain 1 # speed 1.1
+-- final pats
+hc = gain "0.8 0.5" # s "hc hc" -- countoff
+finalPat = stack [
+  vPat,
+  hhMid
+  ]
+seqPLoopPat = seqPLoop [
+  (0, 992, finalPat),
+  (992, 999, hc),
+  (999, 1000, "1!6" # s "hc:0" # hpf 4444 # gain 0.6)
+  ]
+in do
+  hush
+  setcps 0.44
+  setCycle 4
+  d1 $ seqPLoopPat

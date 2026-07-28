@@ -1,7 +1,7 @@
 
 -- Template.
 let
-cpPat = s "cp"
+cpPat = s "cp" # gain 0.7
 -- finalPat
 finalPat = stack [
   cpPat

@@ -1,7 +1,8 @@
 
 -- 16/3
--- 1+72 cycles, 2'43"
--- ABACADEEA 48: mix  64: A' out, both voices  72
+-- 1+72 cycles, 2'43"    -- ABACADEEA 48: mix  64: A' out, both voices  72
+-- This one falls into a neat ABACADEEA' where each section is 8 bars long (1 ostinato = 1 bar). The volta occurs at the two-thirds mark.
+-- B, C, D displace the ostinato by a random amount chosen each bar. E continues this displacement but randomly alternates 50/50 with the original non-displaced every 3/16 bar, creating a long hemiola, but one that is more structural than perceptual given the randomness of the alternation.
 let
 -- vPat
 vS = s "violin" # gain (0.8 * (sew "[t t f t f t t f]*2" "[0.8|0.7|0.6]*16" 0.99))
@@ -19,7 +20,7 @@ whileF x = while "<f f f t f [f t] f [f f t]>" (ply "[2|1|1|1|1]*16") x
 hhMid = whileF "1!16" # s "hc:0" # hpf 4444 # cut 1 # gain 0.69
 hhHigh = whileF "1!16" # s "hc:0" # hpf 9999 # cut 1 # gain 0.8
 hh = sew "<t!8 f!8>" hhMid hhHigh
-kick = "<[1@3 1@5] ~>" # s "bskick:2" # speed 0.66 # gain 1 -- TODO something
+kick = "<[1@3 1@5] ~>" # s (sew "<t!8 f!8>" "bskick:2" "rolandd70-bd:0") # speed 1 # gain 1 -- TODO something bskick:2
 sd = "~ . ~ <~ 1 ~ ~  ~ 1 ~ 1>" # s "snare:0" # gain 1 # speed 1.1
 -- final pats
 hc = gain "0.8 0.5" # s "hc hc" -- countoff
@@ -36,11 +37,11 @@ finalPat = stack [
   ]
 seqPLoopPat = seqPLoop [
   (0, 72, finalPat),
-  (996, 999, hc),
+  (992, 999, hc),
   (999, 1000, "1 1 1 1" # s "hc:0" # hpf 4444 # gain 0.6)
   ]
 in do
   hush
   setcps 0.44
-  setCycle 999
+  setCycle 32
   d1 $ seqPLoopPat

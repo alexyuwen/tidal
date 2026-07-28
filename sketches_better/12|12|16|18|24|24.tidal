@@ -1,4 +1,7 @@
---
+
+-- 12|12|16|18|24|24
+-- The pitch stream loosely tracks a 4" saw wave, but is replaced with a 1" ring exactly once every 6" window but at different spots in each window. The ring's pitch is either C or F#; its register loosely tracks the 4" saw wave.
+-- 12, 12, 16, 18, 24, 24 are the possible values for pitches per 2". The actual value is chosen randomly at the start of each 2".
 let
 cpPat = s "sd" # gain 0.7
 subdv = slow 2 $ "12|12|16|18|24|24"

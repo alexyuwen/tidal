@@ -58,7 +58,7 @@ Bowed strings:
 
 -- Cool tones.  Pitch from rhythm
 d1 $ n "0*90" # octave 1 # s "acidOto3091" # gain 1.8 # legato 0.4
-d1 $ n "0*109.7" # octave 1 # s "superhammond" # gain 1.8 # legato 0.4 -- C, in tune
+d1 $ n "0*109.7" # octave 1 # s "superhammond" # gain 1.8 # legato 0.4
 d1 $ n 0 # octave 2 # s "superhammond" # voice 7
 
 

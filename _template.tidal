@@ -1,5 +1,5 @@
 
--- Template.
+-- 
 let
 cpPat = s "cp" # gain 0.7
 -- final

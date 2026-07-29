@@ -2,8 +2,9 @@
 -- x
 let
 -- vPat
+vS2Octave = (<~) (2/6) "<6!4 5!4>"
 vS1 = s "violin" # octave 4 # gain (0.77 * (sew "[t f]" "1" 0.99))
-vS2 = s "violin" # octave 5 # gain (0.7 * (sew "[t f]" "1" 0.99))
+vS2 = s "violin" # octave vS2Octave # gain (0.7 * (sew "[t f]" "1" 0.99))
 vN = n (cat [ -- TODO 2/6 cycle-length random segments, alternate w original every 4/6 cycles, starting with random
   "[0 ~ 7 . 6 7 0 . 6 7 -5] . [0 ~ 1 . 0 1 -6 . 0 1 -5]",
   "[0 ~ -5 . 0 1 -6 . 0 1 -5] . [0 1 -5 . 0 1 -6 . 0 1 -5]",
@@ -16,8 +17,8 @@ vN = n (cat [ -- TODO 2/6 cycle-length random segments, alternate w original eve
 -- v1Pat = stack [v1Pat1, v1Pat2] -- detuned
 -- v2Pat = (<~) (segment 1 $ irand 16 / 16) v1Pat # vowel "u"
 vPat1 = vN # vS1
-vPat2a = outside 4 (shuffle 24) $ vN # vS2
-vPat2 = sew "[t f]*3/4" vPat2a (vPat1 # octave 5)
+vPat2a = outside 4 (shuffle 24) vN # vS2
+vPat2 = sew "[t f]*3/4" vPat2a (vN # vS1 # octave vS2Octave)
 -- bs
 bsN = cat [
   "12 0 _ . 12 0 _",
@@ -55,9 +56,9 @@ final2 = stack [
   vPat2,
   rhythm
   ]
-final = cat [
-  final1,
-  final2
+final = seqPLoop [
+  (0, 8, final1),
+  (8, 64, final2)
   ]
 seqPLoopPat = seqPLoop [
   (0, 64, final),
@@ -67,5 +68,5 @@ seqPLoopPat = seqPLoop [
 in do
   hush
   setcps 0.44
-  setCycle 0
+  setCycle 8
   d1 $ seqPLoopPat

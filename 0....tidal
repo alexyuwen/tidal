@@ -1,0 +1,83 @@
+
+-- x
+-- 1 cycle = 2.2727 sec
+-- 8 + 20 = 28
+let
+-- vPat
+vS2Octave = (<~) (2/6) "<0!8 [5 6] [7 8] 8!6 7!4 6!4 5!4>"
+vS1 = s "violin" # octave 4 # vowel "i" # gain 0.7
+vS2 = s "violin" # octave vS2Octave # gain 0.68
+vN = n (cat [
+  "[0 ~ 7 . 6 7 0 . 6 7 -5] . [0 ~ 1 . 0 1 -6 . 0 1 -5]",
+  "[0 ~ -5 . 0 1 -6 . 0 1 -5] . [0 1 -5 . 0 1 -6 . 0 1 -5]",
+  "[0 ~ 7 . 6 7 0 . 6 7 -5] . [0 ~ 1 . 0 1 -6 . 0 1 -5]",
+  "[0 -5 1 . 0 1 7 . 6 7 1] . [0 1 7 . 6 7 0 . 6 7 -5]"
+  ])
+vGain = cat [
+  "[1 . 1 . 1 1 1.2] . [1 . 1 1 1.28 . 1 1 1.2]",
+  "[1 1 1.2 . 1 1 1.28 . 1 1 1.2] . [1 1 1.2 . 1 1 1.28 . 1 1 1.2]",
+  "[1 . 1 . 1 1 1.2] . [1 . 1 1 1.28 . 1 1 1.2]",
+  "[1 1.2 1 . 1 . 1] . [1 . 1 . 1 1 1.2]"
+  ]
+vGain2 = 1
+-- vN2 = n (sew "<t!16 f!16>" (-0.2) 0.2)
+-- v1Pat1 = vN # vS1 # vowel "x" # octave 5
+-- v1Pat2 = v1Pat1 |+ vN2
+-- v1Pat = stack [v1Pat1, v1Pat2] -- detuned
+-- v2Pat = (<~) (segment 1 $ irand 16 / 16) v1Pat # vowel "u"
+vPat1 = vN # vS1 |* gain vGain
+vPat2a = outside 4 (shuffle 24) vN # vS2
+vPat2 = sew "[t f]*3/4" vPat2a (vN # vS1 # octave vS2Octave) -- 2/6 cycle-length random segments, alternate w original every 4/6 cycles, starting with random
+-- bs
+bsN = cat [
+  "12 0 _ . 12 0 _",
+  "0 . 0",
+  "12 0 _ . 12 0 _",
+  "0 . 0"
+  ]
+bs = n bsN # octave 3 # s "supermandolin" # vowel "u" # legato 1.33 # gain 0.93 # cut 0 # room 0.5 # orbit 2
+-- drums
+offsets = [0, 1/9, 2/9, 3/9, 4/9, 5/9, 6/9, 7/9, 8/9]
+selectVal = cat [
+  "0|1|8", -- 2+1
+  "2|3|4", -- 1+2
+  "0|1|8",
+  "5|6|7" -- //
+  ]
+offsetF x = (<~) (select (selectVal / 8) offsets) x
+hhMid = "1*6" # s "hc:0" # hpf 4444 # cut 1 # gain 0.54
+kick = "1 1" # s (sew "<t f t f>" "rolandd70-bd:0" "bskick:2") # speed 1 # gain (0.98 * (sew "<t f t f>" 0.96 0.88))
+sd = offsetF "[1(5,9)]*2" # s "snare:0" # gain 0.55 # speed 1.1
+-- final
+hc = gain "0.8 0.5" # s "hc hc" -- countoff
+rhythm = stack [
+  bs,
+  hhMid,
+  sd,
+  kick
+  ]
+final1 = stack [
+  vPat1 # octave 4,
+  rhythm
+  ]
+final2 = stack [
+  vPat2,
+  rhythm
+  ]
+inv True = False
+inv False = True
+final1Mask = "<t!7 [t . t f f] f!19 [f . f t t]>"
+final = stack [
+  mask final1Mask final1,
+  mask (inv <$> final1Mask) final2
+  ]
+seqPLoopPat = seqPLoop [
+  (0, 56 + 2.2, final |* gain (sew "<t!56 f!28>" 1 (slow 8 $ (<~) 0.25 sine))),
+  (992, 999, hc),
+  (999, 1000, "~!2 1!4" # s "hc:0" # hpf 4444 # gain 0.56)
+  ]
+in do
+  hush
+  setcps 0.44
+  setCycle 999
+  d1 $ seqPLoopPat

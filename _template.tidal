@@ -1,5 +1,5 @@
 
--- 
+--
 let
 cpPat = s "cp" # gain 0.7
 -- final
@@ -8,7 +8,8 @@ final = stack [
   ]
 seqPLoopPat = seqPLoop [
   (0, 900, final),
-  (996, 1000, gain "0.8 0.5" # s "hc hc")
+  (992, 999, gain "0.8 0.5" # s "hc hc"),
+  (999, 1000, "1 1 1 1" # s "hc:0" # hpf 4444 # gain 0.6)
   ]
 in do
   hush

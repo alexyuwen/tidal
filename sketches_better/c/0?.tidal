@@ -1,5 +1,5 @@
 -- 0?
--- Here's the third and final one in the suite. Inspired by Croatian string band, this one keeps the tempo of the previous two and sets a pattern of increasing subdivision: 8, 9, 10.
+-- Here's the third and final one in the suite. Inspired by Croatian string band, this one keeps the tempo and root note of the previous two. It also sets a pattern of increasing subdivision: 8, 9, 10.
 let
 -- violins
 -- v
@@ -24,7 +24,7 @@ gtrS = s "supermandolin" # vowel "i" # legato "2.75@3 10" # lpf 6666 # gain 0.9 
 gtrNotes = "[[-4] ~ [-4, -2, 1] ~ ~ . ~ ~ [-3, 0, 2] ~ ~ . ~ ~ [-3, -1, 1] ~ ~ . <[-3, 0, 2] [-3, 0]> ~ ~ ~ ~]"
 gtr = n (scale "major" gtrNotes) # gtrS
 -- rhythm
-hh = s "hc:0" # vowel "a" # cut 1 # gain 0.69 # orbit 4
+hh = s "hc:0" # vowel "a" # cut 1 # gain 0.68 # orbit 4
 hhMask = mask (fast 6.6 $ wchoose [(False, 1), (True, 15)])
 hhN = n $ sew "<t t t [t@3 f]>" ((<~) (segment 1 $ irand 20 / 20) "1([11|12|12|13],20)") "[1 _ 1 _ 1]*4"
 hhPat = hhMask $ hhN # hh
@@ -60,7 +60,6 @@ f5 = stack [
   bitePat v2,
   bitePat gtr,
   bitePat bsPat,
-  bitePat sdPat,
   hhPat
   ]
 f6 = stack [
@@ -68,26 +67,24 @@ f6 = stack [
   v2,
   gtr,
   bsPat,
+  hhPat
+  ]
+f7 = stack [
+  bitePat v,
+  bitePat v2,
+  bitePat gtr,
+  bitePat bsPat,
+  bitePat sdPat,
+  hhPat
+  ]
+f8 = stack [
+  v,
+  v2,
+  gtr,
+  bsPat,
   sdPat,
   hhPat
   ]
-seqPLoopPat2 = seqPLoop [
-  (0, 4, f1),
-  (4, 8, f2),
-  (8, 16, f5),
-  (16, 24, f6),
-  (992, 999, gain "0.8 0.5" # s "hc hc"),
-  (999, 1000, "1" # hh)
-  ] |* gain 1.06
-seqPLoopPatZ = seqPLoop [
-  (0, 4, f1),
-  (4, 8, f2),
-  (8, 16, f5),
-  (16, 20, f1),
-  (20, 24, f1),
-  (24, 32, f5),
-  (32, 48, f6)
-  ] |* gain 1.06
 seqPLoopPat = seqPLoop [
   (0, 4, f1),
   (4, 8, f2),
@@ -95,11 +92,12 @@ seqPLoopPat = seqPLoop [
   (12, 16, f4),
   (16, 24, f5),
   (24, 32, f6),
-  (32, 40, f5),
-  (40, 48, f6)
+  (32, 40, f7),
+  (40, 48 - (3/5) * (1/4), f8),
+  (992, 1000, n "1 1" # s "hc" # gain "0.8 0.55")
   ] |* gain 1.06
 in do
   hush
   setcps 0.44
-  setCycle 0
+  setCycle 992
   d1 $ seqPLoopPat

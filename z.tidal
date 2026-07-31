@@ -1,0 +1,17 @@
+
+--
+let
+final = stack [
+  n "0([1|2|3|4|6|8]/3,8)" # s "supervibe",
+  "hc" # gain 0.7
+  ]
+seqPLoopPat = seqPLoop [
+  (0, 900, final),
+  (992, 999, gain "0.8 0.5" # s "hc hc"),
+  (999, 1000, "1 1 1 1" # s "hc:0" # hpf 4444 # gain 0.6)
+  ]
+in do
+  hush
+  setcps 0.5
+  setCycle 0
+  d1 $ seqPLoopPat

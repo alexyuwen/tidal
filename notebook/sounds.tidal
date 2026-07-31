@@ -62,10 +62,15 @@ d1 $ n "0*109.7" # octave 1 # s "superhammond" # gain 1.8 # legato 0.4
 d1 $ n 0 # octave 2 # s "superhammond" # voice 7
 
 
-
-
--- pluck bass from joropo
-bass = s "pluck:1" # gain 1.33 # legato 9
-offset = 1.172 * 0.5 * (2 ** 0.5)
+-- pluck bass
+let
+bass = s "pluck:1" # gain 1 # legato 9
+offset = 0.82 * 0.5 * (2 ** 0.5) -- 0.82 for C major, manually tuned
 speeds = [offset * 2 ** (i / 12) | i <- [0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23, 24]]
-bassNotes = speed (fit 0 speeds $ 7 + "~ 0 4 ~ -3 4")
+bassNotes = speed (fit 0 speeds $ 7 + "0 4") -- add 7 so index 0 is the middle octave
+bassPat = bassNotes # bass
+in do
+  hush
+  setcps 0.5
+  setCycle 0
+  d3 $ bassPat

@@ -1,0 +1,55 @@
+
+-- X
+let
+-- bs
+bassS = s "pluck:1" # gain 0.9 # legato 9 # cut 0 # orbit 2
+offset = 0.82 * 0.5 * (2 ** 0.5)
+speeds = [offset * 2 ** (i / 12) | i <- [0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23, 24, 26]]
+bassI = "0"
+bassNotes = speed (fit 0 speeds $ 7 + bassI)
+bass = bassNotes # bassS
+-- drums
+-- hh
+hhS = s "hc:0" # vowel "x" # cut 1 # gain 0.67 # orbit 4
+hhNotes = cat [
+  "0@3 0@5",
+  "0@3 0@5",
+  "0@3 0@5",
+  "~"
+  ]
+hh = hhNotes # hhS
+-- snare
+snareS = s "snare:0" # gain 0.75 # speed 1.1
+snareNotes = cat [
+  "~ ~ ~ 0",
+  "~ ~ ~ 0",
+  "~ ~ ~ 0",
+  "~"
+  ]
+snare = snareNotes # snareS
+-- kick
+kickS = s "bskick:2" # vowel "x" # speed 1 # gain 0.9 # room 0.12 # orbit 3
+kickNotes = cat [
+  "0@3 0@5",
+  "0@3 0@5",
+  "0@3 0@5",
+  "0 0"
+  ]
+kick = kickNotes # kickS
+-- final
+final = stack [
+  hh,
+  bass,
+  kick,
+  snare
+  ]
+seqPLoopPat = seqPLoop [
+  (0, 900, final),
+  (992, 999, gain "0.8 0.5" # s "hc hc"),
+  (999, 1000, "1 1 1 1" # s "hc:0" # hpf 4444 # gain 0.6)
+  ]
+in do
+  hush
+  setcps 0.75
+  setCycle 0
+  d1 $ seqPLoopPat

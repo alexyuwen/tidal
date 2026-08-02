@@ -1,5 +1,5 @@
 -- 0?
--- Here's the third and final one in the suite. Inspired by Croatian string band, this one keeps the tempo and root note of the previous two. It also sets a pattern of increasing subdivision: 8, 9, 10.
+-- Inspired by Croatian string band music, this one shares the tempo and root note of the previous two. It also sets a pattern of increasing subdivision: 8, 9, 10.
 let
 -- violins
 -- v
@@ -99,5 +99,5 @@ seqPLoopPat = seqPLoop [
 in do
   hush
   setcps 0.44
-  setCycle 992
+  setCycle 0
   d1 $ seqPLoopPat

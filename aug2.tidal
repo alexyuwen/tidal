@@ -1,6 +1,60 @@
-
+-- TODO: Rotate voices, who gets which
 -- X
 let
+-- violins
+-- v
+vGain = 0.58 * (cat ["1.16 1.12 1 1", "1", "1", "1"])
+vS = s "violin" # vowel "a" # octave 5 # legato 0.88 # gain vGain
+vNotes2 = slow 4 "-1@3 0@58 ~@3" -- 13 + 16 + 16 + 13 = 58
+vNotes = cat [
+  "[<-1 -1 -1 1 1 1>@3 0@3 ~@2] [0@3 ~@5]!3",
+  "[0@3 ~@5]!4",
+  "[0@3 ~@5]!4",
+  "[0@3 ~@5]!4"
+  ]
+vN = n (scale "phrygian" vNotes)
+v = vN # vS
+-- v2
+v2S = s "violin" # vowel "i" # octave 6 # legato 0.88 # gain 0.58
+v2Sew = sew "<t!4 f!4>" "[0@3 ~@5]!4" "~ . [0@3 ~@5]!2"
+v2Notes = cat [
+  "~ . -1@3 0@3 ~@2 . 1@3 0@3 ~@2 . 0@3 ~@5",
+  "[0@3 ~@5]!4",
+  v2Sew,
+  v2Sew
+  ]
+v2N = n (scale "phrygian" v2Notes)
+v2 = v2N # v2S
+-- v3
+v3S = s "violin" # vowel "i" # octave 5 # legato 0.88 # gain 0.56
+v3Notes = cat [
+  "~!3 [-1@3 0@3 ~@2]",
+  "[-1@3 0@3 ~@2] [1@3 0@3 ~@2] [0@3 ~@5] ~",
+  "[[0@3 ~@5] ~] !",
+  "[[0@3 ~@5] ~] !"
+  ]
+v3N = n (scale "phrygian" v3Notes)
+v3 = v3N # v3S
+-- v4
+v4S = s "violin" # vowel "a" # octave 6 # legato 0.88 # gain 0.45
+v4Notes = cat [
+  "~",
+  "~ . [-1@3 0@3 ~@2] !",
+  "[-1@3 0@3 ~@2] [1@3 0@3 ~@2] [0@3 ~@5] ~",
+  "~ [0@3 ~@5] ~ ~"
+  ]
+v4N = n (scale "phrygian" v4Notes)
+v4 = v4N # v4S
+-- v5
+v5S = s "violin" # vowel "a" # octave 7 # legato 0.88 # gain 0.33
+v5Notes = cat [
+  "~",
+  "~",
+  "~ ~ [-1@3 0@3 ~@2] !",
+  "[-1@3 0@3 ~@2] ! [1@3 0@3 ~@2] [0@3 ~@5]"
+  ]
+v5N = n (scale "phrygian" v5Notes)
+v5 = v5N # v5S
 -- bs
 bassS = s "pluck:1" # gain 0.9 # legato 9 # cut 0 # orbit 2
 offset = 0.82 * 0.5 * (2 ** 0.5)
@@ -37,19 +91,35 @@ kickNotes = cat [
   ]
 kick = kickNotes # kickS
 -- final
-final = stack [
+rhythm = stack [
   hh,
   bass,
   kick,
   snare
   ]
+violins = stack [
+  v,
+  v2,
+  v3,
+  v4,
+  v5
+  ]
+t = 16
 seqPLoopPat = seqPLoop [
-  (0, 900, final),
-  (992, 999, gain "0.8 0.5" # s "hc hc"),
-  (999, 1000, "1 1 1 1" # s "hc:0" # hpf 4444 # gain 0.6)
+  (0, t, stack [v, rhythm]),
+  (t, 2*t, stack [v, v2, rhythm]),
+  (2*t, 3*t, stack [v, v2, v3, rhythm]),
+  (3*t, 4*t, stack [v, v2, v3, v4, rhythm]),
+  (4*t, 5*t, stack [v, v2, v3, v4, v5, rhythm]),
+  -- (992, 999, gain "0.8 0.5" # s "hc hc"),
+  -- (999, 1000, "1 1 1 1" # s "hc:0" # hpf 4444 # gain 0.6)
+  (1000 - t, 1000, rhythm)
   ]
 in do
   hush
   setcps 0.75
-  setCycle 0
+  setCycle (1000 - t)
   d1 $ seqPLoopPat
+
+
+
